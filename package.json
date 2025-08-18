@@ -1,0 +1,32 @@
+{
+    "name": "ts-minimal-kit-web",
+    "version": "0.0.1",
+    "description": "",
+    "type": "module",
+    "main": "./dist/app.js",
+    "scripts": {
+        "dev": "npm run dev:server & npm run dev:client",
+        "dev:server": "npx tsc --project tsconfig.server.json --watch",
+        "dev:client": "npx tsc --project tsconfig.client.json --watch",
+        "build": "npm run build:server && npm run build:client",
+        "build:server": "npx tsc --project tsconfig.server.json",
+        "build:client": "npx tsc --project tsconfig.client.json",
+        "start": "node ./dist/app.js",
+        "build:start": "npm run build && npm start",
+        "clean": "node -e \"import('fs').then(fs => { fs.rmSync('dist', {recursive: true, force: true}); fs.readdirSync('public').filter(f => f.endsWith('.js') || f.endsWith('.js.map')).forEach(f => fs.rmSync('public/' + f, {force: true})); fs.readdirSync('.').filter(f => f.endsWith('.tsbuildinfo')).forEach(f => fs.rmSync(f, {force: true})); })\"",
+        "degit": "node -e \"import('fs').then(fs => fs.rmSync('.git', {recursive: true, force: true}))\"",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [
+        "typescript",
+        "minimal",
+        "esm",
+        "web"
+    ],
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "@types/node": "*",
+        "typescript": "*"
+    }
+}

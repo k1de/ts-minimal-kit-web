@@ -1,0 +1,49 @@
+{
+    // TypeScript Configuration for Client-side code
+    "compilerOptions": {
+        // File Layout
+        "rootDir": "./src/client",
+        "outDir": "./public",
+
+        // Environment Settings
+        "lib": ["ESNext", "DOM"],
+        "target": "esnext",
+        "module": "esnext",
+
+        // Output Options
+        "sourceMap": false,
+        "removeComments": true,
+        "noEmitOnError": true,
+
+        // Module Resolution
+        "moduleResolution": "node",
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true,
+
+        // Type Checking
+        "strict": true,
+        "noImplicitAny": true,
+        "strictNullChecks": true,
+        "strictFunctionTypes": true,
+        "strictBindCallApply": true,
+        "strictPropertyInitialization": true,
+        "noImplicitThis": true,
+        "alwaysStrict": true,
+
+        // Additional Checks
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": true,
+
+        // Module System
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "isolatedModules": true,
+
+        // Modern Features
+        "useDefineForClassFields": true,
+        "resolveJsonModule": true
+    },
+    "include": ["src/client/**/*.ts"]
+}

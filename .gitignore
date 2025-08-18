@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+package-lock.json
+tsconfig.tsbuildinfo
+
+# Build output
+dist/
+public/*
+!public/styles.css
+!public/index.html
+*.tsbuildinfo
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment variables
+.env
+.env.local
+.env.*.local

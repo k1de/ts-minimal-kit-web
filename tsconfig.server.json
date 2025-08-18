@@ -1,0 +1,48 @@
+{
+    // TypeScript Configuration for Server-side code
+    "compilerOptions": {
+        // File Layout
+        "rootDir": "./src/server",
+        "outDir": "./dist",
+
+        // Environment Settings
+        "lib": ["ESNext"],
+        "types": ["node", "ws"],
+        "module": "esnext",
+        "target": "esnext",
+
+        // Output Options
+        "sourceMap": true,
+        "declaration": true,
+        "declarationMap": true,
+
+        // Module Resolution
+        "moduleResolution": "node",
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true,
+
+        // Stricter Typechecking Options
+        "noUncheckedIndexedAccess": true,
+        "exactOptionalPropertyTypes": true,
+
+        // Style Options
+        "noImplicitReturns": true,
+        "noImplicitOverride": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noFallthroughCasesInSwitch": true,
+
+        // Recommended Options
+        "strict": true,
+        "verbatimModuleSyntax": true,
+        "isolatedModules": true,
+        "moduleDetection": "force",
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+
+        // Modern Features
+        "useDefineForClassFields": true,
+        "resolveJsonModule": true
+    },
+    "include": ["src/server/**/*.ts"]
+}

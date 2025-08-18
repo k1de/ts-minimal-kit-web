@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Main app container -->
+    <div id="app" data-layout="default">
+        <!-- Navigation slot (hidden by default) -->
+        <nav id="nav" class="nav" hidden></nav>
+        
+        <!-- Sidebar slot (hidden by default) -->
+        <aside id="sidebar" class="sidebar" hidden></aside>
+        
+        <!-- Main content area -->
+        <main id="main" class="main"></main>
+        
+        <!-- Modal container -->
+        <div id="modal" class="modal-container" hidden></div>
+    </div>
+    
+    <!-- Toast notifications -->
+    <div id="toast" class="toast-container"></div>
+    
+    <script type="module" src="index.js"></script>
+</body>
+</html>
