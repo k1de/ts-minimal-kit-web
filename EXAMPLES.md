@@ -279,6 +279,11 @@ this.clear() // Clear all
 this.html('<h1>New content</h1>') // Replace
 this.append('<p>More</p>') // Add
 
+// Element visibility
+this.show('element-id') // Show element
+this.hide('element-id') // Hide element
+this.toggle('element-id') // Toggle visibility
+
 // Element access
 this.get('element-id') // Get element
 this.val('input-id') // Get value

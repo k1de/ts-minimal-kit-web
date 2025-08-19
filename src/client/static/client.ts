@@ -863,6 +863,36 @@ class ClientApp {
     }
 
     /**
+     * Show element
+     */
+    show(id: string): void {
+        const element = document.getElementById(id);
+        if (element) {
+            element.hidden = false;
+        }
+    }
+
+    /**
+     * Hide element
+     */
+    hide(id: string): void {
+        const element = document.getElementById(id);
+        if (element) {
+            element.hidden = true;
+        }
+    }
+
+    /**
+     * Toggle element visibility
+     */
+    toggle(id: string): void {
+        const element = document.getElementById(id);
+        if (element) {
+            element.hidden = !element.hidden;
+        }
+    }
+
+    /**
      * Toggle dark theme
      */
     toggleTheme(): void {

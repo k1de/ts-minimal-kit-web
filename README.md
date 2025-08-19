@@ -121,6 +121,12 @@ npm install
 -   GET, POST, PUT, DELETE
 -   JSON handling
 
+**DOM Manipulation:**
+
+-   Element visibility control (show/hide/toggle)
+-   Content updates
+-   Event handling
+
 ## Documentation
 
 ### 📖 Component Examples
