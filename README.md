@@ -21,6 +21,7 @@ ts-minimal-kit-web/
 ├── package.json       # Dependencies & scripts
 ├── tsconfig.server.json  # Server TypeScript config
 ├── tsconfig.client.json  # Client TypeScript config
+├── EXAMPLES.md        # Component Examples
 └── README.md          # This file
 ```
 
@@ -91,10 +92,10 @@ npm install
 
 ### 🚀 Server
 
--   HTTP server with static file serving
+-   Zero external dependencies
+-   HTTP server
 -   RESTful API support
 -   SPA routing support
--   Zero external dependencies
 -   TypeScript strict mode
 
 ### 🎨 Client UI Framework

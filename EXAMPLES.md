@@ -246,8 +246,8 @@ this.toast('Loading...', 'info', 5000) // 5 seconds
 
 ```typescript
 // Hash navigation
-this.navigateTo('dashboard');       // Go to #dashboard
-this.getCurrentHash();               // Get current hash
+this.navigateTo('dashboard') // Go to #dashboard
+this.getCurrentHash() // Get current hash
 
 // Override to handle hash changes
 protected onHashChange(hash: string): void {
