@@ -1,6 +1,6 @@
 // app.ts - Server-side application entry point
 
-import { server } from './static/server.js';
+import { server, hooks } from './static/server.js';
 import { api } from './static/api.js';
 import('./router.js')
 
@@ -11,4 +11,4 @@ import('./router.js')
 // - External API integrations
 // - Custom business logic
 
-export { server, api };
+export { server, api, hooks };
