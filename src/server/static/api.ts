@@ -70,25 +70,28 @@ export class ApiRouter {
     /**
      * Handle request
      */
-    async handle(req: IncomingMessage, res: ServerResponse): Promise<boolean> {
-        const url = new URL(req.url || '/', `http://${req.headers.host}`);
+    async handle(req: IncomingMessage, res: ServerResponse, url: URL): Promise<void> {
         const method = req.method || 'GET';
         const path = url.pathname;
 
         // Find matching route
         for (const route of this.routes) {
             if (route.method === method && route.path === path) {
+                // Route found
                 try {
                     await route.handler(req, res);
                 } catch (error: any) {
-                    console.error('Route error:', error);
                     this.json(res, { error: error.message }, 500);
+                    if (process.env.DEBUG) {
+                        console.error('Route error:', error);
+                    }
                 }
-                return true;
+                return;
             }
         }
-
-        return false;
+        // Route not found
+        res.writeHead(404, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Not found' }));
     }
 }
 

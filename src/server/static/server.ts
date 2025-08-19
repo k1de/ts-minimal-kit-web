@@ -14,6 +14,14 @@ const __dirname = dirname(__filename);
 const PORT = process.env.PORT || 3000;
 const PUBLIC_DIR = join(dirname(dirname(__dirname)), 'public');
 
+// Types
+type HookFn = (req: IncomingMessage, res: ServerResponse, url: URL) => void | Promise<void>;
+
+const hooks = {
+    before: [] as HookFn[], // Pre-processing hooks
+    after: [] as HookFn[], // Post-processing hooks
+};
+
 // MIME types
 const mimeTypes: Record<string, string> = {
     '.html': 'text/html',
@@ -23,12 +31,27 @@ const mimeTypes: Record<string, string> = {
     '.png': 'image/png',
     '.jpg': 'image/jpeg',
     '.svg': 'image/svg+xml',
-    '.ico': 'image/x-icon'
+    '.ico': 'image/x-icon',
 };
 
 // Serve static files
-async function serveStatic(filePath: string, res: ServerResponse): Promise<void> {
+async function serveStatic(res: ServerResponse, url: URL): Promise<void> {
     try {
+        // Serve index.html for directory roots
+        let pathname = url.pathname;
+        if (pathname.endsWith('/')) {
+            pathname += 'index.html';
+        }
+
+        const filePath = join(PUBLIC_DIR, pathname);
+
+        // Security: prevent directory traversal
+        if (!filePath.startsWith(PUBLIC_DIR)) {
+            res.writeHead(403, { 'Content-Type': 'text/plain' });
+            res.end('403 Forbidden');
+            return;
+        }
+
         const ext = extname(filePath);
         const contentType = mimeTypes[ext] || 'application/octet-stream';
 
@@ -36,51 +59,50 @@ async function serveStatic(filePath: string, res: ServerResponse): Promise<void>
         res.writeHead(200, { 'Content-Type': contentType });
         res.end(content);
     } catch (err) {
-        // Try to serve index.html for 404s (SPA support)
+        // Return proper 404 for missing files
+        res.writeHead(404, { 'Content-Type': 'text/plain' });
+        res.end('404 Not Found');
+
+    }
+}
+
+// Helper function for safe execution Hooks
+async function runHooks(hooks: HookFn[], req: IncomingMessage, res: ServerResponse, url: URL): Promise<void> {
+    for (const hook of hooks) {
         try {
-            const indexPath = join(PUBLIC_DIR, 'index.html');
-            const content = await fs.readFile(indexPath);
-            res.writeHead(200, { 'Content-Type': 'text/html' });
-            res.end(content);
-        } catch {
-            res.writeHead(404, { 'Content-Type': 'text/plain' });
-            res.end('404 Not Found');
+            await hook(req, res, url);
+        } catch (err) {
+            if (process.env.DEBUG) {
+                console.error('Hook error:', err);
+            }
         }
     }
 }
 
+
+
 // Create HTTP server
 const server = createServer(async (req: IncomingMessage, res: ServerResponse) => {
-    const url = new URL(req.url || '/', `http://${req.headers.host}`);
-    let pathname = url.pathname;
+    try {
+        const url = new URL(req.url || '/', `http://${req.headers.host}`);
 
-    // Handle API routes
-    if (pathname.startsWith('/api')) {
-        const handled = await api.handle(req, res);
-        if (!handled) {
-            res.writeHead(404, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify({ error: 'Not found' }));
+        // Before hooks
+        await runHooks(hooks.before, req, res, url);
+
+        // Main logic
+        if (res.writable && !res.headersSent) {
+            if (url.pathname.startsWith('/api')) {
+                await api.handle(req, res, url);
+            } else {
+                await serveStatic(res, url);
+            }
         }
-        return;
+
+        // After hooks (always run for logging/metrics)
+        await runHooks(hooks.after, req, res, url);
+    } catch (err) {
+        console.error('Server error:', err);
     }
-
-    // Serve index.html for root
-    if (pathname === '/') {
-        pathname = '/index.html';
-    }
-
-    // Build file path
-    const filePath = join(PUBLIC_DIR, pathname);
-
-    // Security: prevent directory traversal
-    if (!filePath.startsWith(PUBLIC_DIR)) {
-        res.writeHead(403, { 'Content-Type': 'text/plain' });
-        res.end('403 Forbidden');
-        return;
-    }
-
-    // Serve the file
-    await serveStatic(filePath, res);
 });
 
 // Start server
@@ -118,4 +140,4 @@ process.on('SIGTERM', () => {
     });
 });
 
-export { server };
+export { server, hooks };
