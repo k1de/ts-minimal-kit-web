@@ -87,12 +87,10 @@ const server = createServer(async (req: IncomingMessage, res: ServerResponse) =>
 server.listen(PORT, () => {
     console.log(`
 ╔════════════════════════════════════╗
-║     Minimal UI Skeleton Server     ║
+║         ts-minimal-kit-web         ║
 ╠════════════════════════════════════╣
 ║                                    ║
 ║  Server:  http://localhost:${PORT}${' '.repeat(8 - String(PORT).length)}║
-║  API:     /api/*                   ║
-║  Status:  Ready                    ║
 ║                                    ║
 ╚════════════════════════════════════╝
 
