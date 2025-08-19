@@ -97,6 +97,7 @@ npm install
 -   RESTful API support
 -   SPA routing support
 -   TypeScript strict mode
+-   Request hooks system (before/after)
 
 ### 🎨 Client UI Framework
 

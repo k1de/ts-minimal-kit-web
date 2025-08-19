@@ -5,39 +5,39 @@ Quick reference for ts-minimal-kit-web components.
 ## Quick Start
 
 ```typescript
-import { ClientApp } from './static/client.js'
+import { ClientApp } from './static/client.js';
 
 class MyApp extends ClientApp {
     override start(): void {
-        this.setLayout('nav')
-        this.showNav('My App', [{ text: 'Home', onclick: () => this.showHome() }])
-        this.showHome()
+        this.setLayout('nav');
+        this.showNav('My App', [{ text: 'Home', onclick: () => this.showHome() }]);
+        this.showHome();
     }
 
     showHome(): void {
-        this.clear()
-        this.append(this.section('Welcome'))
-        this.append(this.card('Hello', 'World'))
+        this.clear();
+        this.append(this.section('Welcome'));
+        this.append(this.card('Hello', 'World'));
     }
 }
 
-new MyApp()
+new MyApp();
 ```
 
 ## Layout
 
 ```typescript
 // Layout modes
-this.setLayout('default') // Main content only
-this.setLayout('nav') // With navigation
-this.setLayout('sidebar') // With sidebar
-this.setLayout('nav-sidebar') // Both
+this.setLayout('default'); // Main content only
+this.setLayout('nav'); // With navigation
+this.setLayout('sidebar'); // With sidebar
+this.setLayout('nav-sidebar'); // Both
 
 // Navigation
 this.showNav('App Name', [
     { text: 'Home', onclick: () => this.showHome() },
     { text: 'About', onclick: () => this.showAbout() },
-])
+]);
 
 // Sidebar
 this.showSidebar([
@@ -48,24 +48,24 @@ this.showSidebar([
             { text: 'Settings', onclick: () => this.showSettings() },
         ],
     },
-])
+]);
 ```
 
 ## Content
 
 ```typescript
 // Section
-this.section('Title', 'Optional description')
+this.section('Title', 'Optional description');
 
 // Card
-this.card('Title', 'Content')
-this.card('Title', 'Content', 'Subtitle')
+this.card('Title', 'Content');
+this.card('Title', 'Content', 'Subtitle');
 
 // Grid (2-8 columns)
-this.grid(3, [this.card('One', '1'), this.card('Two', '2'), this.card('Three', '3')])
+this.grid(3, [this.card('One', '1'), this.card('Two', '2'), this.card('Three', '3')]);
 
 // List
-this.list([{ title: 'Item 1' }, { title: 'Item 2', description: 'Details' }, { title: 'Item 3', onclick: () => alert('Clicked') }], 'list-id')
+this.list([{ title: 'Item 1' }, { title: 'Item 2', description: 'Details' }, { title: 'Item 3', onclick: () => alert('Clicked') }], 'list-id');
 
 // Image (all options)
 this.image('photo.jpg', {
@@ -75,7 +75,7 @@ this.image('photo.jpg', {
     alt: 'Description',
     className: 'custom-class',
     loading: 'lazy', // lazy | eager
-})
+});
 
 // Image grid
 this.imageGrid(
@@ -86,26 +86,26 @@ this.imageGrid(
         { src: 'img3.jpg', alt: 'Photo 3' },
     ],
     200
-) // optional fixed height
+); // optional fixed height
 ```
 
 ## Forms
 
 ```typescript
 // Inputs
-this.input('text', 'name-id', 'Enter name')
-this.input('email', 'email-id', 'user@example.com')
-this.input('password', 'pass-id')
-this.textarea('msg-id', 'Enter message...')
+this.input('text', 'name-id', 'Enter name');
+this.input('email', 'email-id', 'user@example.com');
+this.input('password', 'pass-id');
+this.textarea('msg-id', 'Enter message...');
 
 // Select
 this.select('country-id', [
     { value: 'us', text: 'United States' },
     { value: 'uk', text: 'United Kingdom' },
-])
+]);
 
 // Checkbox & Radio
-this.checkbox('agree-id', 'I agree', false)
+this.checkbox('agree-id', 'I agree', false);
 this.radioGroup(
     'color',
     [
@@ -113,13 +113,13 @@ this.radioGroup(
         { value: 'blue', text: 'Blue' },
     ],
     'red'
-)
+);
 
 // Switch
-this.switch('notifications-id', true, 'Enable notifications')
+this.switch('notifications-id', true, 'Enable notifications');
 
 // Form group (label + input + help)
-this.formGroup('Email', this.input('email', 'email-id', 'user@example.com'), 'We never share your email')
+this.formGroup('Email', this.input('email', 'email-id', 'user@example.com'), 'We never share your email');
 ```
 
 ### Form Example
@@ -136,43 +136,43 @@ this.card(
         ${this.button('Cancel', () => this.closeModal())}
     </div>
 `
-)
+);
 ```
 
 ## Components
 
 ```typescript
 // Buttons
-this.button('Click me', () => alert('Hi!'))
-this.button('Save', () => this.save(), 'primary')
-this.button('Delete', () => this.delete(), 'danger')
+this.button('Click me', () => alert('Hi!'));
+this.button('Save', () => this.save(), 'primary');
+this.button('Delete', () => this.delete(), 'danger');
 
 // Button group
 this.buttonGroup([
     { text: 'Yes', onclick: () => this.yes() },
     { text: 'No', onclick: () => this.no() },
-])
+]);
 
 // Badges
-this.badge('New')
-this.badge('Active', 'success')
-this.badge('5 items', 'primary')
+this.badge('New');
+this.badge('Active', 'success');
+this.badge('5 items', 'primary');
 
 // Alerts
-this.alert('Info message')
-this.alert('Success!', 'success')
-this.alert('Warning!', 'warning')
-this.alert('Error!', 'danger')
+this.alert('Info message');
+this.alert('Success!', 'success');
+this.alert('Warning!', 'warning');
+this.alert('Error!', 'danger');
 
 // Progress
-this.progress(75) // 75%
-this.progress(30, 100, 'prog-id') // 30 of 100 with id
-this.progress(50, 100, 'prog-id2', true) // with text indicator
-this.updateProgress('prog-id', 50) // Update to 50
-this.updateProgress('prog-id', 60, 200) // Update to 60 of 200
+this.progress(75); // 75%
+this.progress(30, 100, 'prog-id'); // 30 of 100 with id
+this.progress(50, 100, 'prog-id2', true); // with text indicator
+this.updateProgress('prog-id', 50); // Update to 50
+this.updateProgress('prog-id', 60, 200); // Update to 60 of 200
 
 // Spinner
-this.spinner()
+this.spinner();
 ```
 
 ## Tables
@@ -186,29 +186,29 @@ this.table(
         ['Jane', 'jane@example.com', this.badge('Pending', 'warning')],
     ],
     'users-table'
-)
+);
 
 // Manipulate table
-this.appendTableRow('users-table', ['Bob', 'bob@example.com', 'New'])
-this.prependTableRow('users-table', ['Alice', 'alice@example.com', 'First'])
-this.updateTableRow('users-table', 0, ['John Doe', 'john@company.com', 'Updated'])
-this.removeTableRow('users-table', 1)
-const rowCount = this.getTableLength('users-table') // Get row count
+this.appendTableRow('users-table', ['Bob', 'bob@example.com', 'New']);
+this.prependTableRow('users-table', ['Alice', 'alice@example.com', 'First']);
+this.updateTableRow('users-table', 0, ['John Doe', 'john@company.com', 'Updated']);
+this.removeTableRow('users-table', 1);
+const rowCount = this.getTableLength('users-table'); // Get row count
 ```
 
 ## Lists
 
 ```typescript
 // Create list
-const listId = 'my-list'
-this.append(this.list([{ title: 'First item' }, { title: 'Second item' }], listId))
+const listId = 'my-list';
+this.append(this.list([{ title: 'First item' }, { title: 'Second item' }], listId));
 
 // Manipulate list
-this.appendListItem(listId, { title: 'New item', description: 'Added' })
-this.prependListItem(listId, { title: 'First!', onclick: () => alert('Hi') })
-this.updateListItem(listId, 0, { title: 'Updated item' })
-this.removeListItem(listId, 1)
-const itemCount = this.getListLength(listId) // Get item count
+this.appendListItem(listId, { title: 'New item', description: 'Added' });
+this.prependListItem(listId, { title: 'First!', onclick: () => alert('Hi') });
+this.updateListItem(listId, 0, { title: 'Updated item' });
+this.removeListItem(listId, 1);
+const itemCount = this.getListLength(listId); // Get item count
 ```
 
 ## Tabs
@@ -218,28 +218,28 @@ this.tabs([
     { label: 'Info', content: '<p>Information here</p>' },
     { label: 'Settings', content: this.card('Options', '...') },
     { label: 'About', content: '<p>Version 1.0</p>' },
-])
+]);
 ```
 
 ## Modal & Toast
 
 ```typescript
 // Modal
-this.modal('Title', '<p>Content</p>')
+this.modal('Title', '<p>Content</p>');
 
 // Modal with buttons
 this.modal('Confirm', 'Are you sure?', [
     { text: 'Cancel', onclick: () => {} },
     { text: 'OK', onclick: () => this.confirm(), variant: 'primary' },
-])
+]);
 
 // Close modal
-this.closeModal()
+this.closeModal();
 
 // Toast notifications
-this.toast('Saved!', 'success')
-this.toast('Error occurred', 'danger')
-this.toast('Loading...', 'info', 5000) // 5 seconds
+this.toast('Saved!', 'success');
+this.toast('Error occurred', 'danger');
+this.toast('Loading...', 'info', 5000); // 5 seconds
 ```
 
 ## Navigation
@@ -262,49 +262,131 @@ protected onHashChange(hash: string): void {
 
 ```typescript
 // REST methods
-await this.apiGet('/users')
-await this.apiPost('/users', { name: 'John' })
-await this.apiPut('/users/1', { name: 'Jane' })
-await this.apiDelete('/users/1')
+await this.apiGet('/users');
+await this.apiPost('/users', { name: 'John' });
+await this.apiPut('/users/1', { name: 'Jane' });
+await this.apiDelete('/users/1');
 
 // Generic method
-await this.api('PATCH', '/users/1', { active: true })
+await this.api('PATCH', '/users/1', { active: true });
+```
+
+## Server Hooks
+
+```typescript
+// In app.ts
+import { hooks } from './static/server.js';
+
+// Before hooks - run before request processing
+hooks.before.push((req, res, url) => {
+    // Logging
+    console.log(`[${new Date().toISOString()}] ${req.method} ${url.pathname}`);
+});
+
+hooks.before.push((req, res) => {
+    // Add custom headers
+    res.setHeader('X-Powered-By', 'ts-minimal-kit');
+});
+
+hooks.before.push((req, res, url) => {
+    // Handle custom routes (terminates request)
+    if (url.pathname === '/health') {
+        res.writeHead(200, { 'Content-Type': 'text/plain' });
+        res.end('OK');
+        // Main logic will be skipped automatically
+    }
+});
+
+hooks.before.push((req, res, url) => {
+    // Authentication check
+    if (url.pathname.startsWith('/admin') && !isAuthorized(req)) {
+        res.writeHead(401);
+        res.end('Unauthorized');
+    }
+});
+
+// After hooks - run after request processing
+hooks.after.push((req, res, url) => {
+    // Response time tracking
+    const responseTime = Date.now() - req.startTime;
+    console.log(`${url.pathname} took ${responseTime}ms`);
+});
+```
+
+### Hook Execution Order
+
+1. **Before hooks** - Execute sequentially
+2. **Main logic** - Only if `res.writable && !res.headersSent`
+    - API routes (`/api/*`)
+    - Static files
+3. **After hooks** - Always execute (for logging/metrics)
+
+### Hook Best Practices
+
+```typescript
+// ✅ DO: Check if response is still writable
+hooks.before.push((req, res, url) => {
+    if (res.writable && !res.headersSent) {
+        res.setHeader('X-Custom', 'value');
+    }
+});
+
+// ✅ DO: Use after hooks for read-only operations
+hooks.after.push((req, res) => {
+    // Safe to read properties
+    metrics.record(res.statusCode);
+});
+
+// ❌ DON'T: Modify response in after hooks
+hooks.after.push((req, res) => {
+    // Wrong - response might be sent
+    res.setHeader('X-Late', 'too-late'); // May cause error
+});
+
+// ✅ DO: Terminate response to skip main logic
+hooks.before.push((req, res, url) => {
+    if (shouldBlock(url)) {
+        res.writeHead(403);
+        res.end('Blocked');
+        // Main logic will automatically skip
+    }
+});
 ```
 
 ## DOM Utilities
 
 ```typescript
 // Content manipulation
-this.clear() // Clear all
-this.html('<h1>New content</h1>') // Replace
-this.append('<p>More</p>') // Add
+this.clear(); // Clear all
+this.html('<h1>New content</h1>'); // Replace
+this.append('<p>More</p>'); // Add
 
 // Element visibility
-this.show('element-id') // Show element
-this.hide('element-id') // Hide element
-this.toggle('element-id') // Toggle visibility
+this.show('element-id'); // Show element
+this.hide('element-id'); // Hide element
+this.toggle('element-id'); // Toggle visibility
 
 // Element access
-this.get('element-id') // Get element
-this.val('input-id') // Get value
-this.setVal('input-id', 'new') // Set value
-this.updateText('span-id', 'New text')
-this.updateHtml('div-id', '<b>Bold</b>')
+this.get('element-id'); // Get element
+this.val('input-id'); // Get value
+this.setVal('input-id', 'new'); // Set value
+this.updateText('span-id', 'New text');
+this.updateHtml('div-id', '<b>Bold</b>');
 
 // Events
-this.on('btn-id', 'click', (e) => console.log('Clicked'))
+this.on('btn-id', 'click', (e) => console.log('Clicked'));
 
 // Theme
-this.toggleTheme() // Toggle dark/light
+this.toggleTheme(); // Toggle dark/light
 ```
 
 ## Helpers
 
 ```typescript
 // Typography
-this.heading('Title', 2) // <h2>
-this.heading('Section', 3, 'section-id') // with id
-this.text('Paragraph text')
+this.heading('Title', 2); // <h2>
+this.heading('Section', 3, 'section-id'); // with id
+this.text('Paragraph text');
 this.text(
     'Styled text',
     {
@@ -315,40 +397,40 @@ this.text(
         align: 'center',
     },
     'text-id'
-) // with id
-this.divider() // Horizontal line
-this.spacer('lg') // Vertical space
+); // with id
+this.divider(); // Horizontal line
+this.spacer('lg'); // Vertical space
 
 // Layout helpers
-this.flex(['Item 1', 'Item 2'], 'md', 'row')
+this.flex(['Item 1', 'Item 2'], 'md', 'row');
 
 // Special cards
-this.statCard('Users', '1,234', 'Total', 'primary')
-this.productCard('img.jpg', 'Product', 'Description', '$99')
+this.statCard('Users', '1,234', 'Total', 'primary');
+this.productCard('img.jpg', 'Product', 'Description', '$99');
 ```
 
 ## Complete App Example
 
 ```typescript
 class TodoApp extends ClientApp {
-    private todos: string[] = []
+    private todos: string[] = [];
 
     override start(): void {
-        this.setLayout('nav')
+        this.setLayout('nav');
         this.showNav('Todo App', [
             { text: 'All', onclick: () => this.showTodos() },
             { text: 'Add', onclick: () => this.showAddForm() },
-        ])
-        this.showTodos()
+        ]);
+        this.showTodos();
     }
 
     showTodos(): void {
-        this.clear()
-        this.append(this.section('My Todos'))
+        this.clear();
+        this.append(this.section('My Todos'));
 
         if (this.todos.length === 0) {
-            this.append(this.alert('No todos yet', 'info'))
-            return
+            this.append(this.alert('No todos yet', 'info'));
+            return;
         }
 
         this.append(
@@ -358,7 +440,7 @@ class TodoApp extends ClientApp {
                     onclick: () => this.removeTodo(i),
                 }))
             )
-        )
+        );
     }
 
     showAddForm(): void {
@@ -366,24 +448,24 @@ class TodoApp extends ClientApp {
             {
                 text: 'Add',
                 onclick: () => {
-                    const todo = this.val('new-todo')
+                    const todo = this.val('new-todo');
                     if (todo) {
-                        this.todos.push(todo)
-                        this.toast('Added!', 'success')
-                        this.showTodos()
+                        this.todos.push(todo);
+                        this.toast('Added!', 'success');
+                        this.showTodos();
                     }
                 },
                 variant: 'primary',
             },
-        ])
+        ]);
     }
 
     removeTodo(index: number): void {
-        this.todos.splice(index, 1)
-        this.toast('Removed', 'info')
-        this.showTodos()
+        this.todos.splice(index, 1);
+        this.toast('Removed', 'info');
+        this.showTodos();
     }
 }
 
-new TodoApp()
+new TodoApp();
 ```
