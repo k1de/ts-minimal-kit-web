@@ -1,4 +1,4 @@
-// index.ts - Entry point selector
+// index.ts - Client-side application entry point
 
 import { ClientApp } from './static/client.js';
 

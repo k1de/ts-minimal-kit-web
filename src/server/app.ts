@@ -4,6 +4,11 @@ import { server } from './static/server.js';
 import { api } from './static/api.js';
 import('./router.js')
 
-// Welcome
+// Add your custom server logic here:
+// - Database connections and configuration
+// - Middleware setup
+// - Authentication services
+// - External API integrations
+// - Custom business logic
 
 export { server, api };

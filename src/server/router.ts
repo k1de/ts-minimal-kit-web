@@ -1,4 +1,5 @@
-// === Example API Routes ===
+// router.ts - API routes
+
 import { api } from './static/api.js';
 
 // Add your custom API endpoints here
