@@ -6,6 +6,7 @@ type NotificationType = 'info' | 'success' | 'warning' | 'danger' | 'error';
 type AlertType = NotificationType;
 type ToastType = NotificationType;
 type GridColumns = 2 | 3 | 4 | 5 | 6 | 7 | 8;
+type ThemeVariant = 'dark' | 'light'
 
 interface NavItem {
     text: string;
@@ -14,7 +15,7 @@ interface NavItem {
 }
 
 interface SidebarSection {
-    title: string;
+    title?: string;
     items: Array<{ text: string; onclick?: () => void }>;
 }
 
@@ -204,7 +205,7 @@ class ClientApp {
 
             return `
                 <div class="sidebar-section">
-                    <div class="sidebar-title">${section.title}</div>
+                    ${section.title ? `<div class="sidebar-title">${section.title}</div>` : ''}
                     <ul class="sidebar-menu">${items}</ul>
                 </div>
             `;
@@ -893,14 +894,29 @@ class ClientApp {
     }
 
     /**
-     * Toggle dark theme
+     * Set specific theme
+     */
+    setTheme(theme: ThemeVariant): void {
+        const app = document.getElementById('app');
+        const toast = document.getElementById('toast');
+        app?.setAttribute('data-theme', theme);
+        toast?.setAttribute('data-theme', theme);
+    }
+
+    /**
+     * Toggle between dark and light theme
      */
     toggleTheme(): void {
         const app = document.getElementById('app');
         const current = app?.getAttribute('data-theme');
-        app?.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
-        const toast = document.getElementById('toast');
-        toast?.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+        this.setTheme(current === 'dark' ? 'light' : 'dark');
+    }
+
+    /**
+     * Get current theme
+     */
+    getTheme(): ThemeVariant {
+        return document.getElementById('app')?.getAttribute('data-theme') as ThemeVariant || 'light';
     }
 
     // === REST API Methods ===

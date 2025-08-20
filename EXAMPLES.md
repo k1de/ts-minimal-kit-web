@@ -378,6 +378,8 @@ this.on('btn-id', 'click', (e) => console.log('Clicked'));
 
 // Theme
 this.toggleTheme(); // Toggle dark/light
+this.getTheme(); // Get current theme
+this.setTheme('dark'); // Set specific theme
 ```
 
 ## Helpers
@@ -407,65 +409,4 @@ this.flex(['Item 1', 'Item 2'], 'md', 'row');
 // Special cards
 this.statCard('Users', '1,234', 'Total', 'primary');
 this.productCard('img.jpg', 'Product', 'Description', '$99');
-```
-
-## Complete App Example
-
-```typescript
-class TodoApp extends ClientApp {
-    private todos: string[] = [];
-
-    override start(): void {
-        this.setLayout('nav');
-        this.showNav('Todo App', [
-            { text: 'All', onclick: () => this.showTodos() },
-            { text: 'Add', onclick: () => this.showAddForm() },
-        ]);
-        this.showTodos();
-    }
-
-    showTodos(): void {
-        this.clear();
-        this.append(this.section('My Todos'));
-
-        if (this.todos.length === 0) {
-            this.append(this.alert('No todos yet', 'info'));
-            return;
-        }
-
-        this.append(
-            this.list(
-                this.todos.map((todo, i) => ({
-                    title: todo,
-                    onclick: () => this.removeTodo(i),
-                }))
-            )
-        );
-    }
-
-    showAddForm(): void {
-        this.modal('Add Todo', this.input('text', 'new-todo', 'Enter todo...'), [
-            {
-                text: 'Add',
-                onclick: () => {
-                    const todo = this.val('new-todo');
-                    if (todo) {
-                        this.todos.push(todo);
-                        this.toast('Added!', 'success');
-                        this.showTodos();
-                    }
-                },
-                variant: 'primary',
-            },
-        ]);
-    }
-
-    removeTodo(index: number): void {
-        this.todos.splice(index, 1);
-        this.toast('Removed', 'info');
-        this.showTodos();
-    }
-}
-
-new TodoApp();
 ```
