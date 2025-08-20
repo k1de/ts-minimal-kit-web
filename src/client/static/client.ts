@@ -658,15 +658,16 @@ class ClientApp {
      * @param options - Section options
      */
     section(title: string, options?: SectionOptions): string {
+        const { content, ...baseOptions } = options || {}
         const attrs = this.buildAttrs({
-            ...options,
-            class: options?.className ? `section ${options.className}` : 'section',
+            ...baseOptions,
+            class: baseOptions.className ? `section ${baseOptions.className}` : 'section',
         });
         return `
             <div${attrs}>
                 <div class="section-header">
                     <h1 class="section-title">${title}</h1>
-                    ${options?.content ? `<p class="section-content">${options.content}</p>` : ''}
+                    ${content ? `<p class="section-content">${content}</p>` : ''}
                 </div>
             </div>
         `;
