@@ -7,7 +7,7 @@
 
         // Environment Settings
         "lib": ["ESNext"],
-        "types": ["node", "ws"],
+        "types": ["node"],
         "module": "esnext",
         "target": "esnext",
 
