@@ -11,7 +11,7 @@ class MyApp extends ClientApp {
     override start(): void {
         this.setLayout('nav');
         this.showNav('My App', {
-            items: [{ text: 'Home', onclick: () => this.showHome() }]
+            items: [{ text: 'Home', onclick: () => this.showHome() }],
         });
         this.showHome();
     }
@@ -40,7 +40,7 @@ this.showNav('App Name', {
     items: [
         { text: 'Home', onclick: () => this.showHome() },
         { text: 'About', onclick: () => this.showAbout() },
-    ]
+    ],
 });
 
 // Sidebar
@@ -53,7 +53,7 @@ this.showSidebar({
                 { text: 'Settings', onclick: () => this.showSettings() },
             ],
         },
-    ]
+    ],
 });
 ```
 
@@ -70,21 +70,13 @@ this.card('Title', { content: 'Content', subtitle: 'Subtitle' });
 // Grid (2-8 columns)
 this.grid({
     columns: 3,
-    items: [
-        this.card('One', { content: '1' }), 
-        this.card('Two', { content: '2' }), 
-        this.card('Three', { content: '3' })
-    ]
+    items: [this.card('One', { content: '1' }), this.card('Two', { content: '2' }), this.card('Three', { content: '3' })],
 });
 
 // List
 this.list({
-    items: [
-        { title: 'Item 1' }, 
-        { title: 'Item 2', content: 'Details' }, 
-        { title: 'Item 3', onclick: () => alert('Clicked') }
-    ],
-    id: 'list-id'
+    items: [{ title: 'Item 1' }, { title: 'Item 2', content: 'Details' }, { title: 'Item 3', onclick: () => alert('Clicked') }],
+    id: 'list-id',
 });
 
 // Image (all options)
@@ -106,7 +98,7 @@ this.imageGrid({
         { src: 'img2.jpg', alt: 'Photo 2' },
         { src: 'img3.jpg', alt: 'Photo 3' },
     ],
-    height: 200  // optional fixed height
+    height: 200, // optional fixed height
 });
 ```
 
@@ -124,7 +116,7 @@ this.select('country-id', {
     options: [
         { value: 'us', text: 'United States' },
         { value: 'uk', text: 'United Kingdom' },
-    ]
+    ],
 });
 
 // Checkbox & Radio
@@ -135,7 +127,7 @@ this.radioGroup({
         { value: 'red', text: 'Red' },
         { value: 'blue', text: 'Blue' },
     ],
-    selected: 'red'
+    selected: 'red',
 });
 
 // Switch
@@ -145,7 +137,7 @@ this.switch('notifications-id', { checked: true, label: 'Enable notifications' }
 this.formGroup({
     label: 'Email',
     input: this.input('email-id', { type: 'email', placeholder: 'user@example.com' }),
-    help: 'We never share your email'
+    help: 'We never share your email',
 });
 ```
 
@@ -156,18 +148,18 @@ this.card('User Form', {
     content: `
     ${this.formGroup({
         label: 'Name',
-        input: this.input('name', { type: 'text', placeholder: 'John Doe' })
+        input: this.input('name', { type: 'text', placeholder: 'John Doe' }),
     })}
     ${this.formGroup({
         label: 'Email',
-        input: this.input('email', { type: 'email', placeholder: 'john@example.com' })
+        input: this.input('email', { type: 'email', placeholder: 'john@example.com' }),
     })}
     ${this.checkbox('newsletter', { label: 'Subscribe to newsletter' })}
     <div class="mt-md">
         ${this.button('Submit', { onclick: () => this.handleSubmit(), variant: 'primary' })}
         ${this.button('Cancel', { onclick: () => this.closeModal() })}
     </div>
-`
+`,
 });
 ```
 
@@ -184,7 +176,7 @@ this.buttonGroup({
     buttons: [
         { text: 'Yes', onclick: () => this.yes() },
         { text: 'No', onclick: () => this.no() },
-    ]
+    ],
 });
 
 // Badges
@@ -219,7 +211,7 @@ this.table({
         ['John', 'john@example.com', this.badge('Active', { variant: 'success' })],
         ['Jane', 'jane@example.com', this.badge('Pending', { variant: 'warning' })],
     ],
-    id: 'users-table'
+    id: 'users-table',
 });
 
 // Manipulate table
@@ -235,10 +227,12 @@ const rowCount = this.getTableLength('users-table'); // Get row count
 ```typescript
 // Create list
 const listId = 'my-list';
-this.append(this.list({
-    items: [{ title: 'First item' }, { title: 'Second item' }],
-    id: listId
-}));
+this.append(
+    this.list({
+        items: [{ title: 'First item' }, { title: 'Second item' }],
+        id: listId,
+    })
+);
 
 // Manipulate list
 this.appendListItem(listId, { title: 'New item', content: 'Added' });
@@ -256,7 +250,7 @@ this.tabs({
         { label: 'Info', content: '<p>Information here</p>' },
         { label: 'Settings', content: this.card('Options', { content: '...' }) },
         { label: 'About', content: '<p>Version 1.0</p>' },
-    ]
+    ],
 });
 ```
 
@@ -273,7 +267,7 @@ this.modal({
     buttons: [
         { text: 'Cancel', onclick: () => {} },
         { text: 'OK', onclick: () => this.confirm(), variant: 'primary' },
-    ]
+    ],
 });
 
 // Close modal
@@ -298,6 +292,27 @@ protected onHashChange(hash: string): void {
         case 'home': this.showHome(); break;
         case 'about': this.showAbout(); break;
     }
+}
+```
+
+## Scroll to Element
+
+```typescript
+// Basic scroll to element
+this.scrollToElement('section-id'); // Default: smooth scroll to top
+
+// With options
+this.scrollToElement('footer', {
+    behavior: 'smooth', // 'smooth' | 'instant' | 'auto'
+    block: 'start', // 'start' | 'center' | 'end' | 'nearest'
+    inline: 'nearest', // 'start' | 'center' | 'end' | 'nearest'
+    offset: 80, // For fixed headers
+});
+
+// Check if scroll was successful
+const success = this.scrollToElement('element-id');
+if (!success) {
+    this.toast('Section not found', { type: 'warning' });
 }
 ```
 
@@ -437,7 +452,7 @@ this.text('Styled text', {
     color: 'var(--primary)',
     weight: 'bold',
     align: 'center',
-    id: 'text-id'
+    id: 'text-id',
 });
 this.divider(); // Horizontal line
 this.spacer('lg'); // Vertical space
@@ -446,7 +461,7 @@ this.spacer('lg'); // Vertical space
 this.flex({
     items: ['Item 1', 'Item 2'],
     gap: 'md',
-    direction: 'row'
+    direction: 'row',
 });
 
 // Special cards
@@ -454,12 +469,12 @@ this.statCard('Users', {
     value: '1,234',
     subtitle: 'Total',
     color: 'primary',
-    content: '' // required by interface
+    content: '', // required by interface
 });
 this.productCard({
     image: 'img.jpg',
     title: 'Product',
     content: 'Description',
-    price: '$99'
+    price: '$99',
 });
 ```

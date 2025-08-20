@@ -56,6 +56,9 @@ type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
 type SpacerSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 type FlexDirection = 'row' | 'col';
 type GapSize = 'sm' | 'md' | 'lg';
+type ScrollBehavior = 'smooth' | 'instant' | 'auto';
+type ScrollBlock = 'start' | 'center' | 'end' | 'nearest';
+type ScrollInline = 'start' | 'center' | 'end' | 'nearest';
 
 // ========================================
 // INTERFACES
@@ -294,6 +297,14 @@ interface ProductCardOptions extends BaseOptions {
     priceVariant?: ButtonVariant;
 }
 
+/** Scroll to element options */
+interface ScrollToElementOptions {
+    behavior?: ScrollBehavior;
+    block?: ScrollBlock;
+    inline?: ScrollInline;
+    offset?: number;
+}
+
 // ========================================
 // MAIN CLASS
 // ========================================
@@ -348,17 +359,37 @@ class ClientApp {
      */
     private handleHashChange(): void {
         const hash = window.location.hash.slice(1); // Remove #
-        if (hash) {
-            // Try to scroll to element
-            const element = document.getElementById(hash);
-            if (element) {
-                element.scrollIntoView({ behavior: 'smooth' });
-            }
-        }
         // Call override method if exists
         if (this.onHashChange) {
             this.onHashChange(hash);
         }
+    }
+
+    /**
+     * Scroll to element by ID
+     * @param elementId - Element ID to scroll to
+     * @param options - Scroll options
+     */
+    scrollToElement(elementId: string, options?: ScrollToElementOptions): boolean {
+        const element = document.getElementById(elementId);
+        if (!element) {
+            return false;
+        }
+
+        const { behavior = 'smooth', block = 'start', inline = 'nearest', offset = 0 } = options || {};
+
+        if (offset !== 0) {
+            // Custom scroll with offset (useful for fixed headers)
+            const elementPosition = element.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - offset;
+
+            window.scrollTo({ top: offsetPosition, behavior });
+        } else {
+            // Standard scrollIntoView
+            element.scrollIntoView({ behavior, block, inline });
+        }
+
+        return true;
     }
 
     /**
@@ -575,7 +606,7 @@ class ClientApp {
                 ...baseOptions,
                 href,
                 id,
-                target
+                target,
             });
             return `<a${attrs}>${text}</a>`;
         }
@@ -583,7 +614,7 @@ class ClientApp {
         const attrs = this.buildAttrs({
             ...baseOptions,
             href,
-            target
+            target,
         });
         return `<a${attrs}>${text}</a>`;
     }
@@ -629,7 +660,7 @@ class ClientApp {
     section(title: string, options?: SectionOptions): string {
         const attrs = this.buildAttrs({
             ...options,
-            class: options?.className ? `section ${options.className}` : 'section'
+            class: options?.className ? `section ${options.className}` : 'section',
         });
         return `
             <div${attrs}>
@@ -650,7 +681,7 @@ class ClientApp {
         const { subtitle, content = '', ...baseOptions } = options || {};
         const attrs = this.buildAttrs({
             ...baseOptions,
-            class: baseOptions.className ? `card ${baseOptions.className}` : 'card'
+            class: baseOptions.className ? `card ${baseOptions.className}` : 'card',
         });
         const header = title
             ? `
@@ -694,7 +725,7 @@ class ClientApp {
             src,
             alt,
             loading,
-            style: styleAttrs.length > 0 ? styleAttrs.join('; ') : undefined
+            style: styleAttrs.length > 0 ? styleAttrs.join('; ') : undefined,
         });
 
         return `<img${attrs}>`;
@@ -716,7 +747,7 @@ class ClientApp {
                     alt: img.alt || '',
                     width: '100%',
                     height: `${finalHeight}px`,
-                    fit: 'cover'
+                    fit: 'cover',
                 })}
             </div>`
         );
@@ -753,7 +784,7 @@ class ClientApp {
         const attrs = this.buildAttrs({
             ...baseOptions,
             class: baseOptions.className ? `list ${baseOptions.className}` : 'list',
-            id: listId
+            id: listId,
         });
         return `<ul${attrs}>${listItems}</ul>`;
     }
@@ -846,7 +877,7 @@ class ClientApp {
         const className = `grid grid-${columns}`;
         const attrs = this.buildAttrs({
             ...baseOptions,
-            class: baseOptions.className ? `${className} ${baseOptions.className}` : className
+            class: baseOptions.className ? `${className} ${baseOptions.className}` : className,
         });
         return `<div${attrs}>${items.join('')}</div>`;
     }
@@ -863,7 +894,7 @@ class ClientApp {
         const { label, input, help, ...baseOptions } = options;
         const attrs = this.buildAttrs({
             ...baseOptions,
-            class: baseOptions.className ? `form-group ${baseOptions.className}` : 'form-group'
+            class: baseOptions.className ? `form-group ${baseOptions.className}` : 'form-group',
         });
         return `
             <div${attrs}>
@@ -888,7 +919,7 @@ class ClientApp {
             id,
             class: baseOptions.className || 'input',
             placeholder,
-            value
+            value,
         });
 
         return `<input${attrs}>`;
@@ -906,7 +937,7 @@ class ClientApp {
             id,
             class: baseOptions.className || 'textarea',
             placeholder,
-            rows
+            rows,
         });
 
         return `<textarea${attrs}>${value || ''}</textarea>`;
@@ -923,14 +954,14 @@ class ClientApp {
         const attrs = this.buildAttrs({
             ...baseOptions,
             id,
-            class: baseOptions.className || 'select'
+            class: baseOptions.className || 'select',
         });
 
         const optionElements = selectOptions
             .map((opt) => {
                 const optAttrs = this.buildAttrs({
                     value: opt.value,
-                    selected: selected === opt.value
+                    selected: selected === opt.value,
                 });
                 return `<option${optAttrs}>${opt.text}</option>`;
             })
@@ -951,7 +982,7 @@ class ClientApp {
         const inputAttrs = this.buildAttrs({
             type: 'checkbox',
             id,
-            checked
+            checked,
         });
 
         return `
@@ -978,7 +1009,7 @@ class ClientApp {
                     name,
                     id,
                     value: opt.value,
-                    checked: selected === opt.value
+                    checked: selected === opt.value,
                 });
                 return `
                 <div class="radio">
@@ -1004,7 +1035,7 @@ class ClientApp {
         const inputAttrs = this.buildAttrs({
             type: 'checkbox',
             id,
-            checked
+            checked,
         });
 
         return `
@@ -1040,7 +1071,7 @@ class ClientApp {
 
         const attrs = this.buildAttrs({
             id,
-            class: finalClassName
+            class: finalClassName,
         });
 
         return `<button${attrs}>${text}</button>`;
@@ -1054,7 +1085,7 @@ class ClientApp {
         const { buttons, ...baseOptions } = options;
         const containerAttrs = this.buildAttrs({
             ...baseOptions,
-            class: 'btn-group'
+            class: 'btn-group',
         });
 
         const groupButtons = buttons
@@ -1066,7 +1097,7 @@ class ClientApp {
                 const className = btn.variant ? `btn btn-${btn.variant}` : 'btn';
                 const btnAttrs = this.buildAttrs({
                     id,
-                    class: className
+                    class: className,
                 });
                 return `<button${btnAttrs}>${btn.text}</button>`;
             })
@@ -1123,7 +1154,7 @@ class ClientApp {
         const attrs = this.buildAttrs({
             ...baseOptions,
             class: baseOptions.className ? `table ${baseOptions.className}` : 'table',
-            id: tableId
+            id: tableId,
         });
 
         return `
@@ -1218,7 +1249,7 @@ class ClientApp {
             .map((item, i) => {
                 const tabAttrs = this.buildAttrs({
                     href: '#',
-                    class: i === 0 ? 'tab active' : 'tab'
+                    class: i === 0 ? 'tab active' : 'tab',
                 });
                 return `<a${tabAttrs}>${item.label}</a>`;
             })
@@ -1227,7 +1258,7 @@ class ClientApp {
         const panels = items
             .map((item, i) => {
                 const panelAttrs = this.buildAttrs({
-                    class: i !== 0 ? 'tab-panel hidden' : 'tab-panel'
+                    class: i !== 0 ? 'tab-panel hidden' : 'tab-panel',
                 });
                 return `<div${panelAttrs}>${item.content}</div>`;
             })
@@ -1262,13 +1293,13 @@ class ClientApp {
             class: 'progress',
             id: progressId,
             'data-max': max,
-            'data-show-text': showText
+            'data-show-text': showText,
         });
 
         const barAttrs = this.buildAttrs({
             class: 'progress-bar',
             id: barId,
-            style: `width: ${percentage}%`
+            style: `width: ${percentage}%`,
         });
 
         return `
@@ -1523,7 +1554,7 @@ class ClientApp {
     async api(method: string, endpoint: string, data?: any): Promise<any> {
         const options: RequestInit = {
             method,
-            headers: { 'Content-Type': 'application/json' }
+            headers: { 'Content-Type': 'application/json' },
         };
 
         if (data && ['POST', 'PUT', 'PATCH'].includes(method)) {
@@ -1630,7 +1661,7 @@ class ClientApp {
     divider(options?: BaseOptions): string {
         const attrs = this.buildAttrs({
             ...options,
-            style: 'border: none; border-top: 1px solid var(--border); margin: var(--space-lg) 0;'
+            style: 'border: none; border-top: 1px solid var(--border); margin: var(--space-lg) 0;',
         });
         return `<hr${attrs}>`;
     }
@@ -1643,7 +1674,7 @@ class ClientApp {
     spacer(size: SpacerSize = 'md', options?: BaseOptions): string {
         const attrs = this.buildAttrs({
             ...options,
-            style: `height: var(--space-${size})`
+            style: `height: var(--space-${size})`,
         });
         return `<div${attrs}></div>`;
     }
@@ -1678,7 +1709,7 @@ class ClientApp {
 
         const attrs = this.buildAttrs({
             ...baseOptions,
-            style: styles.length > 0 ? styles.join('; ') : undefined
+            style: styles.length > 0 ? styles.join('; ') : undefined,
         });
 
         return `<p${attrs}>${content}</p>`;
@@ -1701,6 +1732,9 @@ export type {
     SpacerSize,
     FlexDirection,
     GapSize,
+    ScrollBehavior,
+    ScrollBlock,
+    ScrollInline,
     // Options interfaces
     NavOptions,
     SidebarOptions,
@@ -1709,6 +1743,7 @@ export type {
     ButtonOptions,
     ModalOptions,
     ImageOptions,
-    TableOptions
+    TableOptions,
+    ScrollToElementOptions,
     // ... export other options as needed
 };
