@@ -644,7 +644,7 @@ div {
 /* Toast container */
 .toast-container {
     position: fixed;
-    top: var(--space-lg);
+    top: var(--space-2xl);
     right: var(--space-lg);
     z-index: 2000;
     display: flex;
@@ -796,9 +796,13 @@ div {
 
 .progress-text {
     position: absolute;
+    transform: translate(-50%, -50%);   
     left: 50%;
+    top: 50%;
     font-size: 0.75rem;
+    font-weight: 500;
     white-space: nowrap;
+    color: var(--primary-text);
 }
 
 /* === Spinner === */

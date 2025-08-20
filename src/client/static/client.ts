@@ -340,9 +340,7 @@ class ClientApp {
         // Handle hash changes
         window.addEventListener('hashchange', () => this.handleHashChange());
         // Handle initial hash
-        if (window.location.hash) {
-            this.handleHashChange();
-        }
+        this.handleHashChange();
     }
 
     /**
@@ -356,10 +354,10 @@ class ClientApp {
             if (element) {
                 element.scrollIntoView({ behavior: 'smooth' });
             }
-            // Call override method if exists
-            if (this.onHashChange) {
-                this.onHashChange(hash);
-            }
+        }
+        // Call override method if exists
+        if (this.onHashChange) {
+            this.onHashChange(hash);
         }
     }
 
@@ -718,7 +716,7 @@ class ClientApp {
                     alt: img.alt || '',
                     width: '100%',
                     height: `${finalHeight}px`,
-                    fit: 'cover',
+                    fit: 'cover'
                 })}
             </div>`
         );
@@ -1497,10 +1495,12 @@ class ClientApp {
     /**
      * Toggle between dark and light theme
      */
-    toggleTheme(): void {
+    toggleTheme(): ThemeVariant {
         const app = document.getElementById('app');
         const current = app?.getAttribute('data-theme');
-        this.setTheme(current === 'dark' ? 'light' : 'dark');
+        const theme = current === 'dark' ? 'light' : 'dark';
+        this.setTheme(theme);
+        return theme;
     }
 
     /**
@@ -1523,9 +1523,7 @@ class ClientApp {
     async api(method: string, endpoint: string, data?: any): Promise<any> {
         const options: RequestInit = {
             method,
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: { 'Content-Type': 'application/json' }
         };
 
         if (data && ['POST', 'PUT', 'PATCH'].includes(method)) {
@@ -1711,6 +1709,6 @@ export type {
     ButtonOptions,
     ModalOptions,
     ImageOptions,
-    TableOptions,
+    TableOptions
     // ... export other options as needed
 };
