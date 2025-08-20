@@ -146,14 +146,20 @@ class ClientApp {
     /**
      * Add event listener with timeout
      */
-    private addDelayedEventListener(id: string, handler: () => void): void {
+    private addDelayedEventListener(idOrSelector: string, handler: () => void, event: string = 'click'): void {
         setTimeout(() => {
-            const element = document.getElementById(id);
+            const element = idOrSelector.includes('#') || idOrSelector.includes('.') || idOrSelector.includes('[') 
+                ? document.querySelector(idOrSelector) 
+                : document.getElementById(idOrSelector);
             if (element) {
-                element.addEventListener('click', (e) => {
+                element.addEventListener(event, (e) => {
                     e.preventDefault(); // Prevent default link behavior
                     handler();
                 });
+                // Set cursor pointer for clickable elements
+                if (event === 'click') {
+                    (element as HTMLElement).style.cursor = 'pointer';
+                }
             }
         }, 0);
     }
@@ -331,15 +337,10 @@ class ClientApp {
     list(items: ListItem[], id?: string): string {
         const listId = id || this.generateId('list');
 
+        // Bind click handlers for items with onclick
         items.forEach((item, index) => {
             if (item.onclick) {
-                setTimeout(() => {
-                    const element = document.querySelector(`#${listId} .list-item:nth-child(${index + 1})`) as HTMLElement;
-                    if (element) {
-                        if (item.onclick) element.addEventListener('click', item.onclick);
-                        element.style.cursor = 'pointer';
-                    }
-                }, 0);
+                this.addDelayedEventListener(`#${listId} .list-item:nth-child(${index + 1})`, item.onclick);
             }
         });
 
@@ -768,12 +769,10 @@ class ClientApp {
                 ${buttons
                 .map((btn, i) => {
                     const id = `modal-btn-${i}`;
-                    setTimeout(() => {
-                        document.getElementById(id)?.addEventListener('click', () => {
-                            btn.onclick();
-                            this.closeModal();
-                        });
-                    }, 0);
+                    this.addDelayedEventListener(id, () => {
+                        btn.onclick();
+                        this.closeModal();
+                    });
                     const className = btn.variant ? `btn btn-${btn.variant}` : 'btn';
                     return `<button id="${id}" class="${className}">${btn.text}</button>`;
                 })
