@@ -126,7 +126,7 @@ p {
 
 /* Ensure all generic div content inherits text color */
 div {
-    color: inherit;
+    color: var(--text-secondary);
 }
 
 /* === Layout Modes === */
@@ -310,7 +310,7 @@ div {
     color: var(--text);
 }
 
-.section-description {
+.section-content {
     color: var(--text-secondary);
     margin-top: var(--space-sm);
 }
@@ -340,7 +340,7 @@ div {
     margin-bottom: var(--space-xs);
 }
 
-.list-item-description {
+.list-item-content {
     color: var(--text-secondary);
     font-size: 0.875rem;
 }

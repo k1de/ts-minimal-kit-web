@@ -6,14 +6,14 @@ class App extends ClientApp {
     // Example
     override start(): void {
         this.setLayout('nav');
-        this.showNav('My App', [{ text: 'Home', onclick: () => this.showHome() }]);
+        this.showNav('My App', { items: [{ text: 'Theme', onclick: () => this.toggleTheme() }] });
         this.showHome();
     }
 
     showHome(): void {
         this.clear();
-        this.append(this.section('Welcome', 'Start building!'));
-        this.append(this.card('Hello', 'World'));
+        this.append(this.section('Welcome', { content: 'Start building!' }));
+        this.append(this.card('Hello', { content: 'World' }));
     }
 }
 

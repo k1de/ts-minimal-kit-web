@@ -88,45 +88,30 @@ npm install
 -   **Clean:** `npm run clean`
 -   **Remove git history:** `npm run degit`
 
-## Features
+## Server
 
-### 🚀 Server
-
--   Zero external dependencies
--   HTTP server
--   RESTful API support
--   SPA routing support
+-   Zero dependencies
+-   RESTful API with router
+-   SPA support
+-   Request hooks (before/after)
 -   TypeScript strict mode
--   Request hooks system (before/after)
 
-### 🎨 Client UI Framework
+## Client UI Framework
 
-**Components:**
+Consistent object-based API for all components:
 
--   Cards, sections, modals
--   Forms, inputs, buttons
--   Tables, lists, grids
--   Tabs, progress bars
--   Alerts, toasts, badges
+```typescript
+this.card('Title', {
+    content: 'Content here',
+    id: 'my-card'
+});
+```
 
-**Layouts:**
+**Components:** Cards, sections, forms, tables, lists, modals, tabs, buttons, alerts, progress bars
 
--   Default layout
--   Navigation bar
--   Sidebar
--   Nav + sidebar combo
+**Features:** Layouts (nav/sidebar), dark/light themes, REST client, DOM utilities
 
-**API Integration:**
-
--   Built-in REST client
--   GET, POST, PUT, DELETE
--   JSON handling
-
-**DOM Manipulation:**
-
--   Element visibility control (show/hide/toggle)
--   Content updates
--   Event handling
+**TypeScript:** Full type definitions for all components
 
 ## Documentation
 
@@ -138,6 +123,34 @@ See [EXAMPLES.md](./EXAMPLES.md) for complete component reference:
 -   All UI components with examples
 -   API integration patterns
 -   Complete app example
+
+**Quick Example:**
+
+```typescript
+import { ClientApp } from './static/client.js';
+
+class MyApp extends ClientApp {
+    override start(): void {
+        this.setLayout('nav-sidebar');
+        
+        // Navigation with unified API
+        this.showNav('My App', {
+            items: [{ text: 'Home', href: '#' }]
+        });
+        
+        // Create components with options
+        const card = this.card('Welcome', {
+            content: 'Hello World!',
+            subtitle: 'Getting started',
+            id: 'welcome-card'
+        });
+        
+        this.append(card);
+    }
+}
+
+new MyApp();
+```
 
 ### 🛠️ Development
 
@@ -180,6 +193,13 @@ npx tsc --version
 -   DOM library included
 -   Source maps disabled
 -   Strict mode enabled
+
+**TypeScript Support:**
+
+-   Full type definitions for all UI components
+-   Exported interfaces for all options
+-   IDE autocomplete for method parameters
+-   Type-safe API development
 
 ## License
 

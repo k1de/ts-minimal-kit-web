@@ -10,14 +10,16 @@ import { ClientApp } from './static/client.js';
 class MyApp extends ClientApp {
     override start(): void {
         this.setLayout('nav');
-        this.showNav('My App', [{ text: 'Home', onclick: () => this.showHome() }]);
+        this.showNav('My App', {
+            items: [{ text: 'Home', onclick: () => this.showHome() }]
+        });
         this.showHome();
     }
 
     showHome(): void {
         this.clear();
         this.append(this.section('Welcome'));
-        this.append(this.card('Hello', 'World'));
+        this.append(this.card('Hello', { content: 'World' }));
     }
 }
 
@@ -34,41 +36,60 @@ this.setLayout('sidebar'); // With sidebar
 this.setLayout('nav-sidebar'); // Both
 
 // Navigation
-this.showNav('App Name', [
-    { text: 'Home', onclick: () => this.showHome() },
-    { text: 'About', onclick: () => this.showAbout() },
-]);
+this.showNav('App Name', {
+    items: [
+        { text: 'Home', onclick: () => this.showHome() },
+        { text: 'About', onclick: () => this.showAbout() },
+    ]
+});
 
 // Sidebar
-this.showSidebar([
-    {
-        title: 'Menu',
-        items: [
-            { text: 'Dashboard', onclick: () => this.showDash() },
-            { text: 'Settings', onclick: () => this.showSettings() },
-        ],
-    },
-]);
+this.showSidebar({
+    sections: [
+        {
+            title: 'Menu',
+            items: [
+                { text: 'Dashboard', onclick: () => this.showDash() },
+                { text: 'Settings', onclick: () => this.showSettings() },
+            ],
+        },
+    ]
+});
 ```
 
 ## Content
 
 ```typescript
 // Section
-this.section('Title', 'Optional description');
+this.section('Title', { content: 'Optional content' });
 
 // Card
-this.card('Title', 'Content');
-this.card('Title', 'Content', 'Subtitle');
+this.card('Title', { content: 'Content' });
+this.card('Title', { content: 'Content', subtitle: 'Subtitle' });
 
 // Grid (2-8 columns)
-this.grid(3, [this.card('One', '1'), this.card('Two', '2'), this.card('Three', '3')]);
+this.grid({
+    columns: 3,
+    items: [
+        this.card('One', { content: '1' }), 
+        this.card('Two', { content: '2' }), 
+        this.card('Three', { content: '3' })
+    ]
+});
 
 // List
-this.list([{ title: 'Item 1' }, { title: 'Item 2', description: 'Details' }, { title: 'Item 3', onclick: () => alert('Clicked') }], 'list-id');
+this.list({
+    items: [
+        { title: 'Item 1' }, 
+        { title: 'Item 2', content: 'Details' }, 
+        { title: 'Item 3', onclick: () => alert('Clicked') }
+    ],
+    id: 'list-id'
+});
 
 // Image (all options)
-this.image('photo.jpg', {
+this.image({
+    src: 'photo.jpg',
     width: 300,
     height: 200,
     fit: 'cover', // cover | contain | fill | none | scale-down
@@ -78,15 +99,15 @@ this.image('photo.jpg', {
 });
 
 // Image grid
-this.imageGrid(
-    3,
-    [
+this.imageGrid({
+    columns: 3,
+    images: [
         { src: 'img1.jpg', alt: 'Photo 1' },
         { src: 'img2.jpg', alt: 'Photo 2' },
         { src: 'img3.jpg', alt: 'Photo 3' },
     ],
-    200
-); // optional fixed height
+    height: 200  // optional fixed height
+});
 ```
 
 ## Forms
@@ -99,75 +120,88 @@ this.input('password', 'pass-id');
 this.textarea('msg-id', 'Enter message...');
 
 // Select
-this.select('country-id', [
-    { value: 'us', text: 'United States' },
-    { value: 'uk', text: 'United Kingdom' },
-]);
+this.select('country-id', {
+    options: [
+        { value: 'us', text: 'United States' },
+        { value: 'uk', text: 'United Kingdom' },
+    ]
+});
 
 // Checkbox & Radio
-this.checkbox('agree-id', 'I agree', false);
-this.radioGroup(
-    'color',
-    [
+this.checkbox('agree-id', { label: 'I agree', checked: false });
+this.radioGroup({
+    name: 'color',
+    options: [
         { value: 'red', text: 'Red' },
         { value: 'blue', text: 'Blue' },
     ],
-    'red'
-);
+    selected: 'red'
+});
 
 // Switch
-this.switch('notifications-id', true, 'Enable notifications');
+this.switch('notifications-id', { checked: true, label: 'Enable notifications' });
 
 // Form group (label + input + help)
-this.formGroup('Email', this.input('email', 'email-id', 'user@example.com'), 'We never share your email');
+this.formGroup({
+    label: 'Email',
+    input: this.input('email-id', { type: 'email', placeholder: 'user@example.com' }),
+    help: 'We never share your email'
+});
 ```
 
 ### Form Example
 
 ```typescript
-this.card(
-    'User Form',
-    `
-    ${this.formGroup('Name', this.input('text', 'name', 'John Doe'))}
-    ${this.formGroup('Email', this.input('email', 'email', 'john@example.com'))}
-    ${this.checkbox('newsletter', 'Subscribe to newsletter')}
+this.card('User Form', {
+    content: `
+    ${this.formGroup({
+        label: 'Name',
+        input: this.input('name', { type: 'text', placeholder: 'John Doe' })
+    })}
+    ${this.formGroup({
+        label: 'Email',
+        input: this.input('email', { type: 'email', placeholder: 'john@example.com' })
+    })}
+    ${this.checkbox('newsletter', { label: 'Subscribe to newsletter' })}
     <div class="mt-md">
-        ${this.button('Submit', () => this.handleSubmit(), 'primary')}
-        ${this.button('Cancel', () => this.closeModal())}
+        ${this.button('Submit', { onclick: () => this.handleSubmit(), variant: 'primary' })}
+        ${this.button('Cancel', { onclick: () => this.closeModal() })}
     </div>
 `
-);
+});
 ```
 
 ## Components
 
 ```typescript
 // Buttons
-this.button('Click me', () => alert('Hi!'));
-this.button('Save', () => this.save(), 'primary');
-this.button('Delete', () => this.delete(), 'danger');
+this.button('Click me', { onclick: () => alert('Hi!') });
+this.button('Save', { onclick: () => this.save(), variant: 'primary' });
+this.button('Delete', { onclick: () => this.delete(), variant: 'danger' });
 
 // Button group
-this.buttonGroup([
-    { text: 'Yes', onclick: () => this.yes() },
-    { text: 'No', onclick: () => this.no() },
-]);
+this.buttonGroup({
+    buttons: [
+        { text: 'Yes', onclick: () => this.yes() },
+        { text: 'No', onclick: () => this.no() },
+    ]
+});
 
 // Badges
 this.badge('New');
-this.badge('Active', 'success');
-this.badge('5 items', 'primary');
+this.badge('Active', { variant: 'success' });
+this.badge('5 items', { variant: 'primary' });
 
 // Alerts
 this.alert('Info message');
-this.alert('Success!', 'success');
-this.alert('Warning!', 'warning');
-this.alert('Error!', 'danger');
+this.alert('Success!', { type: 'success' });
+this.alert('Warning!', { type: 'warning' });
+this.alert('Error!', { type: 'danger' });
 
 // Progress
 this.progress(75); // 75%
-this.progress(30, 100, 'prog-id'); // 30 of 100 with id
-this.progress(50, 100, 'prog-id2', true); // with text indicator
+this.progress(30, { max: 100, id: 'prog-id' }); // 30 of 100 with id
+this.progress(50, { max: 100, id: 'prog-id2', showText: true }); // with text indicator
 this.updateProgress('prog-id', 50); // Update to 50
 this.updateProgress('prog-id', 60, 200); // Update to 60 of 200
 
@@ -179,14 +213,14 @@ this.spinner();
 
 ```typescript
 // Create table
-this.table(
-    ['Name', 'Email', 'Status'],
-    [
-        ['John', 'john@example.com', this.badge('Active', 'success')],
-        ['Jane', 'jane@example.com', this.badge('Pending', 'warning')],
+this.table({
+    headers: ['Name', 'Email', 'Status'],
+    rows: [
+        ['John', 'john@example.com', this.badge('Active', { variant: 'success' })],
+        ['Jane', 'jane@example.com', this.badge('Pending', { variant: 'warning' })],
     ],
-    'users-table'
-);
+    id: 'users-table'
+});
 
 // Manipulate table
 this.appendTableRow('users-table', ['Bob', 'bob@example.com', 'New']);
@@ -201,10 +235,13 @@ const rowCount = this.getTableLength('users-table'); // Get row count
 ```typescript
 // Create list
 const listId = 'my-list';
-this.append(this.list([{ title: 'First item' }, { title: 'Second item' }], listId));
+this.append(this.list({
+    items: [{ title: 'First item' }, { title: 'Second item' }],
+    id: listId
+}));
 
 // Manipulate list
-this.appendListItem(listId, { title: 'New item', description: 'Added' });
+this.appendListItem(listId, { title: 'New item', content: 'Added' });
 this.prependListItem(listId, { title: 'First!', onclick: () => alert('Hi') });
 this.updateListItem(listId, 0, { title: 'Updated item' });
 this.removeListItem(listId, 1);
@@ -214,32 +251,38 @@ const itemCount = this.getListLength(listId); // Get item count
 ## Tabs
 
 ```typescript
-this.tabs([
-    { label: 'Info', content: '<p>Information here</p>' },
-    { label: 'Settings', content: this.card('Options', '...') },
-    { label: 'About', content: '<p>Version 1.0</p>' },
-]);
+this.tabs({
+    items: [
+        { label: 'Info', content: '<p>Information here</p>' },
+        { label: 'Settings', content: this.card('Options', { content: '...' }) },
+        { label: 'About', content: '<p>Version 1.0</p>' },
+    ]
+});
 ```
 
 ## Modal & Toast
 
 ```typescript
 // Modal
-this.modal('Title', '<p>Content</p>');
+this.modal({ title: 'Title', content: '<p>Content</p>' });
 
 // Modal with buttons
-this.modal('Confirm', 'Are you sure?', [
-    { text: 'Cancel', onclick: () => {} },
-    { text: 'OK', onclick: () => this.confirm(), variant: 'primary' },
-]);
+this.modal({
+    title: 'Confirm',
+    content: 'Are you sure?',
+    buttons: [
+        { text: 'Cancel', onclick: () => {} },
+        { text: 'OK', onclick: () => this.confirm(), variant: 'primary' },
+    ]
+});
 
 // Close modal
 this.closeModal();
 
 // Toast notifications
-this.toast('Saved!', 'success');
-this.toast('Error occurred', 'danger');
-this.toast('Loading...', 'info', 5000); // 5 seconds
+this.toast('Saved!', { type: 'success' });
+this.toast('Error occurred', { type: 'danger' });
+this.toast('Loading...', { type: 'info', duration: 5000 }); // 5 seconds
 ```
 
 ## Navigation
@@ -387,26 +430,36 @@ this.setTheme('dark'); // Set specific theme
 ```typescript
 // Typography
 this.heading('Title', 2); // <h2>
-this.heading('Section', 3, 'section-id'); // with id
+this.heading('Section', 3, { id: 'section-id' }); // with id
 this.text('Paragraph text');
-this.text(
-    'Styled text',
-    {
-        // with styling
-        size: '1.2rem',
-        color: 'var(--primary)',
-        weight: 'bold',
-        align: 'center',
-    },
-    'text-id'
-); // with id
+this.text('Styled text', {
+    size: '1.2rem',
+    color: 'var(--primary)',
+    weight: 'bold',
+    align: 'center',
+    id: 'text-id'
+});
 this.divider(); // Horizontal line
 this.spacer('lg'); // Vertical space
 
 // Layout helpers
-this.flex(['Item 1', 'Item 2'], 'md', 'row');
+this.flex({
+    items: ['Item 1', 'Item 2'],
+    gap: 'md',
+    direction: 'row'
+});
 
 // Special cards
-this.statCard('Users', '1,234', 'Total', 'primary');
-this.productCard('img.jpg', 'Product', 'Description', '$99');
+this.statCard('Users', {
+    value: '1,234',
+    subtitle: 'Total',
+    color: 'primary',
+    content: '' // required by interface
+});
+this.productCard({
+    image: 'img.jpg',
+    title: 'Product',
+    content: 'Description',
+    price: '$99'
+});
 ```

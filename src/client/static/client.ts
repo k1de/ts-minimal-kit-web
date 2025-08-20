@@ -1,5 +1,50 @@
 // client.ts - Minimal UI skeleton framework (static file)
 
+/**
+ * ========================================
+ * MINIMAL UI FRAMEWORK
+ * ========================================
+ *
+ * A lightweight, TypeScript-based UI framework for building web applications
+ * with minimal dependencies and maximum simplicity.
+ *
+ * ## Core Principles:
+ * - Single source of truth for UI components
+ * - Consistent API across all methods
+ * - Automatic event binding with delayed attachment
+ * - Built-in theme support (dark/light)
+ * - Zero external dependencies
+ *
+ * ## API Convention:
+ * All methods follow a consistent pattern:
+ * - First parameter: main content or data (required)
+ * - Second parameter: options object (optional)
+ * - All HTML-generating methods return strings
+ * - All options objects extend BaseOptions with id and className
+ *
+ * ## Usage Example:
+ * ```typescript
+ * class MyApp extends ClientApp {
+ *     override start() {
+ *         this.setLayout('nav-sidebar');
+ *         this.showNav('My App', {
+ *             items: [{ text: 'Home', href: '#' }]
+ *         });
+ *
+ *         const content = this.card('Title', {
+ *             content: 'Card content',
+ *             id: 'my-card'
+ *         });
+ *         this.append(content);
+ *     }
+ * }
+ * ```
+ */
+
+// ========================================
+// TYPE DEFINITIONS
+// ========================================
+
 type Layout = 'default' | 'nav' | 'sidebar' | 'nav-sidebar';
 type ButtonVariant = 'default' | 'primary' | 'success' | 'warning' | 'danger';
 type NotificationType = 'info' | 'success' | 'warning' | 'danger' | 'error';
@@ -7,51 +52,257 @@ type AlertType = NotificationType;
 type ToastType = NotificationType;
 type GridColumns = 2 | 3 | 4 | 5 | 6 | 7 | 8;
 type ThemeVariant = 'dark' | 'light';
+type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
+type SpacerSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+type FlexDirection = 'row' | 'col';
+type GapSize = 'sm' | 'md' | 'lg';
 
+// ========================================
+// INTERFACES
+// ========================================
+
+/** Base options for all UI components */
+interface BaseOptions {
+    id?: string;
+    className?: string;
+}
+
+/** Navigation item configuration */
 interface NavItem {
     text: string;
     href?: string;
     onclick?: () => void;
 }
 
-interface SidebarSection {
-    title?: string;
-    items: Array<{ text: string; onclick?: () => void }>;
+/** Navigation options */
+interface NavOptions extends BaseOptions {
+    items: NavItem[];
 }
 
+/** Sidebar section configuration */
+interface SidebarSection {
+    title?: string;
+    items: NavItem[];
+}
+
+/** Sidebar options */
+interface SidebarOptions extends BaseOptions {
+    sections: SidebarSection[];
+}
+
+/** List item configuration */
 interface ListItem {
     title: string;
-    description?: string;
+    content?: string;
     onclick?: () => void;
 }
 
+/** List options */
+interface ListOptions extends BaseOptions {
+    items: ListItem[];
+}
+
+/** Select option configuration */
 interface SelectOption {
     value: string;
     text: string;
 }
 
+/** Select options */
+interface SelectOptions extends BaseOptions {
+    options: SelectOption[];
+    selected?: string;
+}
+
+/** Tab item configuration */
 interface TabItem {
     label: string;
     content: string;
 }
 
+/** Tabs options */
+interface TabsOptions extends BaseOptions {
+    items: TabItem[];
+}
+
+/** Modal button configuration */
 interface ModalButton {
     text: string;
     onclick: () => void;
-    variant?: string;
+    variant?: ButtonVariant;
 }
 
-interface ImageOptions {
+/** Modal options */
+interface ModalOptions {
+    title: string;
+    content: string;
+    buttons?: ModalButton[];
+}
+
+/** Toast options */
+interface ToastOptions {
+    type?: ToastType;
+    duration?: number;
+}
+
+/** Image options */
+interface ImageOptions extends BaseOptions {
+    src: string;
     width?: number | string;
     height?: number | string;
     fit?: 'cover' | 'contain' | 'fill' | 'none' | 'scale-down';
     alt?: string;
-    className?: string;
     loading?: 'lazy' | 'eager';
 }
 
+/** Card options */
+interface CardOptions extends BaseOptions {
+    content?: string;
+    subtitle?: string;
+}
+
+/** Section options */
+interface SectionOptions extends BaseOptions {
+    content?: string;
+}
+
+/** Button options */
+interface ButtonOptions extends BaseOptions {
+    onclick?: () => void;
+    variant?: ButtonVariant;
+}
+
+/** Button group options */
+interface ButtonGroupOptions extends BaseOptions {
+    buttons: Array<{ text: string; onclick?: () => void; variant?: ButtonVariant }>;
+}
+
+/** Badge options */
+interface BadgeOptions extends BaseOptions {
+    variant?: ButtonVariant;
+}
+
+/** Alert options */
+interface AlertOptions extends BaseOptions {
+    type?: AlertType;
+}
+
+/** Table options */
+interface TableOptions extends BaseOptions {
+    headers: string[];
+    rows: string[][];
+}
+
+/** Progress options */
+interface ProgressOptions extends BaseOptions {
+    max?: number;
+    showText?: boolean;
+}
+
+/** Form input options */
+interface InputOptions extends BaseOptions {
+    type?: string;
+    placeholder?: string;
+    value?: string;
+}
+
+/** Textarea options */
+interface TextareaOptions extends BaseOptions {
+    placeholder?: string;
+    value?: string;
+    rows?: number;
+}
+
+/** Checkbox options */
+interface CheckboxOptions extends BaseOptions {
+    label: string;
+    checked?: boolean;
+}
+
+/** Radio group options */
+interface RadioGroupOptions extends BaseOptions {
+    name: string;
+    options: SelectOption[];
+    selected?: string;
+}
+
+/** Switch options */
+interface SwitchOptions extends BaseOptions {
+    checked?: boolean;
+    label?: string;
+}
+
+/** Form group options */
+interface FormGroupOptions extends BaseOptions {
+    label: string;
+    input: string;
+    help?: string;
+}
+
+/** Grid options */
+interface GridOptions extends BaseOptions {
+    columns?: GridColumns;
+    items: string[];
+}
+
+/** Image grid options */
+interface ImageGridOptions extends BaseOptions {
+    columns?: GridColumns;
+    images: Array<{ src: string; alt?: string }>;
+    height?: number;
+}
+
+/** Text options */
+interface TextOptions extends BaseOptions {
+    size?: string;
+    color?: string;
+    weight?: string;
+    align?: string;
+}
+
+/** Div options */
+interface DivOptions extends BaseOptions {
+    style?: string;
+}
+
+/** Link options */
+interface LinkOptions extends BaseOptions {
+    href: string;
+    target?: string;
+    onclick?: () => void;
+}
+
+/** Flex container options */
+interface FlexOptions extends BaseOptions {
+    items: string[];
+    gap?: GapSize;
+    direction?: FlexDirection;
+}
+
+/** Stat card options */
+interface StatCardOptions extends CardOptions {
+    value: string | number;
+    color?: string;
+}
+
+/** Product card options */
+interface ProductCardOptions extends BaseOptions {
+    image: string;
+    title: string;
+    content: string;
+    price: string;
+    priceVariant?: ButtonVariant;
+}
+
+// ========================================
+// MAIN CLASS
+// ========================================
+
 /**
  * Minimal App Skeleton
+ *
+ * Base class for building web applications with a consistent UI framework.
+ * Extend this class and override the start() method to build your app.
  */
 class ClientApp {
     private container: HTMLElement;
@@ -78,7 +329,7 @@ class ClientApp {
      * Start the app - override this in your app
      */
     protected start(): void {
-        // Some logic
+        // Override this method in your app
         console.log('Override start() method to begin.');
     }
 
@@ -148,8 +399,8 @@ class ClientApp {
      */
     private addDelayedEventListener(idOrSelector: string, handler: () => void, event: string = 'click'): void {
         setTimeout(() => {
-            const element = idOrSelector.includes('#') || idOrSelector.includes('.') || idOrSelector.includes('[') 
-                ? document.querySelector(idOrSelector) 
+            const element = /[.#[]/.test(idOrSelector)
+                ? document.querySelector(idOrSelector)
                 : document.getElementById(idOrSelector);
             if (element) {
                 element.addEventListener(event, (e) => {
@@ -165,28 +416,62 @@ class ClientApp {
     }
 
     /**
+     * Build HTML attributes from any object
+     */
+    private buildAttrs(attrs?: Record<string, any> | BaseOptions): string {
+        if (!attrs) return '';
+
+        // Handle BaseOptions case (convert className to class)
+        if ('className' in attrs && !('class' in attrs)) {
+            attrs = { ...attrs, class: attrs.className };
+            delete (attrs as any).className;
+        }
+
+        const result = Object.entries(attrs)
+            .filter(([key, value]) => value !== undefined && value !== null && value !== '' && key !== 'className')
+            .map(([key, value]) => {
+                if (value === true) return key; // for checked, selected, disabled etc.
+                if (value === false) return ''; // skip false attributes
+                return `${key}="${value}"`;
+            })
+            .filter(Boolean)
+            .join(' ');
+
+        return result ? ' ' + result : '';
+    }
+
+    // ========================================
+    // LAYOUT METHODS
+    // ========================================
+
+    /**
      * Set app layout mode
+     * @param layout - Layout type: 'default', 'nav', 'sidebar', or 'nav-sidebar'
      */
     setLayout(layout: Layout): void {
         document.getElementById('app')?.setAttribute('data-layout', layout);
     }
 
     /**
-     * Show navigation
+     * Show navigation bar
+     * @param brand - Brand text or logo
+     * @param options - Navigation options including items
      */
-    showNav(brand: string, items: NavItem[]): void {
+    showNav(brand: string, options?: NavOptions): void {
         const nav = document.getElementById('nav');
         if (!nav) return;
 
-        const navItems = items
-            .map((item, i) => {
-                const id = `nav-item-${i}`;
-                if (item.onclick) {
-                    this.addDelayedEventListener(id, item.onclick);
-                }
-                return `<li><a href="${item.href || '#'}" id="${id}" class="nav-item">${item.text}</a></li>`;
-            })
-            .join('');
+        const navItems: string = !options
+            ? ''
+            : options.items
+                .map((item, i) => {
+                    const id = options.id ? `${options.id}-item-${i}` : `nav-item-${i}`;
+                    if (item.onclick) {
+                        this.addDelayedEventListener(id, item.onclick);
+                    }
+                    return `<li><a href="${item.href || '#'}" id="${id}" class="nav-item">${item.text}</a></li>`;
+                })
+                .join('');
 
         nav.innerHTML = `
             <div class="nav-brand">${brand}</div>
@@ -197,20 +482,21 @@ class ClientApp {
 
     /**
      * Show sidebar
+     * @param options - Sidebar options including sections
      */
-    showSidebar(sections: SidebarSection[]): void {
+    showSidebar(options: SidebarOptions): void {
         const sidebar = document.getElementById('sidebar');
         if (!sidebar) return;
 
-        sidebar.innerHTML = sections
-            .map((section) => {
+        sidebar.innerHTML = options.sections
+            .map((section, sectionIndex) => {
                 const items = section.items
                     .map((item, i) => {
-                        const id = `sidebar-${sections.indexOf(section)}-${i}`;
+                        const id = options.id ? `${options.id}-${sectionIndex}-${i}` : `sidebar-${sectionIndex}-${i}`;
                         if (item.onclick) {
                             this.addDelayedEventListener(id, item.onclick);
                         }
-                        return `<li><a href="javascript:void(0)" id="${id}" class="sidebar-item">${item.text}</a></li>`;
+                        return `<li><a href="${item.href || '#'}" id="${id}" class="sidebar-item">${item.text}</a></li>`;
                     })
                     .join('');
 
@@ -226,6 +512,10 @@ class ClientApp {
         sidebar.hidden = false;
     }
 
+    // ========================================
+    // CONTENT METHODS
+    // ========================================
+
     /**
      * Clear main content
      */
@@ -234,7 +524,8 @@ class ClientApp {
     }
 
     /**
-     * Add HTML content
+     * Add HTML content (replaces existing)
+     * @param content - HTML content to set
      */
     html(content: string): void {
         this.container.innerHTML = content;
@@ -242,20 +533,111 @@ class ClientApp {
 
     /**
      * Append HTML content
+     * @param content - HTML content to append
      */
     append(content: string): void {
         this.container.insertAdjacentHTML('beforeend', content);
     }
 
+    // ========================================
+    // BASIC HTML ELEMENTS
+    // ========================================
+
+    /**
+     * Create a div element
+     * @param content - Content of the div
+     * @param options - Div options
+     */
+    div(content: string, options?: DivOptions): string {
+        const attrs = this.buildAttrs(options);
+        return `<div${attrs}>${content}</div>`;
+    }
+
+    /**
+     * Create a span element
+     * @param content - Content of the span
+     * @param options - Span options
+     */
+    span(content: string, options?: BaseOptions): string {
+        return `<span${this.buildAttrs(options)}>${content}</span>`;
+    }
+
+    /**
+     * Create a link element
+     * @param text - Link text
+     * @param options - Link options including href
+     */
+    link(text: string, options: LinkOptions): string {
+        const { href, target, onclick, ...baseOptions } = options;
+
+        if (onclick) {
+            const id = options.id || this.generateId('link');
+            this.addDelayedEventListener(id, onclick);
+            const attrs = this.buildAttrs({
+                ...baseOptions,
+                href,
+                id,
+                target
+            });
+            return `<a${attrs}>${text}</a>`;
+        }
+
+        const attrs = this.buildAttrs({
+            ...baseOptions,
+            href,
+            target
+        });
+        return `<a${attrs}>${text}</a>`;
+    }
+
+    /**
+     * Create a paragraph element
+     * @param content - Paragraph content
+     * @param options - Paragraph options
+     */
+    paragraph(content: string, options?: BaseOptions): string {
+        return `<p${this.buildAttrs(options)}>${content}</p>`;
+    }
+
+    /**
+     * Create an unordered list
+     * @param items - List items
+     * @param options - List options
+     */
+    ul(items: string[], options?: BaseOptions): string {
+        const listItems = items.map((item) => `<li>${item}</li>`).join('');
+        return `<ul${this.buildAttrs(options)}>${listItems}</ul>`;
+    }
+
+    /**
+     * Create an ordered list
+     * @param items - List items
+     * @param options - List options
+     */
+    ol(items: string[], options?: BaseOptions): string {
+        const listItems = items.map((item) => `<li>${item}</li>`).join('');
+        return `<ol${this.buildAttrs(options)}>${listItems}</ol>`;
+    }
+
+    // ========================================
+    // COMPONENT METHODS
+    // ========================================
+
     /**
      * Create a section
+     * @param title - Section title
+     * @param options - Section options
      */
-    section(title: string, description?: string): string {
+    section(title: string, options?: SectionOptions): string {
+        const attrs = this.buildAttrs({
+            ...options,
+            class: options?.className ? `section ${options.className}` : 'section'
+        });
         return `
-            <div class="section">
+            <div${attrs}>
                 <div class="section-header">
                     <h1 class="section-title">${title}</h1>
-                    ${description ? `<p class="section-description">${description}</p>` : ''}
+                    ${options?.content ? `<p class="section-content">${options.content}</p>` : ''}
                 </div>
             </div>
         `;
@@ -263,8 +645,15 @@ class ClientApp {
 
     /**
      * Create a card
+     * @param title - Card title
+     * @param options - Card options including content
      */
-    card(title: string, content: string, subtitle?: string): string {
+    card(title: string, options?: CardOptions): string {
+        const { subtitle, content = '', ...baseOptions } = options || {};
+        const attrs = this.buildAttrs({
+            ...baseOptions,
+            class: baseOptions.className ? `card ${baseOptions.className}` : 'card'
+        });
         const header = title
             ? `
             <div class="card-header">
@@ -275,7 +664,7 @@ class ClientApp {
             : '';
 
         return `
-            <div class="card">
+            <div${attrs}>
                 ${header}
                 <div class="card-body">${content}</div>
             </div>
@@ -283,43 +672,49 @@ class ClientApp {
     }
 
     /**
-     * Create an image with size options
+     * Create an image element
+     * @param options - Image options including src
      */
-    image(src: string, options: ImageOptions = {}): string {
-        const { width, height, fit = 'cover', alt = '', className = '', loading = 'lazy' } = options;
+    image(options: ImageOptions): string {
+        const { src, width, height, fit = 'cover', alt = '', loading = 'lazy', ...baseOptions } = options;
 
         const styleAttrs: string[] = [];
-
         if (width) {
             const w = typeof width === 'number' ? `${width}px` : width;
             styleAttrs.push(`width: ${w}`);
         }
-
         if (height) {
             const h = typeof height === 'number' ? `${height}px` : height;
             styleAttrs.push(`height: ${h}`);
         }
-
         if (fit) {
             styleAttrs.push(`object-fit: ${fit}`);
         }
 
-        const style = styleAttrs.length > 0 ? `style="${styleAttrs.join('; ')}"` : '';
+        const attrs = this.buildAttrs({
+            ...baseOptions,
+            src,
+            alt,
+            loading,
+            style: styleAttrs.length > 0 ? styleAttrs.join('; ') : undefined
+        });
 
-        return `<img src="${src}" alt="${alt}" class="${className}" loading="${loading}" ${style}>`;
+        return `<img${attrs}>`;
     }
 
     /**
-     * Create an image gallery
+     * Create an image gallery grid
+     * @param options - Image grid options
      */
-    imageGrid(columns: GridColumns = 3, images: Array<{ src: string; alt?: string }>, height?: number): string {
-        // Calculate responsive height based on columns
+    imageGrid(options: ImageGridOptions): string {
+        const { columns = 3, images, height, ...baseOptions } = options;
         const finalHeight = height ?? Math.floor(320 / (columns / 2));
 
         const items = images.map(
             (img) =>
                 `<div style="overflow: hidden; border-radius: var(--radius);">
-                ${this.image(img.src, {
+                ${this.image({
+                    src: img.src,
                     alt: img.alt || '',
                     width: '100%',
                     height: `${finalHeight}px`,
@@ -328,14 +723,16 @@ class ClientApp {
             </div>`
         );
 
-        return this.grid(columns, items);
+        return this.grid({ items, columns, ...baseOptions });
     }
 
     /**
-     * Create a list
+     * Create an interactive list
+     * @param options - List options including items
      */
-    list(items: ListItem[], id?: string): string {
-        const listId = id || this.generateId('list');
+    list(options: ListOptions): string {
+        const { items, ...baseOptions } = options;
+        const listId = options.id || this.generateId('list');
 
         // Bind click handlers for items with onclick
         items.forEach((item, index) => {
@@ -349,13 +746,18 @@ class ClientApp {
                 (item) => `
             <li class="list-item">
                 <div class="list-item-title">${item.title}</div>
-                ${item.description ? `<div class="list-item-description">${item.description}</div>` : ''}
+                ${item.content ? `<div class="list-item-content">${item.content}</div>` : ''}
             </li>
         `
             )
             .join('');
 
-        return `<ul class="list" id="${listId}">${listItems}</ul>`;
+        const attrs = this.buildAttrs({
+            ...baseOptions,
+            class: baseOptions.className ? `list ${baseOptions.className}` : 'list',
+            id: listId
+        });
+        return `<ul${attrs}>${listItems}</ul>`;
     }
 
     /**
@@ -369,7 +771,7 @@ class ClientApp {
         li.className = 'list-item';
         li.innerHTML = `
             <div class="list-item-title">${item.title}</div>
-            ${item.description ? `<div class="list-item-description">${item.description}</div>` : ''}
+            ${item.content ? `<div class="list-item-content">${item.content}</div>` : ''}
         `;
 
         if (item.onclick) {
@@ -412,7 +814,7 @@ class ClientApp {
             const listItem = items[index] as HTMLElement;
             listItem.innerHTML = `
                 <div class="list-item-title">${item.title}</div>
-                ${item.description ? `<div class="list-item-description">${item.description}</div>` : ''}
+                ${item.content ? `<div class="list-item-content">${item.content}</div>` : ''}
             `;
 
             // Update onclick handler if present
@@ -438,18 +840,35 @@ class ClientApp {
     }
 
     /**
-     * Create a grid
+     * Create a grid layout
+     * @param options - Grid options
      */
-    grid(columns: GridColumns = 3, items: string[]): string {
-        return `<div class="grid grid-${columns}">${items.join('')}</div>`;
+    grid(options: GridOptions): string {
+        const { columns = 3, items, ...baseOptions } = options;
+        const className = `grid grid-${columns}`;
+        const attrs = this.buildAttrs({
+            ...baseOptions,
+            class: baseOptions.className ? `${className} ${baseOptions.className}` : className
+        });
+        return `<div${attrs}>${items.join('')}</div>`;
     }
 
+    // ========================================
+    // FORM METHODS
+    // ========================================
+
     /**
-     * Create form group
+     * Create a form group
+     * @param options - Form group options
      */
-    formGroup(label: string, input: string, help?: string): string {
+    formGroup(options: FormGroupOptions): string {
+        const { label, input, help, ...baseOptions } = options;
+        const attrs = this.buildAttrs({
+            ...baseOptions,
+            class: baseOptions.className ? `form-group ${baseOptions.className}` : 'form-group'
+        });
         return `
-            <div class="form-group">
+            <div${attrs}>
                 <label class="label">${label}</label>
                 ${input}
                 ${help ? `<div class="help-text">${help}</div>` : ''}
@@ -458,148 +877,259 @@ class ClientApp {
     }
 
     /**
-     * Create input
+     * Create an input field
+     * @param id - Input ID
+     * @param options - Input options
      */
-    input(type: string, id: string, placeholder?: string, value?: string): string {
-        const attrs = [
-            `type="${type}"`,
-            `id="${id}"`,
-            'class="input"',
-            placeholder ? `placeholder="${placeholder}"` : '',
-            value ? `value="${value}"` : '',
-        ]
-            .filter(Boolean)
-            .join(' ');
+    input(id: string, options?: InputOptions): string {
+        const { type = 'text', placeholder, value, ...baseOptions } = options || {};
 
-        return `<input ${attrs}>`;
+        const attrs = this.buildAttrs({
+            ...baseOptions,
+            type,
+            id,
+            class: baseOptions.className || 'input',
+            placeholder,
+            value
+        });
+
+        return `<input${attrs}>`;
     }
 
     /**
-     * Create textarea
+     * Create a textarea
+     * @param id - Textarea ID
+     * @param options - Textarea options
      */
-    textarea(id: string, placeholder?: string, value?: string): string {
-        const attrs = [`id="${id}"`, 'class="textarea"', placeholder ? `placeholder="${placeholder}"` : '']
-            .filter(Boolean)
-            .join(' ');
+    textarea(id: string, options?: TextareaOptions): string {
+        const { placeholder, value, rows, ...baseOptions } = options || {};
+        const attrs = this.buildAttrs({
+            ...baseOptions,
+            id,
+            class: baseOptions.className || 'textarea',
+            placeholder,
+            rows
+        });
 
-        return `<textarea ${attrs}>${value || ''}</textarea>`;
+        return `<textarea${attrs}>${value || ''}</textarea>`;
     }
 
     /**
-     * Create select
+     * Create a select dropdown
+     * @param id - Select ID
+     * @param options - Select options
      */
-    select(id: string, options: SelectOption[], selected?: string): string {
-        const optionElements = options
+    select(id: string, options: SelectOptions): string {
+        const { options: selectOptions, selected, ...baseOptions } = options;
+
+        const attrs = this.buildAttrs({
+            ...baseOptions,
+            id,
+            class: baseOptions.className || 'select'
+        });
+
+        const optionElements = selectOptions
             .map((opt) => {
-                const checked = selected === opt.value ? 'selected' : '';
-                return `<option value="${opt.value}" ${checked}>${opt.text}</option>`;
+                const optAttrs = this.buildAttrs({
+                    value: opt.value,
+                    selected: selected === opt.value
+                });
+                return `<option${optAttrs}>${opt.text}</option>`;
             })
             .join('');
 
-        return `<select id="${id}" class="select">${optionElements}</select>`;
+        return `<select${attrs}>${optionElements}</select>`;
     }
 
     /**
-     * Create checkbox
+     * Create a checkbox
+     * @param id - Checkbox ID
+     * @param options - Checkbox options
      */
-    checkbox(id: string, label: string, checked?: boolean): string {
+    checkbox(id: string, options: CheckboxOptions): string {
+        const { label, checked, ...baseOptions } = options;
+        const containerAttrs = this.buildAttrs(baseOptions);
+
+        const inputAttrs = this.buildAttrs({
+            type: 'checkbox',
+            id,
+            checked
+        });
+
         return `
-            <div class="checkbox">
-                <input type="checkbox" id="${id}" ${checked ? 'checked' : ''}>
+            <div class="checkbox"${containerAttrs}>
+                <input${inputAttrs}>
                 <label for="${id}">${label}</label>
             </div>
         `;
     }
 
     /**
-     * Create radio group
+     * Create a radio button group
+     * @param options - Radio group options
      */
-    radioGroup(name: string, options: SelectOption[], selected?: string): string {
-        return options
+    radioGroup(options: RadioGroupOptions): string {
+        const { name, options: radioOptions, selected, ...baseOptions } = options;
+        const containerAttrs = this.buildAttrs(baseOptions);
+
+        const radios = radioOptions
             .map((opt) => {
                 const id = `${name}-${opt.value}`;
-                const checked = selected === opt.value ? 'checked' : '';
+                const inputAttrs = this.buildAttrs({
+                    type: 'radio',
+                    name,
+                    id,
+                    value: opt.value,
+                    checked: selected === opt.value
+                });
                 return `
                 <div class="radio">
-                    <input type="radio" name="${name}" id="${id}" value="${opt.value}" ${checked}>
+                    <input${inputAttrs}>
                     <label for="${id}">${opt.text}</label>
                 </div>
             `;
             })
             .join('');
+
+        return `<div${containerAttrs}>${radios}</div>`;
     }
 
     /**
-     * Create switch
+     * Create a switch/toggle
+     * @param id - Switch ID
+     * @param options - Switch options
      */
-    switch(id: string, checked?: boolean, text?: string): string {
+    switch(id: string, options?: SwitchOptions): string {
+        const { checked, label, ...baseOptions } = options || {};
+        const containerAttrs = this.buildAttrs(baseOptions);
+
+        const inputAttrs = this.buildAttrs({
+            type: 'checkbox',
+            id,
+            checked
+        });
+
         return `
-            <div class="flex items-center gap-md mt-sm">
+            <div class="flex items-center gap-md mt-sm"${containerAttrs}>
                 <label class="switch">
-                    <input type="checkbox" id="${id}" ${checked ? 'checked' : ''}>
+                    <input${inputAttrs}>
                     <span class="switch-slider"></span>
                 </label>
-                ${text ? `<span>${text}</span>` : ''}
+                ${label ? `<span>${label}</span>` : ''}
             </div>
         `;
     }
 
+    // ========================================
+    // BUTTON METHODS
+    // ========================================
+
     /**
-     * Create button
+     * Create a button
+     * @param text - Button text
+     * @param options - Button options
      */
-    button(text: string, onclick?: () => void, variant: ButtonVariant = 'default'): string {
-        const id = this.generateId('btn');
+    button(text: string, options?: ButtonOptions): string {
+        const { onclick, variant = 'default', ...baseOptions } = options || {};
+        const id = baseOptions.id || this.generateId('btn');
 
         if (onclick) {
             this.addDelayedEventListener(id, onclick);
         }
 
         const className = variant === 'default' ? 'btn' : `btn btn-${variant}`;
-        return `<button id="${id}" class="${className}">${text}</button>`;
+        const finalClassName = baseOptions.className ? `${className} ${baseOptions.className}` : className;
+
+        const attrs = this.buildAttrs({
+            id,
+            class: finalClassName
+        });
+
+        return `<button${attrs}>${text}</button>`;
     }
 
     /**
-     * Create button group
+     * Create a button group
+     * @param options - Button group options
      */
-    buttonGroup(buttons: Array<{ text: string; onclick?: () => void }>): string {
+    buttonGroup(options: ButtonGroupOptions): string {
+        const { buttons, ...baseOptions } = options;
+        const containerAttrs = this.buildAttrs({
+            ...baseOptions,
+            class: 'btn-group'
+        });
+
         const groupButtons = buttons
             .map((btn) => {
                 const id = this.generateId('btn');
                 if (btn.onclick) {
                     this.addDelayedEventListener(id, btn.onclick);
                 }
-                return `<button id="${id}" class="btn">${btn.text}</button>`;
+                const className = btn.variant ? `btn btn-${btn.variant}` : 'btn';
+                const btnAttrs = this.buildAttrs({
+                    id,
+                    class: className
+                });
+                return `<button${btnAttrs}>${btn.text}</button>`;
             })
             .join('');
 
-        return `<div class="btn-group">${groupButtons}</div>`;
+        return `<div${containerAttrs}>${groupButtons}</div>`;
     }
 
     /**
-     * Create badge
+     * Create a badge
+     * @param text - Badge text
+     * @param options - Badge options
      */
-    badge(text: string, variant: ButtonVariant = 'default'): string {
+    badge(text: string, options?: BadgeOptions): string {
+        const { variant = 'default', ...baseOptions } = options || {};
         const className = variant === 'default' ? 'badge' : `badge badge-${variant}`;
-        return `<span class="${className}">${text}</span>`;
+
+        const finalClassName = baseOptions.className ? `${className} ${baseOptions.className}` : className;
+
+        const attrs = this.buildAttrs({ ...baseOptions, className: finalClassName });
+        return `<span${attrs}>${text}</span>`;
+    }
+
+    // ========================================
+    // FEEDBACK METHODS
+    // ========================================
+
+    /**
+     * Create an alert message
+     * @param message - Alert message
+     * @param options - Alert options
+     */
+    alert(message: string, options?: AlertOptions): string {
+        const { type = 'info', ...baseOptions } = options || {};
+        const className = `alert alert-${type}`;
+
+        const finalClassName = baseOptions.className ? `${className} ${baseOptions.className}` : className;
+
+        const attrs = this.buildAttrs({ ...baseOptions, className: finalClassName });
+        return `<div${attrs}>${message}</div>`;
     }
 
     /**
-     * Create alert
+     * Create a table
+     * @param options - Table options
      */
-    alert(message: string, type: AlertType = 'info'): string {
-        return `<div class="alert alert-${type}">${message}</div>`;
-    }
+    table(options: TableOptions): string {
+        const { headers, rows, ...baseOptions } = options;
+        const tableId = baseOptions.id || this.generateId('table');
 
-    /**
-     * Create table
-     */
-    table(headers: string[], rows: string[][], id?: string): string {
-        const tableId = id || this.generateId('table');
         const headerRow = headers.map((h) => `<th>${h}</th>`).join('');
         const bodyRows = rows.map((row) => `<tr>${row.map((cell) => `<td>${cell}</td>`).join('')}</tr>`).join('');
 
+        const attrs = this.buildAttrs({
+            ...baseOptions,
+            class: baseOptions.className ? `table ${baseOptions.className}` : 'table',
+            id: tableId
+        });
+
         return `
-            <table class="table" id="${tableId}">
+            <table${attrs}>
                 <thead><tr>${headerRow}</tr></thead>
                 <tbody id="${tableId}-body">${bodyRows}</tbody>
             </table>
@@ -664,9 +1194,11 @@ class ClientApp {
 
     /**
      * Create tabs
+     * @param options - Tabs options
      */
-    tabs(items: TabItem[]): string {
-        const id = this.generateId('tabs');
+    tabs(options: TabsOptions): string {
+        const { items, ...baseOptions } = options;
+        const id = baseOptions.id || this.generateId('tabs');
 
         setTimeout(() => {
             const container = document.getElementById(id);
@@ -685,15 +1217,28 @@ class ClientApp {
         }, 0);
 
         const tabElements = items
-            .map((item, i) => `<a href="#" class="tab ${i === 0 ? 'active' : ''}">${item.label}</a>`)
+            .map((item, i) => {
+                const tabAttrs = this.buildAttrs({
+                    href: '#',
+                    class: i === 0 ? 'tab active' : 'tab'
+                });
+                return `<a${tabAttrs}>${item.label}</a>`;
+            })
             .join('');
 
         const panels = items
-            .map((item, i) => `<div class="tab-panel ${i !== 0 ? 'hidden' : ''}">${item.content}</div>`)
+            .map((item, i) => {
+                const panelAttrs = this.buildAttrs({
+                    class: i !== 0 ? 'tab-panel hidden' : 'tab-panel'
+                });
+                return `<div${panelAttrs}>${item.content}</div>`;
+            })
             .join('');
 
+        const attrs = this.buildAttrs({ ...baseOptions, id });
+
         return `
-            <div id="${id}">
+            <div${attrs}>
                 <div class="tabs">${tabElements}</div>
                 <div class="tab-content">${panels}</div>
             </div>
@@ -701,19 +1246,36 @@ class ClientApp {
     }
 
     /**
-     * Create progress bar with optional text indicator
+     * Create a progress bar
+     * @param value - Current value
+     * @param options - Progress options
      */
-    progress(value: number, max: number = 100, id?: string, showText: boolean = false): string {
+    progress(value: number, options?: ProgressOptions): string {
+        const { max = 100, showText = false, ...baseOptions } = options || {};
         const percentage = Math.min(100, Math.max(0, (value / max) * 100));
-        const progressId = id || this.generateId('progress');
+        const progressId = baseOptions.id || this.generateId('progress');
         const barId = `${progressId}-bar`;
         const textId = `${progressId}-text`;
 
         const textIndicator = showText ? `<span class="progress-text" id="${textId}">${Math.round(percentage)}%</span>` : '';
 
+        const attrs = this.buildAttrs({
+            ...baseOptions,
+            class: 'progress',
+            id: progressId,
+            'data-max': max,
+            'data-show-text': showText
+        });
+
+        const barAttrs = this.buildAttrs({
+            class: 'progress-bar',
+            id: barId,
+            style: `width: ${percentage}%`
+        });
+
         return `
-            <div class="progress" id="${progressId}" data-max="${max}" data-show-text="${showText}">
-                <div class="progress-bar" id="${barId}" style="width: ${percentage}%">
+            <div${attrs}>
+                <div${barAttrs}>
                     ${textIndicator}
                 </div>
             </div>
@@ -750,18 +1312,23 @@ class ClientApp {
     }
 
     /**
-     * Create spinner
+     * Create a spinner
+     * @param options - Spinner options
      */
-    spinner(): string {
-        return '<div class="spinner"></div>';
+    spinner(options?: BaseOptions): string {
+        const attrs = this.buildAttrs(options);
+        return `<div class="spinner"${attrs}></div>`;
     }
 
     /**
-     * Show modal
+     * Show modal dialog
+     * @param options - Modal options
      */
-    modal(title: string, content: string, buttons?: ModalButton[]): void {
+    modal(options: ModalOptions): void {
         const modal = document.getElementById('modal');
         if (!modal) return;
+
+        const { title, content, buttons } = options;
 
         const footer = buttons
             ? `
@@ -812,8 +1379,11 @@ class ClientApp {
 
     /**
      * Show toast notification
+     * @param message - Toast message
+     * @param options - Toast options
      */
-    toast(message: string, type: ToastType = 'info', duration: number = 3000): void {
+    toast(message: string, options?: ToastOptions): void {
+        const { type = 'info', duration = 3000 } = options || {};
         const container = document.getElementById('toast');
         if (!container) return;
 
@@ -824,6 +1394,10 @@ class ClientApp {
 
         setTimeout(() => toast.remove(), duration);
     }
+
+    // ========================================
+    // DOM UTILITIES
+    // ========================================
 
     /**
      * Get element by ID
@@ -905,8 +1479,13 @@ class ClientApp {
         }
     }
 
+    // ========================================
+    // THEME METHODS
+    // ========================================
+
     /**
      * Set specific theme
+     * @param theme - Theme variant: 'dark' or 'light'
      */
     setTheme(theme: ThemeVariant): void {
         const app = document.getElementById('app');
@@ -931,10 +1510,15 @@ class ClientApp {
         return (document.getElementById('app')?.getAttribute('data-theme') as ThemeVariant) || 'light';
     }
 
-    // === REST API Methods ===
+    // ========================================
+    // REST API METHODS
+    // ========================================
 
     /**
      * Make API request
+     * @param method - HTTP method
+     * @param endpoint - API endpoint
+     * @param data - Request data
      */
     async api(method: string, endpoint: string, data?: any): Promise<any> {
         const options: RequestInit = {
@@ -991,88 +1575,142 @@ class ClientApp {
         return this.api('DELETE', endpoint);
     }
 
-    // === Helper Methods for Common Patterns ===
+    // ========================================
+    // HELPER METHODS FOR COMMON PATTERNS
+    // ========================================
 
     /**
      * Create a stat card with value and subtitle
+     * @param title - Card title
+     * @param options - Stat card options
      */
-    statCard(title: string, value: string | number, subtitle?: string, color: string = 'primary'): string {
-        return this.card(
-            title,
-            `
+    statCard(title: string, options: StatCardOptions): string {
+        const { value, subtitle, color = 'primary', ...cardOptions } = options;
+        const content = `
             <div class="text-center">
                 <h2 style="color: var(--${color})">${value}</h2>
                 ${subtitle ? `<p class="text-muted">${subtitle}</p>` : ''}
             </div>
-        `
-        );
+        `;
+
+        return this.card(title, { ...cardOptions, content });
     }
 
     /**
      * Create a product card with image
+     * @param options - Product card options
      */
-    productCard(
-        image: string,
-        title: string,
-        description: string,
-        price: string,
-        priceVariant: ButtonVariant = 'primary'
-    ): string {
-        return this.card(
-            '',
-            this.image(image, { width: '100%', height: 200, fit: 'cover' }) +
+    productCard(options: ProductCardOptions): string {
+        const { image, title, content, price, priceVariant = 'primary', ...baseOptions } = options;
+
+        const contentCard =
+            this.image({ src: image, width: '100%', height: 200, fit: 'cover' }) +
             `<div class="p-md">
                 <h4>${title}</h4>
-                <p class="text-muted">${description}</p>
-                <div class="mt-md">${this.badge(price, priceVariant)}</div>
-            </div>`
-        );
+                <p class="text-muted">${content}</p>
+                <div class="mt-md">${this.badge(price, { variant: priceVariant })}</div>
+            </div>`;
+
+        return this.card('', { ...baseOptions, content: contentCard });
     }
 
     /**
-     * Create a section with title and optional icon
+     * Create a heading
+     * @param text - Heading text
+     * @param level - Heading level (1-6)
+     * @param options - Heading options
      */
-    heading(text: string, level: 1 | 2 | 3 | 4 | 5 | 6 = 4, id?: string): string {
-        const headingId = id ? ` id="${id}"` : '';
-        return `<h${level}${headingId}>${text}</h${level}>`;
+    heading(text: string, level: HeadingLevel = 4, options?: BaseOptions): string {
+        const attrs = this.buildAttrs(options);
+        return `<h${level}${attrs}>${text}</h${level}>`;
     }
 
     /**
      * Create a divider
+     * @param options - Divider options
      */
-    divider(): string {
-        return '<hr style="border: none; border-top: 1px solid var(--border); margin: var(--space-lg) 0;">';
+    divider(options?: BaseOptions): string {
+        const attrs = this.buildAttrs({
+            ...options,
+            style: 'border: none; border-top: 1px solid var(--border); margin: var(--space-lg) 0;'
+        });
+        return `<hr${attrs}>`;
     }
 
     /**
      * Create a spacer
+     * @param size - Spacer size
+     * @param options - Spacer options
      */
-    spacer(size: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' = 'md'): string {
-        return `<div style="height: var(--space-${size})"></div>`;
+    spacer(size: SpacerSize = 'md', options?: BaseOptions): string {
+        const attrs = this.buildAttrs({
+            ...options,
+            style: `height: var(--space-${size})`
+        });
+        return `<div${attrs}></div>`;
     }
 
     /**
      * Create a flex container
+     * @param options - Flex options
      */
-    flex(items: string[], gap: 'sm' | 'md' | 'lg' = 'md', direction: 'row' | 'col' = 'row'): string {
-        return `<div class="flex flex-${direction} gap-${gap}">${items.join('')}</div>`;
+    flex(options: FlexOptions): string {
+        const { items, gap = 'md', direction = 'row', ...baseOptions } = options;
+        const className = `flex flex-${direction} gap-${gap}`;
+
+        const finalClassName = baseOptions.className ? `${className} ${baseOptions.className}` : className;
+
+        const attrs = this.buildAttrs({ ...baseOptions, className: finalClassName });
+        return `<div${attrs}>${items.join('')}</div>`;
     }
 
     /**
      * Create a text block with optional styling
+     * @param content - Text content
+     * @param options - Text options
      */
-    text(content: string, options?: { size?: string; color?: string; weight?: string; align?: string }, id?: string): string {
-        const textId = id ? ` id="${id}"` : '';
+    text(content: string, options?: TextOptions): string {
+        const { size, color, weight, align, ...baseOptions } = options || {};
         const styles: string[] = [];
-        if (options?.size) styles.push(`font-size: ${options.size}`);
-        if (options?.color) styles.push(`color: ${options.color}`);
-        if (options?.weight) styles.push(`font-weight: ${options.weight}`);
-        if (options?.align) styles.push(`text-align: ${options.align}`);
 
-        const style = styles.length > 0 ? ` style="${styles.join('; ')}"` : '';
-        return `<p${textId}${style}>${content}</p>`;
+        if (size) styles.push(`font-size: ${size}`);
+        if (color) styles.push(`color: ${color}`);
+        if (weight) styles.push(`font-weight: ${weight}`);
+        if (align) styles.push(`text-align: ${align}`);
+
+        const attrs = this.buildAttrs({
+            ...baseOptions,
+            style: styles.length > 0 ? styles.join('; ') : undefined
+        });
+
+        return `<p${attrs}>${content}</p>`;
     }
 }
 
+// ========================================
+// EXPORTS
+// ========================================
+
 export { ClientApp };
-export type { Layout, ButtonVariant, AlertType, ToastType, GridColumns };
+export type {
+    Layout,
+    ButtonVariant,
+    AlertType,
+    ToastType,
+    GridColumns,
+    ThemeVariant,
+    HeadingLevel,
+    SpacerSize,
+    FlexDirection,
+    GapSize,
+    // Options interfaces
+    NavOptions,
+    SidebarOptions,
+    ListOptions,
+    CardOptions,
+    ButtonOptions,
+    ModalOptions,
+    ImageOptions,
+    TableOptions,
+    // ... export other options as needed
+};
