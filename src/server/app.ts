@@ -2,7 +2,7 @@
 
 import { server, hooks } from './static/server.js';
 import { api } from './static/api.js';
-import('./router.js')
+import('./router.js');
 
 // Add your custom server logic here:
 // - Database connections and configuration

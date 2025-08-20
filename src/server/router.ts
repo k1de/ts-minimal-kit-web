@@ -13,6 +13,6 @@ import { api } from './static/api.js';
 api.get('/api/health', (_req, res) => {
     api.json(res, {
         status: 'ok',
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
     });
 });

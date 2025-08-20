@@ -62,7 +62,6 @@ async function serveStatic(res: ServerResponse, url: URL): Promise<void> {
         // Return proper 404 for missing files
         res.writeHead(404, { 'Content-Type': 'text/plain' });
         res.end('404 Not Found');
-
     }
 }
 
@@ -78,8 +77,6 @@ async function runHooks(hooks: HookFn[], req: IncomingMessage, res: ServerRespon
         }
     }
 }
-
-
 
 // Create HTTP server
 const server = createServer(async (req: IncomingMessage, res: ServerResponse) => {

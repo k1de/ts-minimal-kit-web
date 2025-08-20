@@ -6,7 +6,7 @@ type NotificationType = 'info' | 'success' | 'warning' | 'danger' | 'error';
 type AlertType = NotificationType;
 type ToastType = NotificationType;
 type GridColumns = 2 | 3 | 4 | 5 | 6 | 7 | 8;
-type ThemeVariant = 'dark' | 'light'
+type ThemeVariant = 'dark' | 'light';
 
 interface NavItem {
     text: string;
@@ -172,13 +172,15 @@ class ClientApp {
         const nav = document.getElementById('nav');
         if (!nav) return;
 
-        const navItems = items.map((item, i) => {
-            const id = `nav-item-${i}`;
-            if (item.onclick) {
-                this.addDelayedEventListener(id, item.onclick);
-            }
-            return `<li><a href="${item.href || '#'}" id="${id}" class="nav-item">${item.text}</a></li>`;
-        }).join('');
+        const navItems = items
+            .map((item, i) => {
+                const id = `nav-item-${i}`;
+                if (item.onclick) {
+                    this.addDelayedEventListener(id, item.onclick);
+                }
+                return `<li><a href="${item.href || '#'}" id="${id}" class="nav-item">${item.text}</a></li>`;
+            })
+            .join('');
 
         nav.innerHTML = `
             <div class="nav-brand">${brand}</div>
@@ -194,22 +196,26 @@ class ClientApp {
         const sidebar = document.getElementById('sidebar');
         if (!sidebar) return;
 
-        sidebar.innerHTML = sections.map(section => {
-            const items = section.items.map((item, i) => {
-                const id = `sidebar-${sections.indexOf(section)}-${i}`;
-                if (item.onclick) {
-                    this.addDelayedEventListener(id, item.onclick);
-                }
-                return `<li><a href="javascript:void(0)" id="${id}" class="sidebar-item">${item.text}</a></li>`;
-            }).join('');
+        sidebar.innerHTML = sections
+            .map((section) => {
+                const items = section.items
+                    .map((item, i) => {
+                        const id = `sidebar-${sections.indexOf(section)}-${i}`;
+                        if (item.onclick) {
+                            this.addDelayedEventListener(id, item.onclick);
+                        }
+                        return `<li><a href="javascript:void(0)" id="${id}" class="sidebar-item">${item.text}</a></li>`;
+                    })
+                    .join('');
 
-            return `
+                return `
                 <div class="sidebar-section">
                     ${section.title ? `<div class="sidebar-title">${section.title}</div>` : ''}
                     <ul class="sidebar-menu">${items}</ul>
                 </div>
             `;
-        }).join('');
+            })
+            .join('');
 
         sidebar.hidden = false;
     }
@@ -253,12 +259,14 @@ class ClientApp {
      * Create a card
      */
     card(title: string, content: string, subtitle?: string): string {
-        const header = title ? `
+        const header = title
+            ? `
             <div class="card-header">
                 <h2 class="card-title">${title}</h2>
                 ${subtitle ? `<p class="card-subtitle">${subtitle}</p>` : ''}
             </div>
-        ` : '';
+        `
+            : '';
 
         return `
             <div class="card">
@@ -272,14 +280,7 @@ class ClientApp {
      * Create an image with size options
      */
     image(src: string, options: ImageOptions = {}): string {
-        const {
-            width,
-            height,
-            fit = 'cover',
-            alt = '',
-            className = '',
-            loading = 'lazy'
-        } = options;
+        const { width, height, fit = 'cover', alt = '', className = '', loading = 'lazy' } = options;
 
         const styleAttrs: string[] = [];
 
@@ -307,16 +308,17 @@ class ClientApp {
      */
     imageGrid(columns: GridColumns = 3, images: Array<{ src: string; alt?: string }>, height?: number): string {
         // Calculate responsive height based on columns
-        const finalHeight = height ?? Math.floor(320 / (columns / 2))
+        const finalHeight = height ?? Math.floor(320 / (columns / 2));
 
-        const items = images.map(img =>
-            `<div style="overflow: hidden; border-radius: var(--radius);">
+        const items = images.map(
+            (img) =>
+                `<div style="overflow: hidden; border-radius: var(--radius);">
                 ${this.image(img.src, {
-                alt: img.alt || '',
-                width: '100%',
-                height: `${finalHeight}px`,
-                fit: "cover"
-            })}
+                    alt: img.alt || '',
+                    width: '100%',
+                    height: `${finalHeight}px`,
+                    fit: 'cover',
+                })}
             </div>`
         );
 
@@ -341,12 +343,16 @@ class ClientApp {
             }
         });
 
-        const listItems = items.map(item => `
+        const listItems = items
+            .map(
+                (item) => `
             <li class="list-item">
                 <div class="list-item-title">${item.title}</div>
                 ${item.description ? `<div class="list-item-description">${item.description}</div>` : ''}
             </li>
-        `).join('');
+        `
+            )
+            .join('');
 
         return `<ul class="list" id="${listId}">${listItems}</ul>`;
     }
@@ -377,7 +383,7 @@ class ClientApp {
      * Prepend item to existing list
      */
     prependListItem(listId: string, item: ListItem): void {
-        this.appendListItem(listId, item, 'prepend')
+        this.appendListItem(listId, item, 'prepend');
     }
 
     /**
@@ -459,8 +465,10 @@ class ClientApp {
             `id="${id}"`,
             'class="input"',
             placeholder ? `placeholder="${placeholder}"` : '',
-            value ? `value="${value}"` : ''
-        ].filter(Boolean).join(' ');
+            value ? `value="${value}"` : '',
+        ]
+            .filter(Boolean)
+            .join(' ');
 
         return `<input ${attrs}>`;
     }
@@ -469,11 +477,9 @@ class ClientApp {
      * Create textarea
      */
     textarea(id: string, placeholder?: string, value?: string): string {
-        const attrs = [
-            `id="${id}"`,
-            'class="textarea"',
-            placeholder ? `placeholder="${placeholder}"` : ''
-        ].filter(Boolean).join(' ');
+        const attrs = [`id="${id}"`, 'class="textarea"', placeholder ? `placeholder="${placeholder}"` : '']
+            .filter(Boolean)
+            .join(' ');
 
         return `<textarea ${attrs}>${value || ''}</textarea>`;
     }
@@ -482,11 +488,12 @@ class ClientApp {
      * Create select
      */
     select(id: string, options: SelectOption[], selected?: string): string {
-        const optionElements = options.map(opt => {
-            const checked = selected === opt.value ? 'selected' : ''
-            return `<option value="${opt.value}" ${checked}>${opt.text}</option>`
-        }
-        ).join('');
+        const optionElements = options
+            .map((opt) => {
+                const checked = selected === opt.value ? 'selected' : '';
+                return `<option value="${opt.value}" ${checked}>${opt.text}</option>`;
+            })
+            .join('');
 
         return `<select id="${id}" class="select">${optionElements}</select>`;
     }
@@ -507,16 +514,18 @@ class ClientApp {
      * Create radio group
      */
     radioGroup(name: string, options: SelectOption[], selected?: string): string {
-        return options.map(opt => {
-            const id = `${name}-${opt.value}`;
-            const checked = selected === opt.value ? 'checked' : '';
-            return `
+        return options
+            .map((opt) => {
+                const id = `${name}-${opt.value}`;
+                const checked = selected === opt.value ? 'checked' : '';
+                return `
                 <div class="radio">
                     <input type="radio" name="${name}" id="${id}" value="${opt.value}" ${checked}>
                     <label for="${id}">${opt.text}</label>
                 </div>
             `;
-        }).join('');
+            })
+            .join('');
     }
 
     /**
@@ -552,13 +561,15 @@ class ClientApp {
      * Create button group
      */
     buttonGroup(buttons: Array<{ text: string; onclick?: () => void }>): string {
-        const groupButtons = buttons.map(btn => {
-            const id = this.generateId('btn');
-            if (btn.onclick) {
-                this.addDelayedEventListener(id, btn.onclick);
-            }
-            return `<button id="${id}" class="btn">${btn.text}</button>`;
-        }).join('');
+        const groupButtons = buttons
+            .map((btn) => {
+                const id = this.generateId('btn');
+                if (btn.onclick) {
+                    this.addDelayedEventListener(id, btn.onclick);
+                }
+                return `<button id="${id}" class="btn">${btn.text}</button>`;
+            })
+            .join('');
 
         return `<div class="btn-group">${groupButtons}</div>`;
     }
@@ -583,10 +594,8 @@ class ClientApp {
      */
     table(headers: string[], rows: string[][], id?: string): string {
         const tableId = id || this.generateId('table');
-        const headerRow = headers.map(h => `<th>${h}</th>`).join('');
-        const bodyRows = rows.map(row =>
-            `<tr>${row.map(cell => `<td>${cell}</td>`).join('')}</tr>`
-        ).join('');
+        const headerRow = headers.map((h) => `<th>${h}</th>`).join('');
+        const bodyRows = rows.map((row) => `<tr>${row.map((cell) => `<td>${cell}</td>`).join('')}</tr>`).join('');
 
         return `
             <table class="table" id="${tableId}">
@@ -604,7 +613,7 @@ class ClientApp {
         if (!tbody) return;
 
         const tr = document.createElement('tr');
-        tr.innerHTML = row.map(cell => `<td>${cell}</td>`).join('');
+        tr.innerHTML = row.map((cell) => `<td>${cell}</td>`).join('');
         tbody[direction](tr);
     }
 
@@ -612,7 +621,7 @@ class ClientApp {
      * Prepend row to existing table
      */
     prependTableRow(tableId: string, row: string[]): void {
-        this.appendTableRow(tableId, row, 'prepend')
+        this.appendTableRow(tableId, row, 'prepend');
     }
 
     /**
@@ -638,7 +647,7 @@ class ClientApp {
         const rows = tbody.getElementsByTagName('tr');
         if (index >= 0 && index < rows.length) {
             if (rows[index]) {
-                rows[index].innerHTML = row.map(cell => `<td>${cell}</td>`).join('');
+                rows[index].innerHTML = row.map((cell) => `<td>${cell}</td>`).join('');
             }
         }
     }
@@ -651,7 +660,6 @@ class ClientApp {
         if (!tbody) return 0;
         return tbody.getElementsByTagName('tr').length;
     }
-
 
     /**
      * Create tabs
@@ -667,21 +675,21 @@ class ClientApp {
             tabs?.forEach((tab, index) => {
                 tab.addEventListener('click', (e) => {
                     e.preventDefault();
-                    tabs.forEach(t => t.classList.remove('active'));
-                    contents?.forEach(c => c.classList.add('hidden'));
+                    tabs.forEach((t) => t.classList.remove('active'));
+                    contents?.forEach((c) => c.classList.add('hidden'));
                     tab.classList.add('active');
                     contents?.[index]?.classList.remove('hidden');
                 });
             });
         }, 0);
 
-        const tabElements = items.map((item, i) =>
-            `<a href="#" class="tab ${i === 0 ? 'active' : ''}">${item.label}</a>`
-        ).join('');
+        const tabElements = items
+            .map((item, i) => `<a href="#" class="tab ${i === 0 ? 'active' : ''}">${item.label}</a>`)
+            .join('');
 
-        const panels = items.map((item, i) =>
-            `<div class="tab-panel ${i !== 0 ? 'hidden' : ''}">${item.content}</div>`
-        ).join('');
+        const panels = items
+            .map((item, i) => `<div class="tab-panel ${i !== 0 ? 'hidden' : ''}">${item.content}</div>`)
+            .join('');
 
         return `
             <div id="${id}">
@@ -700,8 +708,7 @@ class ClientApp {
         const barId = `${progressId}-bar`;
         const textId = `${progressId}-text`;
 
-        const textIndicator = showText ?
-            `<span class="progress-text" id="${textId}">${Math.round(percentage)}%</span>` : '';
+        const textIndicator = showText ? `<span class="progress-text" id="${textId}">${Math.round(percentage)}%</span>` : '';
 
         return `
             <div class="progress" id="${progressId}" data-max="${max}" data-show-text="${showText}">
@@ -755,21 +762,25 @@ class ClientApp {
         const modal = document.getElementById('modal');
         if (!modal) return;
 
-        const footer = buttons ? `
+        const footer = buttons
+            ? `
             <div class="modal-footer">
-                ${buttons.map((btn, i) => {
-            const id = `modal-btn-${i}`;
-            setTimeout(() => {
-                document.getElementById(id)?.addEventListener('click', () => {
-                    btn.onclick();
-                    this.closeModal();
-                });
-            }, 0);
-            const className = btn.variant ? `btn btn-${btn.variant}` : 'btn';
-            return `<button id="${id}" class="${className}">${btn.text}</button>`;
-        }).join('')}
+                ${buttons
+                .map((btn, i) => {
+                    const id = `modal-btn-${i}`;
+                    setTimeout(() => {
+                        document.getElementById(id)?.addEventListener('click', () => {
+                            btn.onclick();
+                            this.closeModal();
+                        });
+                    }, 0);
+                    const className = btn.variant ? `btn btn-${btn.variant}` : 'btn';
+                    return `<button id="${id}" class="${className}">${btn.text}</button>`;
+                })
+                .join('')}
             </div>
-        ` : '';
+        `
+            : '';
 
         modal.innerHTML = `
             <div class="modal">
@@ -918,7 +929,7 @@ class ClientApp {
      * Get current theme
      */
     getTheme(): ThemeVariant {
-        return document.getElementById('app')?.getAttribute('data-theme') as ThemeVariant || 'light';
+        return (document.getElementById('app')?.getAttribute('data-theme') as ThemeVariant) || 'light';
     }
 
     // === REST API Methods ===
@@ -987,19 +998,29 @@ class ClientApp {
      * Create a stat card with value and subtitle
      */
     statCard(title: string, value: string | number, subtitle?: string, color: string = 'primary'): string {
-        return this.card(title, `
+        return this.card(
+            title,
+            `
             <div class="text-center">
                 <h2 style="color: var(--${color})">${value}</h2>
                 ${subtitle ? `<p class="text-muted">${subtitle}</p>` : ''}
             </div>
-        `);
+        `
+        );
     }
 
     /**
      * Create a product card with image
      */
-    productCard(image: string, title: string, description: string, price: string, priceVariant: ButtonVariant = 'primary'): string {
-        return this.card('',
+    productCard(
+        image: string,
+        title: string,
+        description: string,
+        price: string,
+        priceVariant: ButtonVariant = 'primary'
+    ): string {
+        return this.card(
+            '',
             this.image(image, { width: '100%', height: 200, fit: 'cover' }) +
             `<div class="p-md">
                 <h4>${title}</h4>
