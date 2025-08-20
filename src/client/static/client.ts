@@ -481,9 +481,11 @@ class ClientApp {
     /**
      * Create select
      */
-    select(id: string, options: SelectOption[]): string {
-        const optionElements = options.map(opt =>
-            `<option value="${opt.value}">${opt.text}</option>`
+    select(id: string, options: SelectOption[], selected?: string): string {
+        const optionElements = options.map(opt => {
+            const checked = selected === opt.value ? 'selected' : ''
+            return `<option value="${opt.value}" ${checked}>${opt.text}</option>`
+        }
         ).join('');
 
         return `<select id="${id}" class="select">${optionElements}</select>`;
