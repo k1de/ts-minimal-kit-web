@@ -1327,7 +1327,7 @@ class ClientApp {
             barElement.style.width = `${percentage}%`;
 
             // Update text indicator if present
-            const showText = progressElement.getAttribute('data-show-text') === 'true';
+            const showText = progressElement.hasAttribute('data-show-text');
             if (showText) {
                 const textElement = document.getElementById(`${id}-text`);
                 if (textElement) {
