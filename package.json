@@ -13,7 +13,7 @@
         "build:client": "npx tsc --project tsconfig.client.json",
         "start": "node ./dist/app.js",
         "build:start": "npm run build && npm start",
-        "clean": "node -e \"import('fs').then(fs => { fs.rmSync('dist', {recursive: true, force: true}); fs.readdirSync('public').filter(f => f.endsWith('.js') || f.endsWith('.js.map')).forEach(f => fs.rmSync('public/' + f, {force: true})); fs.readdirSync('.').filter(f => f.endsWith('.tsbuildinfo')).forEach(f => fs.rmSync(f, {force: true})); })\"",
+        "clean": "node -e \"import('fs').then(fs => { fs.rmSync('dist', {recursive: true, force: true}); fs.readdirSync('public').filter(f => !['index.html','styles.css'].includes(f)).forEach(f => fs.rmSync('public/' + f, {recursive: true, force: true})); fs.readdirSync('.').filter(f => f.endsWith('.tsbuildinfo')).forEach(f => fs.rmSync(f, {force: true})); })\"",
         "degit": "node -e \"import('fs').then(fs => fs.rmSync('.git', {recursive: true, force: true}))\"",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
