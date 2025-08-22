@@ -321,7 +321,10 @@ class ClientApp {
 
     constructor() {
         this.container = document.getElementById('main')!;
-        this.init();
+        // Ensures child classes initialize before start
+        setTimeout(() => {
+            this.init();
+        }, 0);
     }
 
     /**
