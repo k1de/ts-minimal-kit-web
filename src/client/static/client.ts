@@ -427,6 +427,14 @@ class ClientApp {
     }
 
     /**
+     * Generate nested element ID
+     */
+    private getNestedId(baseId: string | undefined, suffix: string): string {
+        if (!baseId) return '';
+        return ` id="${baseId}-${suffix}"`;
+    }
+
+    /**
      * Add event listener with timeout
      */
     private addDelayedEventListener(idOrSelector: string, handler: () => void, event: string = 'click'): void {
@@ -662,6 +670,7 @@ class ClientApp {
      */
     section(title: string, options?: SectionOptions): string {
         const { content, ...baseOptions } = options || {}
+        const baseId = baseOptions.id;
         const attrs = this.buildAttrs({
             ...baseOptions,
             class: baseOptions.className ? `section ${baseOptions.className}` : 'section',
@@ -669,8 +678,8 @@ class ClientApp {
         return `
             <div${attrs}>
                 <div class="section-header">
-                    <h1 class="section-title">${title}</h1>
-                    ${content ? `<p class="section-content">${content}</p>` : ''}
+                    <h1 class="section-title"${this.getNestedId(baseId, 'title')}>${title}</h1>
+                    ${content ? `<p class="section-content"${this.getNestedId(baseId, 'content')}>${content}</p>` : ''}
                 </div>
             </div>
         `;
@@ -683,6 +692,7 @@ class ClientApp {
      */
     card(title: string, options?: CardOptions): string {
         const { subtitle, content = '', ...baseOptions } = options || {};
+        const baseId = baseOptions.id;
         const attrs = this.buildAttrs({
             ...baseOptions,
             class: baseOptions.className ? `card ${baseOptions.className}` : 'card',
@@ -690,8 +700,8 @@ class ClientApp {
         const header = title
             ? `
             <div class="card-header">
-                <h2 class="card-title">${title}</h2>
-                ${subtitle ? `<p class="card-subtitle">${subtitle}</p>` : ''}
+                <h2 class="card-title"${this.getNestedId(baseId, 'title')}>${title}</h2>
+                ${subtitle ? `<p class="card-subtitle"${this.getNestedId(baseId, 'subtitle')}>${subtitle}</p>` : ''}
             </div>
         `
             : '';
@@ -699,7 +709,7 @@ class ClientApp {
         return `
             <div${attrs}>
                 ${header}
-                <div class="card-body">${content}</div>
+                <div class="card-body"${this.getNestedId(baseId, 'content')}>${content}</div>
             </div>
         `;
     }
@@ -896,15 +906,16 @@ class ClientApp {
      */
     formGroup(options: FormGroupOptions): string {
         const { label, input, help, ...baseOptions } = options;
+        const baseId = baseOptions.id;
         const attrs = this.buildAttrs({
             ...baseOptions,
             class: baseOptions.className ? `form-group ${baseOptions.className}` : 'form-group',
         });
         return `
             <div${attrs}>
-                <label class="label">${label}</label>
+                <label class="label"${this.getNestedId(baseId, 'label')}>${label}</label>
                 ${input}
-                ${help ? `<div class="help-text">${help}</div>` : ''}
+                ${help ? `<div class="help-text"${this.getNestedId(baseId, 'help')}>${help}</div>` : ''}
             </div>
         `;
     }
@@ -1078,7 +1089,7 @@ class ClientApp {
             class: finalClassName,
         });
 
-        return `<button${attrs}>${text}</button>`;
+        return `<button${attrs}><span${this.getNestedId(id, 'text')}>${text}</span></button>`;
     }
 
     /**
@@ -1117,12 +1128,13 @@ class ClientApp {
      */
     badge(text: string, options?: BadgeOptions): string {
         const { variant = 'default', ...baseOptions } = options || {};
+        const baseId = baseOptions.id;
         const className = variant === 'default' ? 'badge' : `badge badge-${variant}`;
 
         const finalClassName = baseOptions.className ? `${className} ${baseOptions.className}` : className;
 
         const attrs = this.buildAttrs({ ...baseOptions, className: finalClassName });
-        return `<span${attrs}>${text}</span>`;
+        return `<span${attrs}><span${this.getNestedId(baseId, 'text')}>${text}</span></span>`;
     }
 
     // ========================================
@@ -1136,12 +1148,13 @@ class ClientApp {
      */
     alert(message: string, options?: AlertOptions): string {
         const { type = 'info', ...baseOptions } = options || {};
+        const baseId = baseOptions.id;
         const className = `alert alert-${type}`;
 
         const finalClassName = baseOptions.className ? `${className} ${baseOptions.className}` : className;
 
         const attrs = this.buildAttrs({ ...baseOptions, className: finalClassName });
-        return `<div${attrs}>${message}</div>`;
+        return `<div${attrs}><span${this.getNestedId(baseId, 'message')}>${message}</span></div>`;
     }
 
     /**
@@ -1288,9 +1301,9 @@ class ClientApp {
         const percentage = Math.min(100, Math.max(0, (value / max) * 100));
         const progressId = baseOptions.id || this.generateId('progress');
         const barId = `${progressId}-bar`;
-        const textId = `${progressId}-text`;
+        const valueId = `${progressId}-value`;
 
-        const textIndicator = showText ? `<span class="progress-text" id="${textId}">${Math.round(percentage)}%</span>` : '';
+        const textIndicator = showText ? `<span class="progress-text" id="${valueId}">${Math.round(percentage)}%</span>` : '';
 
         const attrs = this.buildAttrs({
             ...baseOptions,
@@ -1332,10 +1345,7 @@ class ClientApp {
             // Update text indicator if present
             const showText = progressElement.hasAttribute('data-show-text');
             if (showText) {
-                const textElement = document.getElementById(`${id}-text`);
-                if (textElement) {
-                    textElement.textContent = `${Math.round(percentage)}%`;
-                }
+                this.updateText(`${id}-value`, `${Math.round(percentage)}%`);
             }
         }
 
@@ -1465,21 +1475,25 @@ class ClientApp {
     /**
      * Update text content of an element
      */
-    updateText(id: string, text: string): void {
+    updateText(id: string, text: string): boolean {
         const element = document.getElementById(id);
         if (element) {
             element.textContent = text;
+            return true;
         }
+        return false;
     }
 
     /**
      * Update HTML content of an element
      */
-    updateHtml(id: string, html: string): void {
+    updateHtml(id: string, html: string): boolean {
         const element = document.getElementById(id);
         if (element) {
             element.innerHTML = html;
+            return true;
         }
+        return false;
     }
 
     /**
@@ -1619,10 +1633,11 @@ class ClientApp {
      */
     statCard(title: string, options: StatCardOptions): string {
         const { value, subtitle, color = 'primary', ...cardOptions } = options;
+        const baseId = cardOptions.id;
         const content = `
             <div class="text-center">
-                <h2 style="color: var(--${color})">${value}</h2>
-                ${subtitle ? `<p class="text-muted">${subtitle}</p>` : ''}
+                <h2 style="color: var(--${color})"${this.getNestedId(baseId, 'value')}>${value}</h2>
+                ${subtitle ? `<p class="text-muted"${this.getNestedId(baseId, 'subtitle')}>${subtitle}</p>` : ''}
             </div>
         `;
 
@@ -1654,8 +1669,9 @@ class ClientApp {
      * @param options - Heading options
      */
     heading(text: string, level: HeadingLevel = 4, options?: BaseOptions): string {
+        const baseId = options?.id;
         const attrs = this.buildAttrs(options);
-        return `<h${level}${attrs}>${text}</h${level}>`;
+        return `<h${level}${attrs}><span${this.getNestedId(baseId, 'text')}>${text}</span></h${level}>`;
     }
 
     /**
@@ -1704,6 +1720,7 @@ class ClientApp {
      */
     text(content: string, options?: TextOptions): string {
         const { size, color, weight, align, ...baseOptions } = options || {};
+        const baseId = baseOptions.id;
         const styles: string[] = [];
 
         if (size) styles.push(`font-size: ${size}`);
@@ -1716,7 +1733,7 @@ class ClientApp {
             style: styles.length > 0 ? styles.join('; ') : undefined,
         });
 
-        return `<p${attrs}>${content}</p>`;
+        return `<p${attrs}><span${this.getNestedId(baseId, 'content')}>${content}</span></p>`;
     }
 }
 

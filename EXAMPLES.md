@@ -428,8 +428,8 @@ this.toggle('element-id'); // Toggle visibility
 this.get('element-id'); // Get element
 this.val('input-id'); // Get value
 this.setVal('input-id', 'new'); // Set value
-this.updateText('span-id', 'New text');
-this.updateHtml('div-id', '<b>Bold</b>');
+this.updateText('span-id', 'New text'); // Returns boolean
+this.updateHtml('div-id', '<b>Bold</b>'); // Returns boolean
 
 // Events
 this.on('btn-id', 'click', (e) => console.log('Clicked'));
@@ -440,20 +440,95 @@ this.getTheme(); // Get current theme
 this.setTheme('dark'); // Set specific theme
 ```
 
+### Nested Element IDs
+
+Components with IDs automatically generate predictable nested IDs for their parts:
+
+```typescript
+// Section example
+this.section('Settings', {
+    content: 'Configure your app',
+    id: 'settings-section',
+});
+this.updateText('settings-section-title', 'Preferences');
+this.updateText('settings-section-content', 'Updated description');
+
+// Create components with IDs
+this.card('Dashboard', {
+    content: 'Welcome',
+    subtitle: 'Stats',
+    id: 'dash-card',
+});
+
+// Access nested elements
+this.updateText('dash-card-title', 'New Title'); // Updates card title
+this.updateText('dash-card-subtitle', 'Updated'); // Updates subtitle
+this.updateHtml('dash-card-content', '<p>New</p>'); // Updates content
+
+// StatCard example
+this.statCard('CPU', {
+    value: '45%',
+    subtitle: 'Usage',
+    id: 'cpu-stat',
+});
+this.updateText('cpu-stat-value', '78%'); // Update value
+this.updateText('cpu-stat-subtitle', 'High'); // Update subtitle
+
+// Button example
+this.button('Save', { id: 'save-btn' });
+this.updateText('save-btn-text', 'Saving...'); // Update button text
+
+// Alert example
+this.alert('Info message', { id: 'info-alert' });
+this.updateText('info-alert-message', 'Updated message');
+
+// Progress example
+this.progress(50, { id: 'upload-progress', showText: true });
+this.updateProgress('upload-progress', 75); // Update progress
+document.getElementById('upload-progress-value'); // Access text element
+
+// FormGroup example
+this.formGroup({
+    label: 'Email',
+    input: this.input('email-input', { type: 'email' }),
+    help: 'Enter valid email',
+    id: 'email-group',
+});
+this.updateText('email-group-label', 'Email Address');
+this.updateText('email-group-help', 'We never share your email');
+```
+
+### Nested ID Pattern
+
+For any component with an `id`, nested elements follow this pattern:
+
+-   `{id}-title` - Title element
+-   `{id}-subtitle` - Subtitle element
+-   `{id}-content` - Content/body element
+-   `{id}-value` - Value element (progress, statCard)
+-   `{id}-text` - Text element (button, badge, heading)
+-   `{id}-message` - Message element (alert)
+-   `{id}-label` - Label element (formGroup)
+-   `{id}-help` - Help text element (formGroup)
+
 ## Helpers
 
 ```typescript
 // Typography
 this.heading('Title', 2); // <h2>
-this.heading('Section', 3, { id: 'section-id' }); // with id
+this.heading('Section', 3, { id: 'section-head' }); // with id
+this.updateText('section-head-text', 'New Section'); // Update heading text
+
 this.text('Paragraph text');
 this.text('Styled text', {
     size: '1.2rem',
     color: 'var(--primary)',
     weight: 'bold',
     align: 'center',
-    id: 'text-id',
+    id: 'styled-text',
 });
+this.updateText('styled-text-content', 'Updated text'); // Update text content
+
 this.divider(); // Horizontal line
 this.spacer('lg'); // Vertical space
 
