@@ -5,7 +5,7 @@ import { api } from './static/api.js';
 // Add your custom API endpoints here
 
 // Example
-// api.get('/api/custom', (_req, res) => {
+// api.get('/api/custom', (req, res, url) => {
 //     api.json(res, { message: 'Custom endpoint' });
 // });
 

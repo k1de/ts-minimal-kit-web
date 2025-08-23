@@ -2,7 +2,7 @@
 
 import { IncomingMessage, ServerResponse } from 'node:http';
 
-type Handler = (req: IncomingMessage, res: ServerResponse) => void | Promise<void>;
+type Handler = (req: IncomingMessage, res: ServerResponse, url: URL) => void | Promise<void>;
 
 interface Route {
     method: string;
@@ -79,9 +79,9 @@ export class ApiRouter {
             if (route.method === method && route.path === path) {
                 // Route found
                 try {
-                    await route.handler(req, res);
-                } catch (error: any) {
-                    this.json(res, { error: error.message }, 500);
+                    await route.handler(req, res, url);
+                } catch (error) {
+                    this.json(res, { error: 'INTERNAL SERVER ERROR' }, 500);
                     if (process.env.DEBUG) {
                         console.error('Route error:', error);
                     }
