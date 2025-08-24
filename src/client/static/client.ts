@@ -450,9 +450,15 @@ class ClientApp {
         }, 0);
     }
 
+    /**
+     * Add event listener to element with common setup
+     * @param element - HTML element or null
+     * @param handler - Event handler function
+     * @param event - Event type (default: 'click')
+     */
     private addEventListener(element: HTMLElement | null, handler: () => void, event: string = 'click'): void {
         if (!element) return;
-        
+
         element.addEventListener(event, (e) => {
             // Only prevent default for links and form elements
             const tagName = (e.target as HTMLElement).tagName.toLowerCase();
@@ -480,18 +486,22 @@ class ClientApp {
 
     /**
      * Build HTML attributes from any object
+     * Converts className to class attribute
+     * @param attrs - Attributes object
+     * @returns HTML attributes string
      */
     private buildAttrs(attrs?: Record<string, any> | BaseOptions): string {
         if (!attrs) return '';
 
         // Handle BaseOptions case (convert className to class)
-        if ('className' in attrs && !('class' in attrs)) {
-            attrs = { ...attrs, class: attrs.className };
-            delete (attrs as any).className;
+        const processedAttrs: Record<string, any> = { ...attrs };
+        if ('className' in processedAttrs && !('class' in processedAttrs)) {
+            processedAttrs.class = processedAttrs.className;
+            delete processedAttrs.className;
         }
 
-        const result = Object.entries(attrs)
-            .filter(([key, value]) => value !== undefined && value !== null && value !== '' && key !== 'className')
+        const result = Object.entries(processedAttrs)
+            .filter(([_key, value]) => value !== undefined && value !== null && value !== '')
             .map(([key, value]) => {
                 if (value === true) return key; // for checked, selected, disabled etc.
                 if (value === false) return ''; // skip false attributes
@@ -516,6 +526,19 @@ class ClientApp {
     }
 
     /**
+     * Create navigation item HTML
+     * @param item - Navigation item
+     * @param id - Element ID
+     * @param className - CSS class name
+     */
+    private createNavItem(item: NavItem, id: string, className: string): string {
+        if (item.onclick) {
+            this.addDelayedEventListener(id, item.onclick);
+        }
+        return `<li><a href="${item.href || '#'}" id="${id}" class="${className}">${item.text}</a></li>`;
+    }
+
+    /**
      * Show navigation bar
      * @param brand - Brand text or logo
      * @param options - Navigation options including items
@@ -529,10 +552,7 @@ class ClientApp {
             : options.items
                 .map((item, i) => {
                     const id = options.id ? `${options.id}-item-${i}` : `nav-item-${i}`;
-                    if (item.onclick) {
-                        this.addDelayedEventListener(id, item.onclick);
-                    }
-                    return `<li><a href="${item.href || '#'}" id="${id}" class="nav-item">${item.text}</a></li>`;
+                    return this.createNavItem(item, id, 'nav-item');
                 })
                 .join('');
 
@@ -556,10 +576,7 @@ class ClientApp {
                 const items = section.items
                     .map((item, i) => {
                         const id = options.id ? `${options.id}-${sectionIndex}-${i}` : `sidebar-${sectionIndex}-${i}`;
-                        if (item.onclick) {
-                            this.addDelayedEventListener(id, item.onclick);
-                        }
-                        return `<li><a href="${item.href || '#'}" id="${id}" class="sidebar-item">${item.text}</a></li>`;
+                        return this.createNavItem(item, id, 'sidebar-item');
                     })
                     .join('');
 
@@ -663,13 +680,23 @@ class ClientApp {
     }
 
     /**
+     * Create a list (ordered or unordered)
+     * @param items - List items
+     * @param tag - HTML tag ('ul' or 'ol')
+     * @param options - List options
+     */
+    private createList(items: string[], tag: 'ul' | 'ol', options?: BaseOptions): string {
+        const listItems = items.map((item) => `<li>${item}</li>`).join('');
+        return `<${tag}${this.buildAttrs(options)}>${listItems}</${tag}>`;
+    }
+
+    /**
      * Create an unordered list
      * @param items - List items
      * @param options - List options
      */
     ul(items: string[], options?: BaseOptions): string {
-        const listItems = items.map((item) => `<li>${item}</li>`).join('');
-        return `<ul${this.buildAttrs(options)}>${listItems}</ul>`;
+        return this.createList(items, 'ul', options);
     }
 
     /**
@@ -678,8 +705,7 @@ class ClientApp {
      * @param options - List options
      */
     ol(items: string[], options?: BaseOptions): string {
-        const listItems = items.map((item) => `<li>${item}</li>`).join('');
-        return `<ol${this.buildAttrs(options)}>${listItems}</ol>`;
+        return this.createList(items, 'ol', options);
     }
 
     // ========================================
@@ -835,6 +861,9 @@ class ClientApp {
 
     /**
      * Add item to existing list
+     * @param listId - List ID
+     * @param item - Item to add
+     * @param direction - Direction to add ('append' or 'prepend')
      */
     appendListItem(listId: string, item: ListItem, direction: 'append' | 'prepend' = 'append'): void {
         const list = document.getElementById(listId);
@@ -852,26 +881,43 @@ class ClientApp {
 
     /**
      * Prepend item to existing list
+     * @param listId - List ID
+     * @param item - Item to prepend
      */
     prependListItem(listId: string, item: ListItem): void {
         this.appendListItem(listId, item, 'prepend');
     }
 
     /**
-     * Remove list item by index
+     * Remove element by index from collection
+     * @param parentId - Parent element ID
+     * @param index - Element index to remove
+     * @param className - Class name to find elements
      */
-    removeListItem(listId: string, index: number): void {
-        const list = document.getElementById(listId);
-        if (!list) return;
+    private removeElementByIndex(parentId: string, index: number, className: string): void {
+        const parent = document.getElementById(parentId);
+        if (!parent) return;
 
-        const items = list.getElementsByClassName('list-item');
-        if (index >= 0 && index < items.length) {
-            items[index]?.remove();
+        const elements = parent.getElementsByClassName(className);
+        if (index >= 0 && index < elements.length) {
+            elements[index]?.remove();
         }
     }
 
     /**
+     * Remove list item by index
+     * @param listId - List ID
+     * @param index - Item index to remove
+     */
+    removeListItem(listId: string, index: number): void {
+        this.removeElementByIndex(listId, index, 'list-item');
+    }
+
+    /**
      * Update list item at specific index
+     * @param listId - List ID
+     * @param index - Item index to update
+     * @param item - New item data
      */
     updateListItem(listId: string, index: number, item: ListItem): void {
         const list = document.getElementById(listId);
@@ -893,6 +939,8 @@ class ClientApp {
 
     /**
      * Get list item count
+     * @param listId - List ID
+     * @returns Number of items in the list
      */
     getListLength(listId: string): number {
         const list = document.getElementById(listId);
@@ -1202,6 +1250,8 @@ class ClientApp {
 
     /**
      * Create table row HTML
+     * @param cells - Array of cell contents
+     * @returns HTML string for table row
      */
     private createTableRowHtml(cells: string[]): string {
         return `<tr>${cells.map(cell => `<td>${cell}</td>`).join('')}</tr>`;
@@ -1209,6 +1259,9 @@ class ClientApp {
 
     /**
      * Add row to existing table
+     * @param tableId - Table ID
+     * @param row - Row data to add
+     * @param direction - Direction to add ('append' or 'prepend')
      */
     appendTableRow(tableId: string, row: string[], direction: 'append' | 'prepend' = 'append'): void {
         const tbody = document.getElementById(`${tableId}-body`);
@@ -1220,6 +1273,8 @@ class ClientApp {
 
     /**
      * Prepend row to existing table
+     * @param tableId - Table ID
+     * @param row - Row data to prepend
      */
     prependTableRow(tableId: string, row: string[]): void {
         this.appendTableRow(tableId, row, 'prepend');
@@ -1227,6 +1282,8 @@ class ClientApp {
 
     /**
      * Remove row from table by index
+     * @param tableId - Table ID
+     * @param index - Row index to remove
      */
     removeTableRow(tableId: string, index: number): void {
         const tbody = document.getElementById(`${tableId}-body`);
@@ -1240,21 +1297,24 @@ class ClientApp {
 
     /**
      * Update table row at specific index
+     * @param tableId - Table ID
+     * @param index - Row index
+     * @param row - New row data
      */
     updateTableRow(tableId: string, index: number, row: string[]): void {
         const tbody = document.getElementById(`${tableId}-body`);
         if (!tbody) return;
 
         const rows = tbody.getElementsByTagName('tr');
-        if (index >= 0 && index < rows.length) {
-            if (rows[index]) {
-                rows[index].innerHTML = row.map((cell) => `<td>${cell}</td>`).join('');
-            }
+        if (index >= 0 && index < rows.length && rows[index]) {
+            rows[index].innerHTML = this.createTableRowHtml(row).slice(4, -5); // Remove <tr> tags
         }
     }
 
     /**
      * Get table row count
+     * @param tableId - Table ID
+     * @returns Number of rows in the table body
      */
     getTableLength(tableId: string): number {
         const tbody = document.getElementById(`${tableId}-body`);
@@ -1354,6 +1414,9 @@ class ClientApp {
 
     /**
      * Update progress bar value
+     * @param id - Progress bar ID
+     * @param value - New value
+     * @param max - Optional new maximum value
      */
     updateProgress(id: string, value: number, max?: number): void {
         const progressElement = document.getElementById(id);
@@ -1433,7 +1496,7 @@ class ClientApp {
     }
 
     /**
-     * Close modal
+     * Close modal dialog
      */
     closeModal(): void {
         const modal = document.getElementById('modal');
@@ -1468,13 +1531,17 @@ class ClientApp {
 
     /**
      * Get element by ID
+     * @param id - Element ID
+     * @returns HTMLElement or null
      */
     get(id: string): HTMLElement | null {
         return document.getElementById(id);
     }
 
     /**
-     * Get element value
+     * Get input element value
+     * @param id - Input element ID
+     * @returns Input value or empty string
      */
     val(id: string): string {
         const element = this.get(id) as HTMLInputElement;
@@ -1482,7 +1549,9 @@ class ClientApp {
     }
 
     /**
-     * Set element value
+     * Set input element value
+     * @param id - Input element ID
+     * @param value - Value to set
      */
     setVal(id: string, value: string): void {
         const element = this.get(id) as HTMLInputElement;
@@ -1490,61 +1559,89 @@ class ClientApp {
     }
 
     /**
-     * Add event listener
+     * Add event listener to element
+     * @param id - Element ID
+     * @param event - Event name
+     * @param handler - Event handler
      */
     on(id: string, event: string, handler: (e: Event) => void): void {
         this.get(id)?.addEventListener(event, handler);
     }
 
     /**
-     * Update text content of an element
+     * Update element content (text or HTML)
+     * @param id - Element ID
+     * @param content - Content to set
+     * @param isHtml - Whether content is HTML (default: false)
+     * @returns Success status
      */
-    updateText(id: string, text: string): boolean {
-        const element = document.getElementById(id);
+    private updateContent(id: string, content: string, isHtml: boolean = false): boolean {
+        const element = this.get(id);
         if (element) {
-            element.textContent = text;
+            if (isHtml) {
+                element.innerHTML = content;
+            } else {
+                element.textContent = content;
+            }
             return true;
         }
         return false;
+    }
+
+    /**
+     * Update text content of an element
+     * @param id - Element ID
+     * @param text - Text to set
+     * @returns Success status
+     */
+    updateText(id: string, text: string): boolean {
+        return this.updateContent(id, text, false);
     }
 
     /**
      * Update HTML content of an element
+     * @param id - Element ID
+     * @param html - HTML to set
+     * @returns Success status
      */
     updateHtml(id: string, html: string): boolean {
-        const element = document.getElementById(id);
+        return this.updateContent(id, html, true);
+    }
+
+    /**
+     * Set element visibility
+     * @param id - Element ID
+     * @param visible - Whether element should be visible
+     */
+    setVisibility(id: string, visible: boolean): void {
+        const element = this.get(id);
         if (element) {
-            element.innerHTML = html;
-            return true;
+            element.hidden = !visible;
         }
-        return false;
     }
 
     /**
      * Show element
+     * @param id - Element ID
      */
     show(id: string): void {
-        const element = document.getElementById(id);
-        if (element) {
-            element.hidden = false;
-        }
+        this.setVisibility(id, true);
     }
 
     /**
      * Hide element
+     * @param id - Element ID
      */
     hide(id: string): void {
-        const element = document.getElementById(id);
-        if (element) {
-            element.hidden = true;
-        }
+        this.setVisibility(id, false);
     }
 
     /**
      * Toggle element visibility
+     * @param id - Element ID
      */
     toggle(id: string): void {
-        const element = document.getElementById(id);
+        const element = this.get(id);
         if (element) {
             element.hidden = !element.hidden;
         }
@@ -1591,7 +1688,8 @@ class ClientApp {
      * Make API request
      * @param method - HTTP method
      * @param endpoint - API endpoint
-     * @param data - Request data
+     * @param data - Request data (optional)
+     * @returns Promise with response data
      */
     async api(method: string, endpoint: string, data?: any): Promise<any> {
         const options: RequestInit = {
@@ -1620,6 +1718,8 @@ class ClientApp {
 
     /**
      * GET request
+     * @param endpoint - API endpoint
+     * @returns Promise with response data
      */
     async apiGet(endpoint: string): Promise<any> {
         return this.api('GET', endpoint);
@@ -1627,6 +1727,9 @@ class ClientApp {
 
     /**
      * POST request
+     * @param endpoint - API endpoint
+     * @param data - Request data
+     * @returns Promise with response data
      */
     async apiPost(endpoint: string, data: any): Promise<any> {
         return this.api('POST', endpoint, data);
@@ -1634,6 +1737,9 @@ class ClientApp {
 
     /**
      * PUT request
+     * @param endpoint - API endpoint
+     * @param data - Request data
+     * @returns Promise with response data
      */
     async apiPut(endpoint: string, data: any): Promise<any> {
         return this.api('PUT', endpoint, data);
@@ -1641,6 +1747,8 @@ class ClientApp {
 
     /**
      * DELETE request
+     * @param endpoint - API endpoint
+     * @returns Promise with response data
      */
     async apiDelete(endpoint: string): Promise<any> {
         return this.api('DELETE', endpoint);
