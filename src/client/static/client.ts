@@ -436,23 +436,46 @@ class ClientApp {
 
     /**
      * Add event listener with timeout
+     * Supports both element IDs and CSS selectors
      */
     private addDelayedEventListener(idOrSelector: string, handler: () => void, event: string = 'click'): void {
         setTimeout(() => {
-            const element = /[.#[]/.test(idOrSelector)
-                ? document.querySelector(idOrSelector)
+            // Check if it's a CSS selector (starts with . # [ or contains space/special chars)
+            const isSelector = /^[.#[]|[\s>+~]/.test(idOrSelector);
+            const element = isSelector
+                ? document.querySelector<HTMLElement>(idOrSelector)
                 : document.getElementById(idOrSelector);
-            if (element) {
-                element.addEventListener(event, (e) => {
-                    e.preventDefault(); // Prevent default link behavior
-                    handler();
-                });
-                // Set cursor pointer for clickable elements
-                if (event === 'click') {
-                    (element as HTMLElement).style.cursor = 'pointer';
-                }
-            }
+
+            this.addEventListener(element, handler, event);
         }, 0);
+    }
+
+    private addEventListener(element: HTMLElement | null, handler: () => void, event: string = 'click'): void {
+        if (!element) return;
+        
+        element.addEventListener(event, (e) => {
+            // Only prevent default for links and form elements
+            const tagName = (e.target as HTMLElement).tagName.toLowerCase();
+            if (tagName === 'a' || tagName === 'button' || tagName === 'form') {
+                e.preventDefault();
+            }
+            handler();
+        });
+
+        // Set cursor pointer for clickable elements
+        if (event === 'click') {
+            element.style.cursor = 'pointer';
+        }
+    }
+
+    /**
+     * Create DOM element from HTML string
+     * Using template element for better performance and security
+     */
+    private htmlToElement(html: string): HTMLElement {
+        const template = document.createElement('template');
+        template.innerHTML = html.trim();
+        return template.content.firstChild as HTMLElement;
     }
 
     /**
@@ -669,7 +692,7 @@ class ClientApp {
      * @param options - Section options
      */
     section(title: string, options?: SectionOptions): string {
-        const { content, ...baseOptions } = options || {}
+        const { content, ...baseOptions } = options || {};
         const baseId = baseOptions.id;
         const attrs = this.buildAttrs({
             ...baseOptions,
@@ -784,15 +807,9 @@ class ClientApp {
             }
         });
 
+        // Generate HTML strings directly (more efficient)
         const listItems = items
-            .map(
-                (item) => `
-            <li class="list-item">
-                <div class="list-item-title">${item.title}</div>
-                ${item.content ? `<div class="list-item-content">${item.content}</div>` : ''}
-            </li>
-        `
-            )
+            .map((item) => this.createListItemHtml(item))
             .join('');
 
         const attrs = this.buildAttrs({
@@ -804,18 +821,26 @@ class ClientApp {
     }
 
     /**
+     * Create list item HTML
+     * Used both for string generation and DOM element creation
+     */
+    private createListItemHtml(item: ListItem): string {
+        return `
+            <li class="list-item">
+                <div class="list-item-title">${item.title}</div>
+                ${item.content ? `<div class="list-item-content">${item.content}</div>` : ''}
+            </li>
+        `;
+    }
+
+    /**
      * Add item to existing list
      */
     appendListItem(listId: string, item: ListItem, direction: 'append' | 'prepend' = 'append'): void {
         const list = document.getElementById(listId);
         if (!list) return;
 
-        const li = document.createElement('li');
-        li.className = 'list-item';
-        li.innerHTML = `
-            <div class="list-item-title">${item.title}</div>
-            ${item.content ? `<div class="list-item-content">${item.content}</div>` : ''}
-        `;
+        const li = this.htmlToElement(this.createListItemHtml(item));
 
         if (item.onclick) {
             li.addEventListener('click', item.onclick);
@@ -853,24 +878,17 @@ class ClientApp {
         if (!list) return;
 
         const items = list.getElementsByClassName('list-item');
-        if (index >= 0 && index < items.length) {
-            const listItem = items[index] as HTMLElement;
-            listItem.innerHTML = `
-                <div class="list-item-title">${item.title}</div>
-                ${item.content ? `<div class="list-item-content">${item.content}</div>` : ''}
-            `;
+        if (index < 0 || index >= items.length) return;
 
-            // Update onclick handler if present
-            if (item.onclick) {
-                listItem.style.cursor = 'pointer';
-                // Remove old listeners and add new one
-                const newListItem = listItem.cloneNode(true) as HTMLElement;
-                listItem.parentNode?.replaceChild(newListItem, listItem);
-                newListItem.addEventListener('click', item.onclick);
-            } else {
-                listItem.style.cursor = 'default';
-            }
+        const oldItem = items[index] as HTMLElement;
+        const newItem = this.htmlToElement(this.createListItemHtml(item));
+
+        if (item.onclick) {
+            newItem.addEventListener('click', item.onclick);
+            newItem.style.cursor = 'pointer';
         }
+
+        oldItem.replaceWith(newItem);
     }
 
     /**
@@ -1166,7 +1184,7 @@ class ClientApp {
         const tableId = baseOptions.id || this.generateId('table');
 
         const headerRow = headers.map((h) => `<th>${h}</th>`).join('');
-        const bodyRows = rows.map((row) => `<tr>${row.map((cell) => `<td>${cell}</td>`).join('')}</tr>`).join('');
+        const bodyRows = rows.map((row) => this.createTableRowHtml(row)).join('');
 
         const attrs = this.buildAttrs({
             ...baseOptions,
@@ -1183,14 +1201,20 @@ class ClientApp {
     }
 
     /**
+     * Create table row HTML
+     */
+    private createTableRowHtml(cells: string[]): string {
+        return `<tr>${cells.map(cell => `<td>${cell}</td>`).join('')}</tr>`;
+    }
+
+    /**
      * Add row to existing table
      */
     appendTableRow(tableId: string, row: string[], direction: 'append' | 'prepend' = 'append'): void {
         const tbody = document.getElementById(`${tableId}-body`);
         if (!tbody) return;
 
-        const tr = document.createElement('tr');
-        tr.innerHTML = row.map((cell) => `<td>${cell}</td>`).join('');
+        const tr = this.htmlToElement(this.createTableRowHtml(row));
         tbody[direction](tr);
     }
 
