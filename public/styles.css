@@ -418,6 +418,7 @@ div {
 
 .checkbox input,
 .radio input {
+    accent-color: var(--primary);
     margin-right: var(--space-sm);
 }
 
@@ -565,7 +566,7 @@ div {
     padding: var(--space-xs) var(--space-sm);
     font-size: 0.75rem;
     font-weight: 600;
-    border-radius: var(--radius);
+    border-radius: 1rem;
     background: var(--bg-secondary);
     color: var(--text-secondary);
 }
@@ -777,9 +778,9 @@ div {
 
 /* === Progress === */
 .progress {
-    height: 16px;
+    height: 20px;
     background: var(--bg-secondary);
-    border-radius: 8px;
+    border-radius: 10px;
     overflow: hidden;
     position: relative;
 }
@@ -796,19 +797,18 @@ div {
 
 .progress-text {
     position: absolute;
-    transform: translate(-50%, -50%);   
+    transform: translate(-50%, -50%);
     left: 50%;
     top: 50%;
     font-size: 0.75rem;
-    font-weight: 500;
-    white-space: nowrap;
-    color: var(--primary-text);
+    font-weight: 666;
+    color: var(--text);
 }
 
 /* === Spinner === */
 .spinner {
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
     border: 3px solid var(--border);
     border-top-color: var(--primary);
     border-radius: 50%;
