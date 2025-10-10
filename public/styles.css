@@ -787,7 +787,7 @@ div {
 
 .progress-bar {
     height: 100%;
-    background: var(--primary);
+    background: rgba(from var(--primary) r g b / 0.5);
     transition: width 300ms ease;
     display: flex;
     align-items: center;
