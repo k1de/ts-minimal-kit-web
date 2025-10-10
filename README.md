@@ -13,6 +13,7 @@ ts-minimal-kit-web/
 │   │   └── static/    # Core server modules
 │   └── client/        # Client-side code
 │       ├── index.ts   # Client entry point
+│       ├── SHOWCASE.ts  # demonstration of features
 │       └── static/    # UI framework
 ├── public/            # Static files & compiled client
 │   ├── index.html     # Main HTML

@@ -45,5 +45,6 @@
         "useDefineForClassFields": true,
         "resolveJsonModule": true
     },
-    "include": ["src/client/**/*.ts"]
+    "include": ["src/client/**/*.ts"],
+    "exclude": ["src/client/SHOWCASE.ts"]
 }
