@@ -400,7 +400,7 @@ class ShowcaseApp extends ClientApp {
                     this.div(checkboxes, { className: 'flex-1' }),
                     this.div(radios, { className: 'flex-1' })
                 ],
-                gap: 'lg'
+                gap: 'l'
             }),
             id: 'checks-radios-card'
         }));
@@ -436,7 +436,7 @@ class ShowcaseApp extends ClientApp {
 
         this.append(this.card('Users Table', {
             content: table +
-                this.spacer('md') +
+                this.spacer('m') +
                 this.button('Add Row', {
                     onclick: () => {
                         const id = (this.getTableLength('users-table') + 1).toString();
@@ -521,7 +521,7 @@ class ShowcaseApp extends ClientApp {
                     variant: 'success'
                 })
             ],
-            gap: 'md'
+            gap: 'm'
         });
 
         this.append(this.card('Modal Triggers', {
@@ -565,7 +565,7 @@ class ShowcaseApp extends ClientApp {
 
         this.append(this.card('Interactive List', {
             content: list +
-                this.spacer('md') +
+                this.spacer('m') +
                 this.flex({
                     items: [
                         this.button('Add Item', {
@@ -589,7 +589,7 @@ class ShowcaseApp extends ClientApp {
                             variant: 'danger'
                         })
                     ],
-                    gap: 'md'
+                    gap: 'm'
                 }),
             id: 'list-card'
         }));
@@ -664,7 +664,7 @@ class ShowcaseApp extends ClientApp {
             id: 'progress-dynamic'
         });
 
-        const progressBars = progressBar1 + this.spacer('sm') + progressBar2 + this.spacer('sm') + progressBar3;
+        const progressBars = progressBar1 + this.spacer('s') + progressBar2 + this.spacer('s') + progressBar3;
 
         // Start dynamic animation for the third progress bar
         this.startDynamicProgress();

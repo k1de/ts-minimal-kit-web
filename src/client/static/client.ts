@@ -53,9 +53,8 @@ type ToastType = NotificationType;
 type GridColumns = 2 | 3 | 4 | 5 | 6 | 7 | 8;
 type ThemeVariant = 'dark' | 'light';
 type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
-type SpacerSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+type Spacing = 's' | 'm' | 'l';
 type FlexDirection = 'row' | 'col';
-type GapSize = 'sm' | 'md' | 'lg';
 type ScrollBehavior = 'smooth' | 'instant' | 'auto';
 type ScrollBlock = 'start' | 'center' | 'end' | 'nearest';
 type ScrollInline = 'start' | 'center' | 'end' | 'nearest';
@@ -278,7 +277,7 @@ interface LinkOptions extends BaseOptions {
 /** Flex container options */
 interface FlexOptions extends BaseOptions {
     items: string[];
-    gap?: GapSize;
+    gap?: Spacing;
     direction?: FlexDirection;
 }
 
@@ -1120,7 +1119,7 @@ class ClientApp {
         });
 
         return `
-            <div class="flex items-center gap-md mt-sm"${containerAttrs}>
+            <div class="flex items-center gap-m mt-s"${containerAttrs}>
                 <label class="switch">
                     <input${inputAttrs}>
                     <span class="switch-slider"></span>
@@ -1785,10 +1784,10 @@ class ClientApp {
 
         const contentCard =
             this.image({ src: image, width: '100%', height: 200, fit: 'cover' }) +
-            `<div class="p-md">
+            `<div class="p-m">
                 <h4>${title}</h4>
                 <p class="text-muted">${content}</p>
-                <div class="mt-md">${this.badge(price, { variant: priceVariant })}</div>
+                <div class="mt-m">${this.badge(price, { variant: priceVariant })}</div>
             </div>`;
 
         return this.card('', { ...baseOptions, content: contentCard });
@@ -1823,7 +1822,7 @@ class ClientApp {
      * @param size - Spacer size
      * @param options - Spacer options
      */
-    spacer(size: SpacerSize = 'md', options?: BaseOptions): string {
+    spacer(size: Spacing = 'm', options?: BaseOptions): string {
         const attrs = this.buildAttrs({
             ...options,
             style: `height: var(--space-${size})`,
@@ -1836,7 +1835,7 @@ class ClientApp {
      * @param options - Flex options
      */
     flex(options: FlexOptions): string {
-        const { items, gap = 'md', direction = 'row', ...baseOptions } = options;
+        const { items, gap = 'm', direction = 'row', ...baseOptions } = options;
         const className = `flex flex-${direction} gap-${gap}`;
 
         const finalClassName = baseOptions.className ? `${className} ${baseOptions.className}` : className;
@@ -1882,9 +1881,8 @@ export type {
     GridColumns,
     ThemeVariant,
     HeadingLevel,
-    SpacerSize,
+    Spacing,
     FlexDirection,
-    GapSize,
     ScrollBehavior,
     ScrollBlock,
     ScrollInline,
