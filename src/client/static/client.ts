@@ -281,21 +281,6 @@ interface FlexOptions extends BaseOptions {
     direction?: FlexDirection;
 }
 
-/** Stat card options */
-interface StatCardOptions extends CardOptions {
-    value: string | number;
-    color?: string;
-}
-
-/** Product card options */
-interface ProductCardOptions extends BaseOptions {
-    image: string;
-    title: string;
-    content: string;
-    price: string;
-    priceVariant?: ButtonVariant;
-}
-
 /** Scroll to element options */
 interface ScrollToElementOptions {
     behavior?: ScrollBehavior;
@@ -1753,45 +1738,6 @@ class ClientApp {
         return this.api('DELETE', endpoint);
     }
 
-    // ========================================
-    // HELPER METHODS FOR COMMON PATTERNS
-    // ========================================
-
-    /**
-     * Create a stat card with value and subtitle
-     * @param title - Card title
-     * @param options - Stat card options
-     */
-    statCard(title: string, options: StatCardOptions): string {
-        const { value, subtitle, color = 'primary', ...cardOptions } = options;
-        const baseId = cardOptions.id;
-        const content = `
-            <div class="text-center">
-                <h2 style="color: var(--${color})"${this.getNestedId(baseId, 'value')}>${value}</h2>
-                ${subtitle ? `<p class="text-muted"${this.getNestedId(baseId, 'subtitle')}>${subtitle}</p>` : ''}
-            </div>
-        `;
-
-        return this.card(title, { ...cardOptions, content });
-    }
-
-    /**
-     * Create a product card with image
-     * @param options - Product card options
-     */
-    productCard(options: ProductCardOptions): string {
-        const { image, title, content, price, priceVariant = 'primary', ...baseOptions } = options;
-
-        const contentCard =
-            this.image({ src: image, width: '100%', height: 200, fit: 'cover' }) +
-            `<div class="p-m">
-                <h4>${title}</h4>
-                <p class="text-muted">${content}</p>
-                <div class="mt-m">${this.badge(price, { variant: priceVariant })}</div>
-            </div>`;
-
-        return this.card('', { ...baseOptions, content: contentCard });
-    }
 
     /**
      * Create a heading
