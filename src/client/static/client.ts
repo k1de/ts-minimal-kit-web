@@ -228,12 +228,6 @@ interface RadioGroupOptions extends BaseOptions {
     selected?: string;
 }
 
-/** Switch options */
-interface SwitchOptions extends BaseOptions {
-    checked?: boolean;
-    label?: string;
-}
-
 /** Form group options */
 interface FormGroupOptions extends BaseOptions {
     label: string;
@@ -245,13 +239,6 @@ interface FormGroupOptions extends BaseOptions {
 interface GridOptions extends BaseOptions {
     columns?: GridColumns;
     items: string[];
-}
-
-/** Image grid options */
-interface ImageGridOptions extends BaseOptions {
-    columns?: GridColumns;
-    images: Array<{ src: string; alt?: string }>;
-    height?: number;
 }
 
 /** Text options */
@@ -779,30 +766,6 @@ class ClientApp {
     }
 
     /**
-     * Create an image gallery grid
-     * @param options - Image grid options
-     */
-    imageGrid(options: ImageGridOptions): string {
-        const { columns = 3, images, height, ...baseOptions } = options;
-        const finalHeight = height ?? Math.floor(320 / (columns / 2));
-
-        const items = images.map(
-            (img) =>
-                `<div style="overflow: hidden; border-radius: var(--radius);">
-                ${this.image({
-                    src: img.src,
-                    alt: img.alt || '',
-                    width: '100%',
-                    height: `${finalHeight}px`,
-                    fit: 'cover',
-                })}
-            </div>`
-        );
-
-        return this.grid({ items, columns, ...baseOptions });
-    }
-
-    /**
      * Create an interactive list
      * @param options - List options including items
      */
@@ -1086,32 +1049,6 @@ class ClientApp {
             .join('');
 
         return `<div${containerAttrs}>${radios}</div>`;
-    }
-
-    /**
-     * Create a switch/toggle
-     * @param id - Switch ID
-     * @param options - Switch options
-     */
-    switch(id: string, options?: SwitchOptions): string {
-        const { checked, label, ...baseOptions } = options || {};
-        const containerAttrs = this.buildAttrs(baseOptions);
-
-        const inputAttrs = this.buildAttrs({
-            type: 'checkbox',
-            id,
-            checked,
-        });
-
-        return `
-            <div class="flex items-center gap-m mt-s"${containerAttrs}>
-                <label class="switch">
-                    <input${inputAttrs}>
-                    <span class="switch-slider"></span>
-                </label>
-                ${label ? `<span>${label}</span>` : ''}
-            </div>
-        `;
     }
 
     // ========================================
