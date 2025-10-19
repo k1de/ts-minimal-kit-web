@@ -121,19 +121,19 @@ class ShowcaseApp extends ClientApp {
             this.grid(
                 [
                     this.card(
-                        this.heading('30+', 2, { style: 'text-align: center; color: var(--primary)' }) +
+                        this.heading('30+', 2, { style: { textAlign: 'center', color: 'var(--primary)' } }) +
                         this.div('UI Elements', { className: 'text-center text-muted' })
                     ),
                     this.card(
-                        this.heading('50+', 2, { style: 'text-align: center; color: var(--success)' }) +
+                        this.heading('50+', 2, { style: { textAlign: 'center', color: 'var(--success)' } }) +
                         this.div('Helper Functions', { className: 'text-center text-muted' })
                     ),
                     this.card(
-                        this.heading('2', 2, { style: 'text-align: center; color: var(--warning)' }) +
+                        this.heading('2', 2, { style: { textAlign: 'center', color: 'var(--warning)' } }) +
                         this.div('Dark & Light', { className: 'text-center text-muted' })
                     ),
                     this.card(
-                        this.heading('0', 2, { style: 'text-align: center; color: var(--danger)' }) +
+                        this.heading('0', 2, { style: { textAlign: 'center', color: 'var(--danger)' } }) +
                         this.div('Zero External', { className: 'text-center text-muted' })
                     ),
                 ],

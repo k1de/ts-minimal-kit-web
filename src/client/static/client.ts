@@ -56,6 +56,11 @@ type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
 type Spacing = 'none' | 's' | 'm' | 'l';
 type FlexDirection = 'row' | 'col';
 
+/** CSS style properties - using native CSSStyleDeclaration without methods */
+type StyleOptions = Partial<{
+    [K in keyof CSSStyleDeclaration as CSSStyleDeclaration[K] extends Function ? never : K]: CSSStyleDeclaration[K]
+}>;
+
 
 // ========================================
 // INTERFACES
@@ -65,7 +70,7 @@ type FlexDirection = 'row' | 'col';
 interface BaseOptions {
     id?: string;
     className?: string;
-    style?: string;
+    style?: string | StyleOptions;
 }
 
 /** Navigation item configuration */
@@ -405,6 +410,7 @@ class ClientApp {
     /**
      * Build HTML attributes from any object
      * Converts className to class attribute
+     * Converts style object to string
      * @param attrs - Attributes object
      * @returns HTML attributes string
      */
@@ -416,6 +422,19 @@ class ClientApp {
         if ('className' in processedAttrs && !('class' in processedAttrs)) {
             processedAttrs.class = processedAttrs.className;
             delete processedAttrs.className;
+        }
+
+        // Handle style object
+        if (processedAttrs.style && typeof processedAttrs.style === 'object') {
+            const styleObj = processedAttrs.style as StyleOptions;
+            processedAttrs.style = Object.entries(styleObj)
+                .filter(([_, value]) => value !== undefined && value !== null)
+                .map(([key, value]) => {
+                    // Convert camelCase to kebab-case (native CSSStyleDeclaration uses camelCase)
+                    const cssKey = key.replace(/[A-Z]/g, match => `-${match.toLowerCase()}`);
+                    return `${cssKey}: ${value}`;
+                })
+                .join('; ');
         }
 
         const result = Object.entries(processedAttrs)
@@ -1522,6 +1541,7 @@ export type {
     HeadingLevel,
     Spacing,
     FlexDirection,
+    StyleOptions,
 
     // Options interfaces
     NavOptions,
