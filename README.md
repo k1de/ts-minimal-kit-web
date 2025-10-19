@@ -110,10 +110,11 @@ npm install
 
 ### Components
 
-Cards, sections, forms,
-tables, lists, tabs,
-modals, buttons, alerts,
-progress bars, and more.
+Layouts: cards, sections, grids, flex, tabs.
+Forms: inputs, selects, checkboxes, tables, lists.
+Actions: buttons, dropdowns, modals.
+Feedback: alerts, toasts, badges.
+Progress: progress bars, spinners.
 
 **See [EXAMPLES.md](./EXAMPLES.md) for complete component reference and usage examples.**
 

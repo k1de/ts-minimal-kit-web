@@ -169,6 +169,54 @@ this.showSidebar({
 });
 ```
 
+## Basic HTML Elements
+
+```typescript
+// Headings
+this.heading('Main Title', 1); // <h1>
+this.heading('Section Title', 2); // <h2>
+this.heading('Subsection', 3); // <h3>
+
+// Text elements
+this.paragraph('This is a paragraph');
+this.text('Styled text', {
+    size: '1.25rem',
+    color: 'var(--primary)',
+    weight: 'bold',
+    align: 'center',
+});
+
+// Basic containers
+this.div('Content in div', { id: 'my-div', className: 'custom-class' });
+this.span('Inline text', { className: 'highlight' });
+
+// Links
+this.link('Click here', {
+    href: 'https://example.com',
+    target: '_blank',
+});
+this.link('Internal link', {
+    href: '#section',
+    onclick: () => this.handleClick(),
+});
+
+// Lists
+this.ul(['Item 1', 'Item 2', 'Item 3']);
+this.ol(['First', 'Second', 'Third'], { className: 'ordered-list' });
+
+// Layout helpers
+this.divider(); // Horizontal line
+this.spacer('m'); // Medium space
+this.spacer('l'); // Large space
+
+// Flex container
+this.flex({
+    items: [this.button('Button 1'), this.button('Button 2'), this.button('Button 3')],
+    direction: 'row', // or 'col'
+    gap: 'm', // s, m, or l
+});
+```
+
 ## Content Components
 
 ```typescript
@@ -179,6 +227,15 @@ this.section('Title', { content: 'Content text' });
 this.card('Title', {
     content: 'Content',
     subtitle: 'Optional subtitle',
+});
+
+// Tabs
+this.tabs({
+    items: [
+        { label: 'Tab 1', content: 'Content 1' },
+        { label: 'Tab 2', content: 'Content 2' },
+        { label: 'Tab 3', content: 'Content 3' },
+    ],
 });
 
 // Grid (2-8 columns)
@@ -246,6 +303,25 @@ this.button('Click me', { onclick: () => alert('Hi!') });
 this.button('Save', { variant: 'primary' });
 this.button('Delete', { variant: 'danger' });
 
+// Button Group
+this.buttonGroup({
+    buttons: [
+        { text: 'Edit', onclick: () => this.edit() },
+        { text: 'Delete', onclick: () => this.delete(), variant: 'danger' },
+    ],
+});
+
+// Dropdown
+this.dropdown({
+    text: 'Actions',
+    items: [
+        { text: 'Edit', onclick: () => this.edit() },
+        { text: 'Duplicate', onclick: () => this.duplicate() },
+        { text: 'Delete', onclick: () => this.delete() },
+    ],
+    variant: 'primary',
+});
+
 // Badges
 this.badge('New');
 this.badge('Active', { variant: 'success' });
@@ -256,7 +332,10 @@ this.alert('Success!', { type: 'success' });
 
 // Progress
 this.progress(75); // 75%
-this.progress(50, { showText: true, id: 'prog-1' });
+this.progress(50, { showText: true, max: 100 });
+
+// Spinner
+this.spinner();
 
 // Toast notifications
 this.toast('Saved!', { type: 'success' });
@@ -285,11 +364,6 @@ this.table({
     ],
     id: 'users-table',
 });
-
-// Table manipulation
-this.appendTableRow('users-table', ['Bob', 'bob@example.com', 'New']);
-this.updateTableRow('users-table', 0, ['John Doe', 'john@company.com', 'Updated']);
-this.removeTableRow('users-table', 1);
 ```
 
 ## Navigation & DOM
@@ -307,20 +381,30 @@ protected onHashChange(hash: string): void {
     }
 }
 
+// Scroll to element
+this.scrollToElement('section-id');        // Smooth scroll by default
+this.scrollToElement('section-id', false); // Instant scroll
+
 // DOM utilities
 this.clear();                          // Clear content
-this.append('<p>Text</p>');           // Add content
+this.html('<p>Replace all</p>');      // Replace content
+this.append('<p>Add text</p>');       // Append content
 this.get('element-id');               // Get element
 this.val('input-id');                 // Get input value
 this.setVal('input-id', 'new');       // Set input value
 this.updateText('span-id', 'New');    // Update text
+this.updateHtml('div-id', '<b>HTML</b>'); // Update HTML
 this.show('element-id');              // Show element
 this.hide('element-id');              // Hide element
 this.toggle('element-id');            // Toggle visibility
 
 // Theme
 this.toggleTheme();                   // Toggle dark/light
-this.setTheme('dark');               // Set specific theme
+this.setTheme('dark');                // Set specific theme
+this.getTheme();                      // Get current theme
+
+// Event listeners
+this.on('button-id', 'click', (e) => console.log('Clicked'));
 ```
 
 ## Nested Element IDs
@@ -348,7 +432,7 @@ For component with `id`, nested elements follow:
 -   `{id}-title` - Title element
 -   `{id}-subtitle` - Subtitle element
 -   `{id}-content` - Content element
--   `{id}-value` - Value element (progress, statCard)
+-   `{id}-value` - Value element (progress)
 -   `{id}-text` - Text element (button, badge)
 -   `{id}-message` - Message element (alert)
 -   `{id}-label` - Label element (formGroup)
