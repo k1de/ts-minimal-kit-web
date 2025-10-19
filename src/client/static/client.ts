@@ -612,7 +612,7 @@ class ClientApp {
      * @param content - Paragraph content
      * @param options - Paragraph options
      */
-    p(content: string, options?: BaseOptions): string {
+    paragraph(content: string, options?: BaseOptions): string {
         return `<p${this.buildAttrs(options)}>${content}</p>`;
     }
 
@@ -1443,16 +1443,16 @@ class ClientApp {
      * @param level - Heading level (1-6, default: 2)
      * @param options - Heading options
      */
-    h(text: string, level: HeadingLevel = 2, options?: BaseOptions): string {
+    heading(text: string, level: HeadingLevel = 2, options?: BaseOptions): string {
         const attrs = this.buildAttrs(options);
         return `<h${level}${attrs}>${text}</h${level}>`;
     }
 
     /**
-     * Create a divider
-     * @param options - Divider options
+     * Create a separator (horizontal rule)
+     * @param options - Separator options
      */
-    divider(options?: BaseOptions): string {
+    separator(options?: BaseOptions): string {
         const attrs = this.buildAttrs({
             ...options,
             style: 'border: none; border-top: 1px solid var(--border); margin: var(--space-l) 0;',

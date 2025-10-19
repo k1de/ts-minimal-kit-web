@@ -20,8 +20,8 @@ class MyApp extends ClientApp {
     showHome(): void {
         this.clear();
         this.append(this.card(
-            this.h('Welcome', 1) + 
-            this.p('Hello World')
+            this.heading('Welcome', 1) + 
+            this.paragraph('Hello World')
         ));
     }
 }
@@ -173,13 +173,13 @@ this.showSidebar({
 
 ```typescript
 // Headings
-this.h('Main Title', 1); // <h1>
-this.h('Section Title', 2); // <h2>
-this.h('Subsection', 3); // <h3>
-this.h('Default H2'); // <h2> by default
+this.heading('Main Title', 1); // <h1>
+this.heading('Section Title', 2); // <h2>
+this.heading('Subsection', 3); // <h3>
+this.heading('Default H2'); // <h2> by default
 
 // Text elements
-this.p('This is a paragraph');
+this.paragraph('This is a paragraph');
 this.text('Styled text', {
     size: '1.25rem',
     color: 'var(--primary)',
@@ -206,7 +206,7 @@ this.ul(['Item 1', 'Item 2', 'Item 3']);
 this.ol(['First', 'Second', 'Third'], { className: 'ordered-list' });
 
 // Layout helpers
-this.divider(); // Horizontal line
+this.separator(); // Horizontal line
 this.spacer('m'); // Medium space
 this.spacer('l'); // Large space
 
@@ -225,9 +225,9 @@ this.card('Any content here');
 
 // Card with composed content
 this.card(
-    this.h('Card Title') + // defaults to h2
-    this.divider() +
-    this.p('Card content') +
+    this.heading('Card Title') + // defaults to h2
+    this.separator() +
+    this.paragraph('Card content') +
     this.button('Action', { variant: 'primary' })
 );
 
@@ -349,8 +349,8 @@ this.toast('Error!', { type: 'danger', duration: 5000 });
 
 // Modal - regular (can close by clicking outside)
 this.modal(
-    this.h('Confirm Action') +
-    this.p('Are you sure you want to proceed?') +
+    this.heading('Confirm Action') +
+    this.paragraph('Are you sure you want to proceed?') +
     this.spacer('m') +
     this.flex([
         this.button('Cancel', { onclick: () => this.closeModal() }),
@@ -367,8 +367,8 @@ this.modal(
 // Modal - blocking (must use buttons to close)
 this.modal(
     this.alert('Critical Action', { type: 'warning' }) +
-    this.h('This action cannot be undone') +
-    this.p('You must make a choice to continue.') +
+    this.heading('This action cannot be undone') +
+    this.paragraph('You must make a choice to continue.') +
     this.spacer('m') +
     this.button('I understand', {
         onclick: () => this.closeModal(),
