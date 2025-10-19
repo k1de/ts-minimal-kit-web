@@ -1,31 +1,24 @@
-// showcase.ts - Showcase application
+// showcase.ts - Showcase application demonstrating framework capabilities
 
 import { ClientApp } from './static/client.js';
 import type { ThemeVariant } from './static/client.js';
 
-// Showcase
-
 class ShowcaseApp extends ClientApp {
     override start(): void {
-        this.loadTheme()
+        this.loadTheme();
 
-        // Set layout with navigation and sidebar
-        this.setLayout('nav-sidebar');
-
-        // Navigation with new API
-        this.showNav('UI Framework Examples', {
+        // Navigation
+        this.showNav('UI Framework Showcase', {
             items: [
                 { text: 'Home', onclick: () => this.navigateTo('home') },
                 { text: 'Components', onclick: () => this.navigateTo('components') },
                 { text: 'Forms', onclick: () => this.navigateTo('forms') },
-                {
-                    text: 'Theme', onclick: () => this.swapThemeAndSave()
-                }
+                { text: 'Layouts', onclick: () => this.navigateTo('layouts') },
+                { text: 'Theme', onclick: () => this.swapThemeAndSave() },
             ],
-            id: 'main-nav'
         });
 
-        // Sidebar with sections - new API
+        // Sidebar
         this.showSidebar({
             sections: [
                 {
@@ -33,699 +26,995 @@ class ShowcaseApp extends ClientApp {
                     items: [
                         { text: 'Typography', onclick: () => this.navigateTo('typography') },
                         { text: 'Buttons', onclick: () => this.navigateTo('buttons') },
-                        { text: 'Cards', onclick: () => this.navigateTo('cards') }
-                    ]
+                        { text: 'Badges', onclick: () => this.navigateTo('badges') },
+                    ],
                 },
                 {
-                    title: 'Advanced',
+                    title: 'Layout',
+                    items: [
+                        { text: 'Cards', onclick: () => this.navigateTo('cards') },
+                        { text: 'Grid', onclick: () => this.navigateTo('grid') },
+                        { text: 'Flex', onclick: () => this.navigateTo('flex') },
+                        { text: 'Tabs', onclick: () => this.navigateTo('tabs') },
+                    ],
+                },
+                {
+                    title: 'Data',
                     items: [
                         { text: 'Tables', onclick: () => this.navigateTo('tables') },
+                        { text: 'Lists', onclick: () => this.navigateTo('lists') },
+                    ],
+                },
+                {
+                    title: 'Feedback',
+                    items: [
+                        { text: 'Alerts', onclick: () => this.navigateTo('alerts') },
                         { text: 'Modals', onclick: () => this.navigateTo('modals') },
-                        { text: 'Lists', onclick: () => this.navigateTo('lists') }
-                    ]
-                }
+                        { text: 'Progress', onclick: () => this.navigateTo('progress') },
+                    ],
+                },
             ],
-            id: 'main-sidebar'
         });
     }
 
     override onHashChange(hash: string): void {
         switch (hash) {
-            case 'typography':
-                this.showTypography()
-                break;
-            case 'buttons':
-                this.showButtons()
-                break;
-            case 'cards':
-                this.showCards()
-                break;
-            case 'tables':
-                this.showTables()
-                break;
-            case 'modals':
-                this.showModals()
-                break;
-            case 'lists':
-                this.showLists()
-                break;
-            case 'forms':
-                this.showForms()
-                break;
-            case 'components':
-                this.showComponents()
-                break;
-
-            default:
-                this.showHome();
-                break;
+            case 'typography': this.showTypography(); break;
+            case 'buttons': this.showButtons(); break;
+            case 'badges': this.showBadges(); break;
+            case 'cards': this.showCards(); break;
+            case 'grid': this.showGrid(); break;
+            case 'flex': this.showFlex(); break;
+            case 'tabs': this.showTabs(); break;
+            case 'tables': this.showTables(); break;
+            case 'lists': this.showLists(); break;
+            case 'alerts': this.showAlerts(); break;
+            case 'modals': this.showModals(); break;
+            case 'progress': this.showProgress(); break;
+            case 'forms': this.showForms(); break;
+            case 'components': this.showComponents(); break;
+            case 'layouts': this.showLayouts(); break;
+            default: this.showHome();
         }
     }
 
     private loadTheme(): void {
         const theme = localStorage.getItem('theme') as ThemeVariant;
-        if (theme) this.setTheme(theme)
+        if (theme) this.setTheme(theme);
     }
 
     private swapThemeAndSave(): void {
-        const theme = this.toggleTheme()
+        const theme = this.toggleTheme();
         localStorage.setItem('theme', theme);
+        this.toast(`Theme: ${theme}`, { type: 'info' });
     }
 
     private showHome(): void {
         this.clear();
 
-        // Section with ID for later updates
-        this.append(this.section('Welcome to UI Framework', {
-            content: 'A minimal, consistent UI framework with unified API',
-            id: 'welcome-section'
-        }));
+        // Welcome section
+        this.append(
+            this.div(
+                this.h('Welcome to UI Framework', 1) +
+                this.p('A minimal TypeScript framework with zero dependencies')
+            )
+        );
 
-        // Basic HTML elements - new methods
-        this.append(this.div(
-            this.paragraph('This framework provides a consistent API where:', { id: 'intro-para' }) +
-            this.ul([
-                'All methods use object parameters for multiple options',
-                'Every component can have an optional ID',
-                'Event handling is automatic with cursor:pointer',
-                'Theme switching is built-in'
-            ], { id: 'features-list' }),
-            { id: 'intro-content', className: 'p-md' }
-        ));
+        // Feature list
+        this.append(
+            this.card(
+                this.h('Core Principles') +
+                this.p('This framework provides:') +
+                this.ul([
+                    'Zero external dependencies',
+                    'Full TypeScript support',
+                    'Consistent API across all components',
+                    'Built-in dark/light themes',
+                    'Automatic event handling',
+                    'Client and server integration',
+                ])
+            )
+        );
 
-        // Stat cards grid
-        const statsGrid = this.grid({
-            columns: 4,
-            items: [
-                this.statCard('Components', {
-                    value: '25+',
-                    subtitle: 'UI Elements',
-                    color: 'primary',
-                    content: '',
-                    id: 'stat-components'
-                }),
-                this.statCard('API Methods', {
-                    value: '50+',
-                    subtitle: 'Helper Functions',
-                    color: 'success',
-                    content: '',
-                    id: 'stat-methods'
-                }),
-                this.statCard('Themes', {
-                    value: '2',
-                    subtitle: 'Dark & Light',
-                    color: 'warning',
-                    content: '',
-                    id: 'stat-themes'
-                }),
-                this.statCard('Dependencies', {
-                    value: '0',
-                    subtitle: 'Zero External',
-                    color: 'danger',
-                    content: '',
-                    id: 'stat-deps'
-                })
-            ],
-            id: 'stats-grid'
-        });
+        // Stats grid
+        this.append(
+            this.grid(
+                [
+                    this.card(
+                        this.div(this.h('30+'), { style: 'text-align: center; color: var(--primary)' }) +
+                        this.div('UI Elements', { className: 'text-center text-muted' })
+                    ),
+                    this.card(
+                        this.div(this.h('50+'), { style: 'text-align: center; color: var(--success)' }) +
+                        this.div('Helper Functions', { className: 'text-center text-muted' })
+                    ),
+                    this.card(
+                        this.div(this.h('2'), { style: 'text-align: center; color: var(--warning)' }) +
+                        this.div('Dark & Light', { className: 'text-center text-muted' })
+                    ),
+                    this.card(
+                        this.div(this.h('0'), { style: 'text-align: center; color: var(--danger)' }) +
+                        this.div('Zero External', { className: 'text-center text-muted' })
+                    ),
+                ],
+                { columns: 4 }
+            )
+        );
 
-        this.append(statsGrid);
+        // Quick navigation
+        this.append(
+            this.card(
+                this.h('Quick Start') +
+                this.p('Explore framework capabilities')
+            )
+        );
+
+        this.append(
+            this.flex(
+                [
+                    this.button('View Components', {
+                        onclick: () => this.navigateTo('components'),
+                        variant: 'primary',
+                    }),
+                    this.button('Try Forms', {
+                        onclick: () => this.navigateTo('forms'),
+                        variant: 'success',
+                    }),
+                    this.button('See Layouts', {
+                        onclick: () => this.navigateTo('layouts'),
+                        variant: 'warning',
+                    }),
+                ],
+                { gap: 'm' }
+            )
+        );
     }
 
     private showTypography(): void {
         this.clear();
 
-        this.append(this.section('Typography Examples', {
-            content: 'Text elements with consistent API',
-            id: 'typography-section'
-        }));
+        this.append(this.div(
+            this.h('Typography') +
+            this.p('Text elements and formatting')
+        ));
 
-        // Headings with IDs
-        const headings = [1, 2, 3, 4, 5, 6].map(level =>
-            this.heading(`Heading Level ${level}`, level as any, { id: `heading-${level}` })
-        ).join('');
+        // Headings
+        this.append(
+            this.card(
+                this.h('Headings') +
+                this.h('Heading 1') +
+                this.h('Heading 2') +
+                this.h('Heading 3', 3) +
+                this.h('Heading 4', 4) +
+                this.h('Heading 5', 5) +
+                this.h('Heading 6', 6)
+            )
+        );
 
-        this.append(this.card('Headings', {
-            content: headings,
-            id: 'headings-card'
-        }));
-
-        // Text with styling options
-        this.append(this.card('Styled Text', {
-            content:
-                this.text('Default text with no styling', { id: 'text-default' }) +
+        // Text styles
+        this.append(
+            this.card(
+                this.h('Text Styles') +
+                this.p('Regular paragraph text') +
                 this.text('Large blue text', {
                     size: '1.5rem',
                     color: 'var(--primary)',
-                    id: 'text-styled'
                 }) +
                 this.text('Bold centered text', {
                     weight: 'bold',
                     align: 'center',
-                    id: 'text-bold'
                 }) +
-                this.divider() +
-                this.paragraph('Simple paragraph using paragraph() method', { id: 'simple-para' }),
-            id: 'text-card'
-        }));
+                this.text('Small muted text', {
+                    size: '0.875rem',
+                    color: 'var(--text-muted)',
+                })
+            )
+        );
 
         // Links
-        this.append(this.card('Links', {
-            content:
-                this.link('External Link', {
+        this.append(
+            this.card(
+                this.h('Links') +
+                this.link('External link', {
                     href: 'https://example.com',
                     target: '_blank',
-                    id: 'external-link'
-                }) + ' and ' +
-                this.link('Internal Link', {
-                    href: '#home',
+                }) +
+                this.spacer('s') +
+                this.link('Interactive link', {
+                    href: '#',
                     onclick: () => this.toast('Link clicked!', { type: 'info' }),
-                    id: 'internal-link'
-                }),
-            id: 'links-card'
-        }));
+                }) +
+                this.spacer('s') +
+                this.link('Navigate to home', {
+                    href: '#home',
+                })
+            )
+        );
+
+        // Lists
+        this.append(
+            this.card(
+                this.h('Lists') +
+                this.h('Unordered List', 4) +
+                this.ul(['First item', 'Second item', 'Third item']) +
+                this.h('Ordered List', 4) +
+                this.ol(['Step one', 'Step two', 'Step three'])
+            )
+        );
     }
 
     private showButtons(): void {
         this.clear();
 
-        this.append(this.section('Button Examples', {
-            content: 'Buttons with consistent options API'
-        }));
+        this.append(this.div(
+            this.h('Buttons') +
+            this.p('Interactive button components')
+        ));
 
-        // Individual buttons with new API
-        const buttons = ['default', 'primary', 'success', 'warning', 'danger'].map(variant =>
-            this.button(`${variant} Button`, {
-                variant: variant as any,
-                onclick: () => this.toast(`${variant} clicked!`, { type: 'success' }),
-                id: `btn-${variant}`
-            })
-        ).join(' ');
+        // Button variants
+        this.append(
+            this.card(
+                this.h('Button Variants') +
+                this.flex(
+                    [
+                        this.button('Default', {
+                            onclick: () => this.toast('Default clicked'),
+                        }),
+                        this.button('Primary', {
+                            variant: 'primary',
+                            onclick: () => this.toast('Primary clicked', { type: 'info' }),
+                        }),
+                        this.button('Success', {
+                            variant: 'success',
+                            onclick: () => this.toast('Success clicked', { type: 'success' }),
+                        }),
+                        this.button('Warning', {
+                            variant: 'warning',
+                            onclick: () => this.toast('Warning clicked', { type: 'warning' }),
+                        }),
+                        this.button('Danger', {
+                            variant: 'danger',
+                            onclick: () => this.toast('Danger clicked', { type: 'danger' }),
+                        }),
+                    ],
+                    { gap: 's' }
+                )
+            )
+        );
 
-        this.append(this.card('Button Variants', {
-            content: buttons,
-            id: 'buttons-card'
-        }));
+        // Button group
+        this.append(
+            this.card(
+                this.h('Button Group') +
+                this.buttonGroup({
+                    buttons: [
+                        { text: 'Left', onclick: () => console.log('Left') },
+                        { text: 'Center', onclick: () => console.log('Center'), variant: 'primary' },
+                        { text: 'Right', onclick: () => console.log('Right') },
+                    ],
+                })
+            )
+        );
 
-        // Button group with new API
-        this.append(this.card('Button Group', {
-            content: this.buttonGroup({
-                buttons: [
-                    { text: 'First', onclick: () => console.log('First') },
-                    { text: 'Second', onclick: () => console.log('Second'), variant: 'primary' },
-                    { text: 'Third', onclick: () => console.log('Third'), variant: 'success' }
-                ],
-                id: 'button-group-1'
-            }),
-            id: 'button-group-card'
-        }));
+        // Dropdown
+        this.append(
+            this.card(
+                this.h('Dropdown Menu') +
+                this.dropdown({
+                    text: 'Actions',
+                    items: [
+                        { text: 'Edit', onclick: () => this.toast('Edit clicked', { type: 'info' }) },
+                        { text: 'Duplicate', onclick: () => this.toast('Duplicate clicked', { type: 'info' }) },
+                        { text: 'Delete', onclick: () => this.toast('Delete clicked', { type: 'danger' }) },
+                    ],
+                    variant: 'primary',
+                }) +
+                this.spacer('m') +
+                this.dropdown({
+                    text: 'Options',
+                    items: [
+                        { text: 'Settings', onclick: () => console.log('Settings') },
+                        { text: 'Profile', onclick: () => console.log('Profile') },
+                        { text: 'Logout', onclick: () => console.log('Logout') },
+                    ],
+                })
+            )
+        );
+    }
 
-        // Badges with new API
-        const badges = ['default', 'primary', 'success', 'warning', 'danger'].map(variant =>
-            this.badge(variant, {
-                variant: variant as any,
-                id: `badge-${variant}`
-            })
-        ).join(' ');
+    private showBadges(): void {
+        this.clear();
 
-        this.append(this.card('Badges', {
-            content: badges,
-            id: 'badges-card'
-        }));
+        this.append(this.div(
+            this.h('Badges') +
+            this.p('Small status indicators')
+        ));
+
+        this.append(
+            this.card(
+                this.h('Badge Variants') +
+                this.flex(
+                    [
+                        this.badge('Default'),
+                        this.badge('Primary', { variant: 'primary' }),
+                        this.badge('Success', { variant: 'success' }),
+                        this.badge('Warning', { variant: 'warning' }),
+                        this.badge('Danger', { variant: 'danger' }),
+                    ],
+                    { gap: 's' }
+                )
+            )
+        );
+
+        // Badges in context
+        this.append(
+            this.card(
+                this.h('Badges in Context') +
+                this.div(
+                    this.h('Product Title', 4) +
+                    this.badge('New', { variant: 'success' }),
+                    { className: 'flex items-center gap-s' }
+                ) +
+                this.p('Product description with inline badge.') +
+                this.divider() +
+                this.flex(
+                    [
+                        this.span('Status:'),
+                        this.badge('Active', { variant: 'primary' }),
+                    ],
+                    { gap: 's' }
+                )
+            )
+        );
     }
 
     private showCards(): void {
         this.clear();
 
-        this.append(this.section('Card Examples', {
-            content: 'Various card layouts with unified API'
-        }));
+        this.append(this.div(
+            this.h('Cards') +
+            this.p('Container components')
+        ));
 
-        // Basic card
-        this.append(this.card('Basic Card', {
-            content: 'This is a basic card with title and content.',
-            subtitle: 'Card subtitle',
-            id: 'basic-card'
-        }));
+        // Basic cards
+        this.append(
+            this.card('This is a basic card with simple content.')
+        );
 
-        // Product cards grid
-        const products = this.grid({
-            columns: 3,
-            items: [
-                this.productCard({
-                    image: 'https://placehold.co/300x200',
-                    title: 'Product 1',
-                    content: 'Amazing product with great features',
-                    price: '$99.99',
-                    priceVariant: 'primary',
-                    id: 'product-1'
-                }),
-                this.productCard({
-                    image: 'https://placehold.co/300x200',
-                    title: 'Product 2',
-                    content: 'Another fantastic product',
-                    price: '$149.99',
-                    priceVariant: 'success',
-                    id: 'product-2'
-                }),
-                this.productCard({
-                    image: 'https://placehold.co/300x200',
-                    title: 'Product 3',
-                    content: 'Premium quality guaranteed',
-                    price: '$199.99',
-                    priceVariant: 'danger',
-                    id: 'product-3'
-                })
-            ],
-            id: 'products-grid'
-        });
+        this.append(
+            this.card(
+                this.h('Card with Title') +
+                this.p('Card content goes here. Cards can contain any HTML content.')
+            )
+        );
 
-        this.append(products);
-
-        // Image gallery
-        this.append(this.card('Image Gallery', {
-            content: this.imageGrid({
-                columns: 4,
-                images: [
-                    { src: 'https://placehold.co/200', alt: 'Image 1' },
-                    { src: 'https://placehold.co/200', alt: 'Image 2' },
-                    { src: 'https://placehold.co/200', alt: 'Image 3' },
-                    { src: 'https://placehold.co/200', alt: 'Image 4' }
-                ],
-                height: 150,
-                id: 'image-gallery'
-            }),
-            id: 'gallery-card'
-        }));
+        // Nested cards
+        this.append(
+            this.card(
+                this.h('Parent Card') +
+                this.p('Cards can contain other components:') +
+                this.grid(
+                    [
+                        this.card('First nested card'),
+                        this.card('Second nested card'),
+                    ],
+                    { columns: 2 }
+                )
+            )
+        );
     }
 
-    private showForms(): void {
+    private showGrid(): void {
         this.clear();
 
-        this.append(this.section('Form Examples', {
-            content: 'Form elements with consistent API'
-        }));
+        this.append(this.div(
+            this.h('Grid Layout') +
+            this.p('Responsive grid system')
+        ));
 
-        // Text inputs
-        const textInputs = this.formGroup({
-            label: 'Text Input',
-            input: this.input('text-input', {
-                type: 'text',
-                placeholder: 'Enter text...',
-                value: ''
-            }),
-            help: 'This is help text for the input',
-            id: 'text-input-group'
-        });
+        // Grid examples
+        const gridExamples = [2, 3, 4].map(cols =>
+            this.card(
+                this.h(`${cols} Column Grid`) +
+                this.grid(
+                    Array(cols).fill(0).map((_, i) =>
+                        this.div(
+                            this.badge(`Item ${i + 1}`, { variant: 'primary' }),
+                            { style: 'padding: var(--space-m); background: var(--bg-secondary); border-radius: var(--radius); text-align: center;' }
+                        )
+                    ),
+                    { columns: cols as any }
+                )
+            )
+        ).join('');
 
-        // Textarea
-        const textareaGroup = this.formGroup({
-            label: 'Textarea',
-            input: this.textarea('textarea-1', {
-                placeholder: 'Enter longer text...',
-                rows: 4
-            }),
-            id: 'textarea-group'
-        });
+        this.append(gridExamples);
+    }
 
-        // Select dropdown
-        const selectGroup = this.formGroup({
-            label: 'Select Dropdown',
-            input: this.select('select-1', {
-                options: [
-                    { value: 'opt1', text: 'Option 1' },
-                    { value: 'opt2', text: 'Option 2' },
-                    { value: 'opt3', text: 'Option 3' }
-                ],
-                selected: 'opt2'
-            }),
-            id: 'select-group'
-        });
+    private showFlex(): void {
+        this.clear();
 
-        this.append(this.card('Input Fields', {
-            content: textInputs + textareaGroup + selectGroup,
-            id: 'inputs-card'
-        }));
+        this.append(this.div(
+            this.h('Flex Layout') +
+            this.p('Flexible box layouts')
+        ));
 
-        // Checkboxes and Radio buttons
-        const checkboxes =
-            this.checkbox('check-1', {
-                label: 'Option 1',
-                checked: true,
-                id: 'checkbox-group-1'
-            }) +
-            this.checkbox('check-2', {
-                label: 'Option 2',
-                id: 'checkbox-group-2'
-            }) +
-            this.checkbox('check-3', {
-                label: 'Option 3',
-                id: 'checkbox-group-3'
-            });
+        // Row flex
+        this.append(
+            this.card(
+                this.h('Flex Row') +
+                this.flex(
+                    [
+                        this.button('Button 1', { variant: 'primary' }),
+                        this.button('Button 2', { variant: 'success' }),
+                        this.button('Button 3', { variant: 'warning' }),
+                    ],
+                    { direction: 'row', gap: 'm' }
+                )
+            )
+        );
 
-        const radios = this.radioGroup({
-            name: 'radio-group',
-            options: [
-                { value: 'r1', text: 'Radio 1' },
-                { value: 'r2', text: 'Radio 2' },
-                { value: 'r3', text: 'Radio 3' }
-            ],
-            selected: 'r2',
-            id: 'radio-group-1'
-        });
+        // Column flex
+        this.append(
+            this.card(
+                this.h('Flex Column') +
+                this.flex(
+                    [
+                        this.alert('First item', { type: 'info' }),
+                        this.alert('Second item', { type: 'success' }),
+                        this.alert('Third item', { type: 'warning' }),
+                    ],
+                    { direction: 'col', gap: 's' }
+                )
+            )
+        );
 
-        this.append(this.card('Checkboxes & Radio Buttons', {
-            content: this.flex({
-                items: [
-                    this.div(checkboxes, { className: 'flex-1' }),
-                    this.div(radios, { className: 'flex-1' })
-                ],
-                gap: 'l'
-            }),
-            id: 'checks-radios-card'
-        }));
+        // Gap sizes
+        this.append(
+            this.card(
+                this.h('Gap Sizes') +
+                this.h('Small Gap', 5) +
+                this.flex(
+                    [this.badge('A'), this.badge('B'), this.badge('C')],
+                    { gap: 's' }
+                ) +
+                this.h('Medium Gap', 5) +
+                this.flex(
+                    [this.badge('A'), this.badge('B'), this.badge('C')],
+                    { gap: 'm' }
+                ) +
+                this.h('Large Gap', 5) +
+                this.flex(
+                    [this.badge('A'), this.badge('B'), this.badge('C')],
+                    { gap: 'l' }
+                )
+            )
+        );
+    }
 
-        // Switches
-        const switches =
-            this.switch('switch-1', { checked: true, label: 'Enabled Switch' }) +
-            this.switch('switch-2', { checked: false, label: 'Disabled Switch' });
+    private showTabs(): void {
+        this.clear();
 
-        this.append(this.card('Toggle Switches', {
-            content: switches,
-            id: 'switches-card'
-        }));
+        this.append(this.div(
+            this.h('Tabs') +
+            this.p('Tabbed content containers')
+        ));
+
+        this.append(
+            this.card(
+                this.h('Simple Tabs') +
+                this.tabs({
+                    items: [
+                        {
+                            label: 'Tab 1',
+                            content: this.p('Content for the first tab'),
+                        },
+                        {
+                            label: 'Tab 2',
+                            content:
+                                this.p('Content for the second tab') +
+                                this.button('Button in tab', { variant: 'primary' }),
+                        },
+                        {
+                            label: 'Tab 3',
+                            content:
+                                this.alert('Alert in third tab', { type: 'info' }) +
+                                this.spacer('m') +
+                                this.progress(75, { showText: true }),
+                        },
+                    ],
+                })
+            )
+        );
     }
 
     private showTables(): void {
         this.clear();
 
-        this.append(this.section('Table Example', {
-            content: 'Dynamic table with new API'
-        }));
+        this.append(this.div(
+            this.h('Tables') +
+            this.p('Data tables')
+        ));
 
-        // Create table with new API
-        const table = this.table({
-            headers: ['ID', 'Name', 'Email', 'Status'],
-            rows: [
-                ['1', 'John Doe', 'john@example.com', this.badge('Active', { variant: 'success' })],
-                ['2', 'Jane Smith', 'jane@example.com', this.badge('Pending', { variant: 'warning' })],
-                ['3', 'Bob Johnson', 'bob@example.com', this.badge('Inactive', { variant: 'danger' })]
-            ],
-            id: 'users-table'
-        });
-
-        this.append(this.card('Users Table', {
-            content: table +
-                this.spacer('m') +
-                this.button('Add Row', {
-                    onclick: () => {
-                        const id = (this.getTableLength('users-table') + 1).toString();
-                        this.appendTableRow('users-table', [
-                            id,
-                            `User ${id}`,
-                            `user${id}@example.com`,
-                            this.badge('New', { variant: 'primary' })
-                        ]);
-                    },
-                    variant: 'primary'
-                }),
-            id: 'table-card'
-        }));
-    }
-
-    private showModals(): void {
-        this.clear();
-
-        this.append(this.section('Modal Examples', {
-            content: 'Modal dialogs with new API'
-        }));
-
-        // Modal triggers
-        const modalButtons = this.flex({
-            items: [
-                this.button('Simple Modal', {
-                    onclick: () => this.modal({
-                        title: 'Simple Modal',
-                        content: 'This is a simple modal with no buttons.'
-                    }),
-                    variant: 'default'
-                }),
-
-                this.button('Confirmation Modal', {
-                    onclick: () => this.modal({
-                        title: 'Confirm Action',
-                        content: 'Are you sure you want to proceed?',
-                        buttons: [
-                            {
-                                text: 'Cancel',
-                                onclick: () => this.toast('Cancelled', { type: 'info' }),
-                                variant: 'default'
-                            },
-                            {
-                                text: 'Confirm',
-                                onclick: () => this.toast('Confirmed!', { type: 'success' }),
-                                variant: 'primary'
-                            }
-                        ]
-                    }),
-                    variant: 'primary'
-                }),
-
-                this.button('Complex Modal', {
-                    onclick: () => this.modal({
-                        title: 'User Form',
-                        content:
-                            this.formGroup({
-                                label: 'Name',
-                                input: this.input('modal-name', { placeholder: 'Enter name' })
-                            }) +
-                            this.formGroup({
-                                label: 'Email',
-                                input: this.input('modal-email', {
-                                    type: 'email',
-                                    placeholder: 'Enter email'
-                                })
-                            }),
-                        buttons: [
-                            {
-                                text: 'Save',
-                                onclick: () => {
-                                    const name = this.val('modal-name');
-                                    const email = this.val('modal-email');
-                                    this.toast(`Saved: ${name} (${email})`, { type: 'success' });
-                                },
-                                variant: 'success'
-                            }
-                        ]
-                    }),
-                    variant: 'success'
+        this.append(
+            this.card(
+                this.h('User Table') +
+                this.table({
+                    headers: ['ID', 'Name', 'Email', 'Status', 'Actions'],
+                    rows: [
+                        ['1', 'John Doe', 'john@example.com', this.badge('Active', { variant: 'success' }), this.button('Edit', { variant: 'primary' })],
+                        ['2', 'Jane Smith', 'jane@example.com', this.badge('Pending', { variant: 'warning' }), this.button('Edit', { variant: 'primary' })],
+                        ['3', 'Bob Johnson', 'bob@example.com', this.badge('Inactive', { variant: 'danger' }), this.button('Edit', { variant: 'primary' })],
+                    ],
                 })
-            ],
-            gap: 'm'
-        });
-
-        this.append(this.card('Modal Triggers', {
-            content: modalButtons,
-            id: 'modal-triggers-card'
-        }));
+            )
+        );
     }
 
     private showLists(): void {
         this.clear();
 
-        this.append(this.section('List Examples', {
-            content: 'Interactive lists with new API'
-        }));
+        this.append(this.div(
+            this.h('Lists') +
+            this.p('Interactive list components')
+        ));
 
-        // Interactive list
-        const list = this.list({
-            items: [
-                {
-                    title: 'Clickable Item 1',
-                    content: 'Click to see action',
-                    onclick: () => this.toast('Item 1 clicked!', { type: 'info' })
-                },
-                {
-                    title: 'Clickable Item 2',
-                    content: 'This also has an action',
-                    onclick: () => this.toast('Item 2 clicked!', { type: 'success' })
-                },
-                {
-                    title: 'Static Item',
-                    content: 'This item has no click action'
-                },
-                {
-                    title: 'Clickable Item 3',
-                    content: 'Another interactive item',
-                    onclick: () => this.toast('Item 3 clicked!', { type: 'warning' })
-                }
-            ],
-            id: 'interactive-list'
-        });
-
-        this.append(this.card('Interactive List', {
-            content: list +
-                this.spacer('m') +
-                this.flex({
+        this.append(
+            this.card(
+                this.h('Interactive List') +
+                this.list({
                     items: [
-                        this.button('Add Item', {
-                            onclick: () => {
-                                const count = this.getListLength('interactive-list') + 1;
-                                this.appendListItem('interactive-list', {
-                                    title: `New Item ${count}`,
-                                    content: 'Dynamically added',
-                                    onclick: () => this.toast(`Item ${count} clicked!`)
-                                });
-                            },
-                            variant: 'primary'
+                        {
+                            title: 'Clickable Item',
+                            content: 'Click to trigger an action',
+                            onclick: () => this.toast('Item clicked!', { type: 'info' }),
+                        },
+                        {
+                            title: 'Another Item',
+                            content: 'This one also has an action',
+                            onclick: () => this.toast('Another item clicked!', { type: 'success' }),
+                        },
+                        {
+                            title: 'Static Item',
+                            content: 'This item has no click action',
+                        },
+                        {
+                            title: 'Last Item',
+                            content: 'With description text',
+                        },
+                    ],
+                })
+            )
+        );
+    }
+
+    private showAlerts(): void {
+        this.clear();
+
+        this.append(this.div(
+            this.h('Alerts') +
+            this.p('Alert messages')
+        ));
+
+        this.append(
+            this.card(
+                this.h('Alert Types') +
+                this.alert('Info alert message', { type: 'info' }) +
+                this.alert('Success alert message', { type: 'success' }) +
+                this.alert('Warning alert message', { type: 'warning' }) +
+                this.alert('Danger alert message', { type: 'danger' })
+            )
+        );
+
+        // Toast notifications
+        this.append(
+            this.card(
+                this.h('Toast Notifications') +
+                this.flex(
+                    [
+                        this.button('Info Toast', {
+                            onclick: () => this.toast('Info message', { type: 'info' }),
                         }),
-                        this.button('Remove Last', {
+                        this.button('Success Toast', {
+                            onclick: () => this.toast('Success!', { type: 'success' }),
+                            variant: 'success',
+                        }),
+                        this.button('Warning Toast', {
+                            onclick: () => this.toast('Warning!', { type: 'warning' }),
+                            variant: 'warning',
+                        }),
+                        this.button('Error Toast', {
+                            onclick: () => this.toast('Error!', { type: 'error', duration: 5000 }),
+                            variant: 'danger',
+                        }),
+                    ],
+                    { gap: 's' }
+                )
+            )
+        );
+    }
+
+    private showModals(): void {
+        this.clear();
+
+        this.append(this.div(
+            this.h('Modals') +
+            this.p('Modal dialogs')
+        ));
+
+        this.append(
+            this.card(
+                this.h('Modal Examples') +
+                this.flex(
+                    [
+                        this.button('Simple Modal', {
+                            onclick: () => this.modal(
+                                this.h('Simple Modal') +
+                                this.p('This is a simple modal dialog.') +
+                                this.spacer('m') +
+                                this.button('Close', {
+                                    onclick: () => this.closeModal(),
+                                    variant: 'primary'
+                                })
+                            ),
+                        }),
+                        this.button('Confirm Modal', {
+                            onclick: () => this.modal(
+                                this.h('Confirm Action') +
+                                this.p('Are you sure you want to proceed?') +
+                                this.spacer('m') +
+                                this.flex(
+                                    [
+                                        this.button('Cancel', {
+                                            onclick: () => this.closeModal()
+                                        }),
+                                        this.button('Confirm', {
+                                            onclick: () => {
+                                                this.closeModal();
+                                                this.toast('Confirmed!', { type: 'success' });
+                                            },
+                                            variant: 'primary'
+                                        }),
+                                    ],
+                                    { gap: 's' }
+                                )
+                            ),
+                            variant: 'primary',
+                        }),
+                        this.button('Form Modal', {
+                            onclick: () => this.modal(
+                                this.h('User Form') +
+                                this.formGroup({
+                                    label: 'Name',
+                                    input: this.input('modal-name', { placeholder: 'Enter name' }),
+                                }) +
+                                this.formGroup({
+                                    label: 'Email',
+                                    input: this.input('modal-email', { type: 'email', placeholder: 'Enter email' }),
+                                }) +
+                                this.spacer('m') +
+                                this.flex(
+                                    [
+                                        this.button('Cancel', {
+                                            onclick: () => this.closeModal()
+                                        }),
+                                        this.button('Save', {
+                                            onclick: () => {
+                                                const name = this.val('modal-name');
+                                                const email = this.val('modal-email');
+                                                if (name && email) {
+                                                    this.closeModal();
+                                                    this.toast(`Saved: ${name}`, { type: 'success' });
+                                                } else {
+                                                    this.toast('Please fill all fields', { type: 'warning' });
+                                                }
+                                            },
+                                            variant: 'success',
+                                        }),
+                                    ],
+                                    { gap: 's' }
+                                )
+                            ),
+                            variant: 'success',
+                        }),
+                    ],
+                    { gap: 's' }
+                )
+            )
+        );
+    }
+
+    private showProgress(): void {
+        this.clear();
+
+        this.append(this.div(
+            this.h('Progress Indicators') +
+            this.p('Loading and progress states')
+        ));
+
+        // Progress bars
+        this.append(
+            this.card(
+                this.h('Progress Bars') +
+                this.h('25%', 5) +
+                this.progress(25) +
+                this.spacer('m') +
+                this.h('50% with text', 5) +
+                this.progress(50, { showText: true }) +
+                this.spacer('m') +
+                this.h('75% with text', 5) +
+                this.progress(75, { showText: true }) +
+                this.spacer('m') +
+                this.h('Custom max (30/50)', 5) +
+                this.progress(30, { max: 50, showText: true })
+            )
+        );
+
+        // Spinner
+        this.append(
+            this.card(
+                this.h('Loading Spinner') +
+                this.div(this.spinner(), { style: 'text-align: center; padding: var(--space-l);' }) +
+                this.text('Loading...', { align: 'center' })
+            )
+        );
+
+        // Dynamic progress
+        let progress = 0;
+        const progressId = 'dynamic-progress';
+
+        this.append(
+            this.card(
+                this.h('Dynamic Progress') +
+                this.div('', { id: progressId }) +
+                this.spacer('m') +
+                this.button('Start Progress', {
+                    onclick: () => {
+                        progress = 0;
+                        const interval = setInterval(() => {
+                            progress += 10;
+                            this.updateHtml(progressId, this.progress(progress, { showText: true }));
+                            if (progress >= 100) {
+                                clearInterval(interval);
+                                this.toast('Complete!', { type: 'success' });
+                            }
+                        }, 500);
+                    },
+                    variant: 'primary',
+                })
+            )
+        );
+    }
+
+    private showForms(): void {
+        this.clear();
+
+        this.append(this.div(
+            this.h('Forms') +
+            this.p('Form elements and inputs')
+        ));
+
+        // Text inputs
+        this.append(
+            this.card(
+                this.h('Text Inputs') +
+                this.formGroup({
+                    label: 'Text Input',
+                    input: this.input('text-input', { placeholder: 'Enter text...' }),
+                    help: 'Basic text input field',
+                }) +
+                this.formGroup({
+                    label: 'Email Input',
+                    input: this.input('email-input', { type: 'email', placeholder: 'user@example.com' }),
+                }) +
+                this.formGroup({
+                    label: 'Password Input',
+                    input: this.input('password-input', { type: 'password', placeholder: 'Enter password' }),
+                }) +
+                this.formGroup({
+                    label: 'Textarea',
+                    input: this.textarea('textarea', { placeholder: 'Enter long text...', rows: 4 }),
+                })
+            )
+        );
+
+        // Select and options
+        this.append(
+            this.card(
+                this.h('Select Elements') +
+                this.formGroup({
+                    label: 'Select Dropdown',
+                    input: this.select('country', {
+                        options: [
+                            { value: 'us', text: 'United States' },
+                            { value: 'uk', text: 'United Kingdom' },
+                            { value: 'ca', text: 'Canada' },
+                        ],
+                        selected: 'us',
+                    }),
+                })
+            )
+        );
+
+        // Checkboxes and radios
+        this.append(
+            this.card(
+                this.h('Checkboxes & Radio Buttons') +
+                this.h('Checkboxes', 4) +
+                this.checkbox('check1', { label: 'Option 1', checked: true }) +
+                this.checkbox('check2', { label: 'Option 2' }) +
+                this.checkbox('check3', { label: 'Option 3' }) +
+                this.divider() +
+                this.h('Radio Buttons', 4) +
+                this.radioGroup({
+                    name: 'radio-example',
+                    options: [
+                        { value: 'opt1', text: 'Option A' },
+                        { value: 'opt2', text: 'Option B' },
+                        { value: 'opt3', text: 'Option C' },
+                    ],
+                    selected: 'opt1',
+                })
+            )
+        );
+
+        // Form with submit
+        this.append(
+            this.card(
+                this.h('Complete Form') +
+                this.formGroup({
+                    label: 'Full Name',
+                    input: this.input('name', { placeholder: 'John Doe' }),
+                }) +
+                this.formGroup({
+                    label: 'Email',
+                    input: this.input('email', { type: 'email', placeholder: 'john@example.com' }),
+                }) +
+                this.formGroup({
+                    label: 'Message',
+                    input: this.textarea('message', { placeholder: 'Your message...', rows: 3 }),
+                }) +
+                this.checkbox('agree', { label: 'I agree to terms' }) +
+                this.spacer('m') +
+                this.flex(
+                    [
+                        this.button('Cancel', {
+                            onclick: () => this.toast('Cancelled', { type: 'info' }),
+                        }),
+                        this.button('Submit', {
                             onclick: () => {
-                                const length = this.getListLength('interactive-list');
-                                if (length > 0) {
-                                    this.removeListItem('interactive-list', length - 1);
+                                const name = this.val('name');
+                                const email = this.val('email');
+                                if (name && email) {
+                                    this.toast('Form submitted!', { type: 'success' });
+                                } else {
+                                    this.toast('Please fill required fields', { type: 'warning' });
                                 }
                             },
-                            variant: 'danger'
-                        })
+                            variant: 'primary',
+                        }),
                     ],
-                    gap: 'm'
-                }),
-            id: 'list-card'
-        }));
-
-        // Tabs example
-        const tabs = this.tabs({
-            items: [
-                {
-                    label: 'Tab 1',
-                    content: this.paragraph('Content for tab 1') +
-                        this.button('Action in Tab 1', {
-                            onclick: () => this.toast('Tab 1 action!'),
-                            variant: 'primary'
-                        })
-                },
-                {
-                    label: 'Tab 2',
-                    content: this.paragraph('Content for tab 2') +
-                        this.progress(60, { max: 100, showText: true, id: 'tab-progress' })
-                },
-                {
-                    label: 'Tab 3',
-                    content: this.paragraph('Content for tab 3') +
-                        this.alert('This is an alert in tab 3', { type: 'warning' })
-                }
-            ],
-            id: 'tabs-example'
-        });
-
-        this.append(this.card('Tabs Component', {
-            content: tabs,
-            id: 'tabs-card'
-        }));
+                    { gap: 's' }
+                )
+            )
+        );
     }
 
     private showComponents(): void {
         this.clear();
 
-        this.append(this.section('All Components', {
-            content: 'Overview of all available components'
-        }));
+        this.append(this.div(
+            this.h('All Components') +
+            this.p('Complete component showcase')
+        ));
 
-        // Alerts
-        const alerts = ['info', 'success', 'warning', 'danger'].map(type =>
-            this.alert(`This is a ${type} alert`, {
-                type: type as any,
-                id: `alert-${type}`
-            })
-        ).join('');
+        // Component categories with examples
+        const categories = [
+            { name: 'Layouts', items: ['Cards', 'Grids', 'Flex', 'Tabs'] },
+            { name: 'Forms', items: ['Inputs', 'Selects', 'Checkboxes', 'Tables', 'Lists'] },
+            { name: 'Actions', items: ['Buttons', 'Dropdowns', 'Modals'] },
+            { name: 'Feedback', items: ['Alerts', 'Toasts', 'Badges'] },
+            { name: 'Progress', items: ['Progress bars', 'Spinners'] },
+        ];
 
-        this.append(this.card('Alerts', {
-            content: alerts,
-            id: 'alerts-card'
-        }));
-
-        // Progress bars
-        const progressBar1 = this.progress(25, {
-            max: 100,
-            showText: false,
-            id: 'progress-25'
+        categories.forEach(category => {
+            this.append(
+                this.card(
+                    this.h(category.name) +
+                    this.ul(category.items)
+                )
+            );
         });
 
-        const progressBar2 = this.progress(50, {
-            max: 100,
-            showText: true,
-            id: 'progress-50'
-        });
-
-        const progressBar3 = this.progress(0, {
-            max: 100,
-            showText: true,
-            id: 'progress-dynamic'
-        });
-
-        const progressBars = progressBar1 + this.spacer('s') + progressBar2 + this.spacer('s') + progressBar3;
-
-        // Start dynamic animation for the third progress bar
-        this.startDynamicProgress();
-
-        this.append(this.card('Progress Bars', {
-            content: progressBars,
-            id: 'progress-card'
-        }));
-
-        // Spinner
-        this.append(this.card('Loading Spinner', {
-            content: this.spinner({ id: 'main-spinner' }),
-            id: 'spinner-card'
-        }));
-
-        // Toast triggers
-        const toastButtons = ['info', 'success', 'warning', 'danger'].map(type =>
-            this.button(`${type} Toast`, {
-                onclick: () => this.toast(`This is a ${type} toast!`, {
-                    type: type as any,
-                    duration: 3000
-                }),
-                variant: type as any
-            })
-        ).join(' ');
-
-        this.append(this.card('Toast Notifications', {
-            content: toastButtons,
-            id: 'toast-card'
-        }));
+        // Navigation example
+        this.append(
+            this.card(
+                this.h('Navigation') +
+                this.p('Use hash navigation:') +
+                this.flex(
+                    [
+                        this.button('Go to Forms', {
+                            onclick: () => this.navigateTo('forms'),
+                        }),
+                        this.button('Scroll to top', {
+                            onclick: () => this.scrollToElement('app'),
+                        }),
+                    ],
+                    { gap: 's' }
+                )
+            )
+        );
     }
 
-    // Demo progress animation
-    private async startDynamicProgress(): Promise<void> {
-        let currentValue = 0;
-        let hashChanged = false;
+    private showLayouts(): void {
+        this.clear();
 
-        // Stop animation when hash changes
-        window.addEventListener('hashchange', () => {
-            hashChanged = true;
-        }, { once: true });
+        this.append(this.div(
+            this.h('Layouts') +
+            this.p('Layout options and combinations')
+        ));
 
-        while (currentValue < 100 && !hashChanged) {
-            await this.sleep(250); // Более читаемо
-            currentValue += 2;
-            this.updateProgress('progress-dynamic', currentValue);
-        }
+        // Layout modes
+        this.append(
+            this.card(
+                this.h('Layout Modes') +
+                this.p('The framework supports 4 layout modes:') +
+                this.ol([
+                    'default - Content only',
+                    'nav - With navigation bar',
+                    'sidebar - With sidebar',
+                    'nav-sidebar - Both navigation and sidebar',
+                ]) +
+                this.spacer('m') +
+                this.flex(
+                    [
+                        this.button('Default', {
+                            onclick: () => {
+                                this.toast('Layout: default', { type: 'info' });
+                            },
+                        }),
+                        this.button('Nav', {
+                            onclick: () => {
+                                this.toast('Layout: nav', { type: 'info' });
+                            },
+                        }),
+                        this.button('Sidebar', {
+                            onclick: () => {
+                                this.toast('Layout: sidebar', { type: 'info' });
+                            },
+                        }),
+                        this.button('Nav+Sidebar', {
+                            onclick: () => {
+                                this.toast('Layout: nav-sidebar', { type: 'info' });
+                            },
+                        }),
+                    ],
+                    { gap: 's' }
+                )
+            )
+        );
 
-        // Опционально: финальное обновление до 100%
-        if (!hashChanged) {
-            this.updateProgress('progress-dynamic', 100);
-        }
-    }
-
-    private sleep(ms: number): Promise<void> {
-        return new Promise(resolve => setTimeout(resolve, ms));
+        // Spacing utilities
+        this.append(
+            this.card(
+                this.h('Spacing') +
+                this.h('Spacers', 4) +
+                this.badge('Small') +
+                this.spacer('s') +
+                this.badge('Medium') +
+                this.spacer('m') +
+                this.badge('Large') +
+                this.spacer('l') +
+                this.badge('End') +
+                this.divider() +
+                this.p('Dividers create visual separation')
+            )
+        );
     }
 }
 
-// Create and start the example app
+// Create and start the showcase app
 const app = new ShowcaseApp();
 
 // Expose for console access
-(window as any).ShowcaseApp = app;
+(window as any).showcaseApp = app;

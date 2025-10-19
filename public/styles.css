@@ -112,15 +112,27 @@ body {
     min-height: 100vh;
 }
 
+/* === Typography & Block Elements === */
+/* Base margin-bottom for all text and block elements */
+/* h1, h2, h3, h4, h5, h6, */
+p, blockquote, pre,
+ul, ol, dl,
+table, figure, hr,
+.btn, .card, .alert, .list, .progress {
+    margin-top: 0;
+    margin-bottom: var(--space-s);
+}
+/* .grid, .section, .tabs, .form-group */
+
+
+
 /* Ensure all headings and paragraphs use proper text color */
 h1, h2, h3, h4, h5, h6 {
     color: var(--text);
-    margin-bottom: var(--space-s);
 }
 
 p {
     color: var(--text);
-    margin-bottom: var(--space-s);
 }
 
 /* Ensure all generic div content inherits text color */
@@ -271,47 +283,6 @@ div {
     padding: var(--space-l);
     margin-bottom: var(--space-l);
     box-shadow: var(--shadow);
-}
-
-.card-header {
-    margin-bottom: var(--space-m);
-    padding-bottom: var(--space-m);
-    border-bottom: 1px solid var(--border);
-}
-
-.card-title {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: var(--text);
-}
-
-.card-subtitle {
-    color: var(--text-secondary);
-    margin-top: var(--space-s);
-}
-
-.card-body {
-    color: var(--text);
-}
-
-/* === Section === */
-.section {
-    margin-bottom: var(--space-l);
-}
-
-.section-header {
-    margin-bottom: var(--space-l);
-}
-
-.section-title {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: var(--text);
-}
-
-.section-content {
-    color: var(--text-secondary);
-    margin-top: var(--space-s);
 }
 
 /* === List === */
@@ -668,7 +639,7 @@ ul, ol {
 
 .table th,
 .table td {
-    padding: var(--space-m);
+    padding: var(--space-s);
     text-align: left;
     border-bottom: 1px solid var(--border);
 }
@@ -692,7 +663,6 @@ ul, ol {
     border-bottom: 1px solid var(--border);
     display: flex;
     gap: var(--space-m);
-    margin-bottom: var(--space-l);
 }
 
 .tab {
@@ -713,7 +683,7 @@ ul, ol {
 }
 
 .tab-content {
-    padding: var(--space-l) 0;
+    padding: var(--space-l);
 }
 
 .tab-panel {
@@ -748,31 +718,6 @@ ul, ol {
     width: 100%;
     margin: var(--space-l);
     padding: var(--space-l);
-}
-
-.modal-header {
-    margin-bottom: var(--space-m);
-    padding-bottom: var(--space-m);
-    border-bottom: 1px solid var(--border);
-}
-
-.modal-title {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: var(--text);
-}
-
-.modal-body {
-    color: var(--text);
-}
-
-.modal-footer {
-    margin-top: var(--space-m);
-    padding-top: var(--space-m);
-    border-top: 1px solid var(--border);
-    display: flex;
-    justify-content: flex-end;
-    gap: var(--space-m);
 }
 
 /* === Progress === */

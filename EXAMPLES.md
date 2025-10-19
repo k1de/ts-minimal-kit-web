@@ -348,14 +348,21 @@ this.toast('Saved!', { type: 'success' });
 this.toast('Error!', { type: 'danger', duration: 5000 });
 
 // Modal
-this.modal({
-    title: 'Confirm',
-    content: 'Are you sure?',
-    buttons: [
-        { text: 'Cancel', onclick: () => {} },
-        { text: 'OK', onclick: () => this.confirm(), variant: 'primary' },
-    ],
-});
+this.modal(
+    this.h('Confirm Action') +
+    this.p('Are you sure you want to proceed?') +
+    this.divider() +
+    this.flex([
+        this.button('Cancel', { onclick: () => this.closeModal() }),
+        this.button('OK', { 
+            onclick: () => { 
+                this.confirm(); 
+                this.closeModal(); 
+            }, 
+            variant: 'primary' 
+        })
+    ], { gap: 's' })
+);
 ```
 
 ## Tables

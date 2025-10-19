@@ -125,20 +125,6 @@ interface TabsOptions extends BaseOptions {
     items: TabItem[];
 }
 
-/** Modal button configuration */
-interface ModalButton {
-    text: string;
-    onclick: () => void;
-    variant?: ButtonVariant;
-}
-
-/** Modal options */
-interface ModalOptions {
-    title: string;
-    content: string;
-    buttons?: ModalButton[];
-}
-
 /** Toast options */
 interface ToastOptions {
     type?: ToastType;
@@ -1175,41 +1161,13 @@ class ClientApp {
 
     /**
      * Show modal dialog
-     * @param options - Modal options
+     * @param content - Modal content HTML
      */
-    modal(options: ModalOptions): void {
+    modal(content: string): void {
         const modal = document.getElementById('modal');
         if (!modal) return;
 
-        const { title, content, buttons } = options;
-
-        const footer = buttons
-            ? `
-            <div class="modal-footer">
-                ${buttons
-                .map((btn, i) => {
-                    const id = `modal-btn-${i}`;
-                    this.addDelayedEventListener(id, () => {
-                        btn.onclick();
-                        this.closeModal();
-                    });
-                    const className = btn.variant ? `btn btn-${btn.variant}` : 'btn';
-                    return `<button id="${id}" class="${className}">${btn.text}</button>`;
-                })
-                .join('')}
-            </div>
-        `
-            : '';
-
-        modal.innerHTML = `
-            <div class="modal">
-                <div class="modal-header">
-                    <h3 class="modal-title">${title}</h3>
-                </div>
-                <div class="modal-body">${content}</div>
-                ${footer}
-            </div>
-        `;
+        modal.innerHTML = `<div class="modal">${content}</div>`;
 
         modal.onclick = (e) => {
             if (e.target === modal) this.closeModal();
@@ -1573,7 +1531,6 @@ export type {
     SidebarOptions,
     ListOptions,
     ButtonOptions,
-    ModalOptions,
     ImageOptions,
     TableOptions,
 
