@@ -3,16 +3,24 @@
 import { ClientApp } from './static/client.js';
 
 class App extends ClientApp {
-    // Example
     override start(): void {
-        this.showNav('My App', { items: [{ text: 'Theme', onclick: () => this.toggleTheme() }] });
+        this.showNav('My App', {
+            items: [
+                { text: 'Home', onclick: () => this.showHome() },
+                { text: 'Theme', onclick: () => this.toggleTheme() }
+            ]
+        });
         this.showHome();
     }
 
     showHome(): void {
         this.clear();
-        this.append(this.section('Welcome', { content: 'Start building!' }));
-        this.append(this.card('Hello', { content: 'World' }));
+        this.append(
+            this.card(
+                this.h('Welcome') +
+                this.p('Start building your app!')
+            )
+        );
     }
 }
 
@@ -20,4 +28,4 @@ class App extends ClientApp {
 const app = new App();
 
 // Expose for console access (development)
-(window as any).showcaseApp = app;
+(window as any).app = app;

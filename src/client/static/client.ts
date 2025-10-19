@@ -155,16 +155,7 @@ interface ImageOptions extends BaseOptions {
     loading?: 'lazy' | 'eager';
 }
 
-/** Card options */
-interface CardOptions extends BaseOptions {
-    content?: string;
-    subtitle?: string;
-}
 
-/** Section options */
-interface SectionOptions extends BaseOptions {
-    content?: string;
-}
 
 /** Button options */
 interface ButtonOptions extends BaseOptions {
@@ -243,7 +234,6 @@ interface FormGroupOptions extends BaseOptions {
 /** Grid options */
 interface GridOptions extends BaseOptions {
     columns?: GridColumns;
-    items: string[];
 }
 
 /** Text options */
@@ -268,7 +258,6 @@ interface LinkOptions extends BaseOptions {
 
 /** Flex container options */
 interface FlexOptions extends BaseOptions {
-    items: string[];
     gap?: Spacing;
     direction?: FlexDirection;
 }
@@ -469,7 +458,7 @@ class ClientApp {
      */
     private updateLayout(): void {
         let layout: Layout = 'default';
-        
+
         if (this.hasNav && this.hasSidebar) {
             layout = 'nav-sidebar';
         } else if (this.hasNav) {
@@ -477,7 +466,7 @@ class ClientApp {
         } else if (this.hasSidebar) {
             layout = 'sidebar';
         }
-        
+
         document.getElementById('app')?.setAttribute('data-layout', layout);
     }
 
@@ -517,7 +506,7 @@ class ClientApp {
             <ul class="nav-menu">${navItems}</ul>
         `;
         nav.hidden = false;
-        
+
         this.hasNav = true;
         this.updateLayout();
     }
@@ -549,7 +538,7 @@ class ClientApp {
             .join('');
 
         sidebar.hidden = false;
-        
+
         this.hasSidebar = true;
         this.updateLayout();
     }
@@ -637,7 +626,7 @@ class ClientApp {
      * @param content - Paragraph content
      * @param options - Paragraph options
      */
-    paragraph(content: string, options?: BaseOptions): string {
+    p(content: string, options?: BaseOptions): string {
         return `<p${this.buildAttrs(options)}>${content}</p>`;
     }
 
@@ -675,54 +664,16 @@ class ClientApp {
     // ========================================
 
     /**
-     * Create a section
-     * @param title - Section title
-     * @param options - Section options
+     * Create a card container
+     * @param content - Card content
+     * @param options - Card options
      */
-    section(title: string, options?: SectionOptions): string {
-        const { content, ...baseOptions } = options || {};
-        const baseId = baseOptions.id;
+    card(content: string, options?: BaseOptions): string {
         const attrs = this.buildAttrs({
-            ...baseOptions,
-            class: baseOptions.className ? `section ${baseOptions.className}` : 'section',
+            ...options,
+            class: options?.className ? `card ${options.className}` : 'card',
         });
-        return `
-            <div${attrs}>
-                <div class="section-header">
-                    <h1 class="section-title"${this.getNestedId(baseId, 'title')}>${title}</h1>
-                    ${content ? `<p class="section-content"${this.getNestedId(baseId, 'content')}>${content}</p>` : ''}
-                </div>
-            </div>
-        `;
-    }
-
-    /**
-     * Create a card
-     * @param title - Card title
-     * @param options - Card options including content
-     */
-    card(title: string, options?: CardOptions): string {
-        const { subtitle, content = '', ...baseOptions } = options || {};
-        const baseId = baseOptions.id;
-        const attrs = this.buildAttrs({
-            ...baseOptions,
-            class: baseOptions.className ? `card ${baseOptions.className}` : 'card',
-        });
-        const header = title
-            ? `
-            <div class="card-header">
-                <h2 class="card-title"${this.getNestedId(baseId, 'title')}>${title}</h2>
-                ${subtitle ? `<p class="card-subtitle"${this.getNestedId(baseId, 'subtitle')}>${subtitle}</p>` : ''}
-            </div>
-        `
-            : '';
-
-        return `
-            <div${attrs}>
-                ${header}
-                <div class="card-body"${this.getNestedId(baseId, 'content')}>${content}</div>
-            </div>
-        `;
+        return `<div${attrs}>${content}</div>`;
     }
 
     /**
@@ -793,10 +744,11 @@ class ClientApp {
 
     /**
      * Create a grid layout
+     * @param items - Grid items
      * @param options - Grid options
      */
-    grid(options: GridOptions): string {
-        const { columns = 3, items, ...baseOptions } = options;
+    grid(items: string[], options?: GridOptions): string {
+        const { columns = 3, ...baseOptions } = options || {};
         const className = `grid grid-${columns}`;
         const attrs = this.buildAttrs({
             ...baseOptions,
@@ -1529,13 +1481,12 @@ class ClientApp {
     /**
      * Create a heading
      * @param text - Heading text
-     * @param level - Heading level (1-6)
+     * @param level - Heading level (1-6, default: 2)
      * @param options - Heading options
      */
-    heading(text: string, level: HeadingLevel = 4, options?: BaseOptions): string {
-        const baseId = options?.id;
+    h(text: string, level: HeadingLevel = 2, options?: BaseOptions): string {
         const attrs = this.buildAttrs(options);
-        return `<h${level}${attrs}><span${this.getNestedId(baseId, 'text')}>${text}</span></h${level}>`;
+        return `<h${level}${attrs}>${text}</h${level}>`;
     }
 
     /**
@@ -1565,10 +1516,11 @@ class ClientApp {
 
     /**
      * Create a flex container
+     * @param items - Flex items
      * @param options - Flex options
      */
-    flex(options: FlexOptions): string {
-        const { items, gap = 'm', direction = 'row', ...baseOptions } = options;
+    flex(items: string[], options?: FlexOptions): string {
+        const { gap = 'm', direction = 'row', ...baseOptions } = options || {};
         const className = `flex flex-${direction} gap-${gap}`;
 
         const finalClassName = baseOptions.className ? `${className} ${baseOptions.className}` : className;
@@ -1620,7 +1572,6 @@ export type {
     NavOptions,
     SidebarOptions,
     ListOptions,
-    CardOptions,
     ButtonOptions,
     ModalOptions,
     ImageOptions,

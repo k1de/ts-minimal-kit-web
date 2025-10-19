@@ -19,8 +19,10 @@ class MyApp extends ClientApp {
 
     showHome(): void {
         this.clear();
-        this.append(this.section('Welcome'));
-        this.append(this.card('Hello', { content: 'World' }));
+        this.append(this.card(
+            this.h('Welcome', 1) + 
+            this.p('Hello World')
+        ));
     }
 }
 
@@ -171,12 +173,13 @@ this.showSidebar({
 
 ```typescript
 // Headings
-this.heading('Main Title', 1); // <h1>
-this.heading('Section Title', 2); // <h2>
-this.heading('Subsection', 3); // <h3>
+this.h('Main Title', 1); // <h1>
+this.h('Section Title', 2); // <h2>
+this.h('Subsection', 3); // <h3>
+this.h('Default H2'); // <h2> by default
 
 // Text elements
-this.paragraph('This is a paragraph');
+this.p('This is a paragraph');
 this.text('Styled text', {
     size: '1.25rem',
     color: 'var(--primary)',
@@ -208,24 +211,25 @@ this.spacer('m'); // Medium space
 this.spacer('l'); // Large space
 
 // Flex container
-this.flex({
-    items: [this.button('Button 1'), this.button('Button 2'), this.button('Button 3')],
-    direction: 'row', // or 'col'
-    gap: 'm', // s, m, or l
-});
+this.flex(
+    [this.button('Button 1'), this.button('Button 2'), this.button('Button 3')],
+    { direction: 'row', gap: 'm' } // direction: 'row' or 'col', gap: 's', 'm', or 'l'
+);
 ```
 
 ## Content Components
 
 ```typescript
-// Section
-this.section('Title', { content: 'Content text' });
+// Card - simple container
+this.card('Any content here');
 
-// Card
-this.card('Title', {
-    content: 'Content',
-    subtitle: 'Optional subtitle',
-});
+// Card with composed content
+this.card(
+    this.h('Card Title') + // defaults to h2
+    this.divider() +
+    this.p('Card content') +
+    this.button('Action', { variant: 'primary' })
+);
 
 // Tabs
 this.tabs({
@@ -237,10 +241,14 @@ this.tabs({
 });
 
 // Grid (2-8 columns)
-this.grid({
-    columns: 3,
-    items: [this.card('One', { content: '1' }), this.card('Two', { content: '2' }), this.card('Three', { content: '3' })],
-});
+this.grid(
+    [
+        this.card('Content 1'),
+        this.card('Content 2'), 
+        this.card('Content 3')
+    ],
+    { columns: 3 }
+);
 
 // List
 this.list({
@@ -410,26 +418,20 @@ this.on('button-id', 'click', (e) => console.log('Clicked'));
 Components with IDs generate predictable nested IDs:
 
 ```typescript
-// Card with ID
-this.card('Dashboard', {
-    content: 'Welcome',
-    subtitle: 'Stats',
-    id: 'dash-card',
-});
+// Progress with ID
+this.progress(75, { id: 'my-progress', showText: true });
 
 // Access nested elements
-this.updateText('dash-card-title', 'New Title');
-this.updateText('dash-card-subtitle', 'Updated');
-this.updateText('dash-card-content', 'New content');
+this.updateText('my-progress-value', '80%');
+
+// Button with ID
+this.button('Click me', { id: 'my-btn' });
+this.updateText('my-btn-text', 'New Label');
 ```
 
 ### ID Pattern
 
 For component with `id`, nested elements follow:
-
--   `{id}-title` - Title element
--   `{id}-subtitle` - Subtitle element
--   `{id}-content` - Content element
 -   `{id}-value` - Value element (progress)
 -   `{id}-text` - Text element (button, badge)
 -   `{id}-message` - Message element (alert)
