@@ -53,7 +53,7 @@ type ToastType = NotificationType;
 type GridColumns = 2 | 3 | 4 | 5 | 6 | 7 | 8;
 type ThemeVariant = 'dark' | 'light';
 type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
-type Spacing = 's' | 'm' | 'l';
+type Spacing = 'none' | 's' | 'm' | 'l';
 type FlexDirection = 'row' | 'col';
 
 

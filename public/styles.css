@@ -38,6 +38,7 @@
     --info-text: #155e75;
     
     /* Spacing */
+    --space-none: 0;
     --space-s: 0.5rem;
     --space-m: 1rem;
     --space-l: 1.5rem;
@@ -113,18 +114,31 @@ body {
 }
 
 /* === Typography & Block Elements === */
-/* Base margin-bottom for all text and block elements */
-/* h1, h2, h3, h4, h5, h6, */
-p, blockquote, pre,
-ul, ol, dl,
-table, figure, hr,
-.btn, .card, .alert, .list, .progress {
+/* Base margin-bottom for common elements */
+h1, h2, h3, h4, h5, h6, p,
+ul, ol, hr, img,
+.card, .grid, .tabs,
+.form-group, .input, .textarea, .select,
+.checkbox, .radio,
+.alert, .table, .list, .progress,
+.btn, .btn-group, .dropdown {
     margin-top: 0;
-    margin-bottom: var(--space-s);
+    margin-bottom: var(--space-m);
 }
-/* .grid, .section, .tabs, .form-group */
 
+/* Remove bottom margin from last child in containers */
+.main > :last-child,
+.card > :last-child,
+.modal > :last-child,
+.tab-panel > :last-child,
+.sidebar-section > :last-child {
+    margin-bottom: 0;
+}
 
+/* Elements without bottom margin */
+.badge, .spinner, .nav, .sidebar, .toast, .modal-container {
+    margin-bottom: 0;
+}
 
 /* Ensure all headings and paragraphs use proper text color */
 h1, h2, h3, h4, h5, h6 {
@@ -248,7 +262,7 @@ div {
     text-decoration: none;
     border-radius: var(--radius);
     transition: var(--transition);
-    margin-bottom: var(--space-s);
+    margin-bottom: 0;
 }
 
 .sidebar-item:hover {
@@ -268,20 +282,13 @@ div {
     background: var(--bg);
 }
 
-/* === Container === */
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 var(--space-l);
-}
-
 /* === Card === */
 .card {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius-l);
     padding: var(--space-l);
-    margin-bottom: var(--space-l);
+    margin-bottom: var(--space-l); /* Larger gap between cards */
     box-shadow: var(--shadow);
 }
 
@@ -294,7 +301,6 @@ div {
 /* Fix for regular ul/ol lists */
 ul, ol {
     padding-left: var(--space-l);
-    margin-bottom: var(--space-s);
 }
 
 .list-item {
@@ -328,6 +334,10 @@ ul, ol {
     gap: var(--space-l);
 }
 
+.grid > * {
+    margin-bottom: 0;
+}
+
 .grid-2 { grid-template-columns: repeat(2, 1fr); }
 .grid-3 { grid-template-columns: repeat(3, 1fr); }
 .grid-4 { grid-template-columns: repeat(4, 1fr); }
@@ -349,11 +359,6 @@ ul, ol {
 }
 
 /* Ensure all form elements text is visible */
-.form-group p,
-.form-group span {
-    color: var(--text);
-}
-
 .input,
 .select,
 .textarea {
@@ -455,21 +460,6 @@ ul, ol {
     color: white;
 }
 
-/* Button sizes */
-.btn-s {
-    padding: var(--space-s) var(--space-m);
-    font-size: 0.875rem;
-}
-
-.btn-l {
-    padding: var(--space-m) var(--space-l);
-    font-size: 1.125rem;
-}
-
-.btn-block {
-    width: 100%;
-}
-
 /* Button group */
 .btn-group {
     display: inline-flex;
@@ -478,6 +468,7 @@ ul, ol {
 .btn-group .btn {
     border-radius: 0;
     margin-left: -1px;
+    margin-bottom: 0; /* Remove margin for buttons inside group */
 }
 
 .btn-group .btn:first-child {
@@ -495,6 +486,10 @@ ul, ol {
     display: inline-block;
 }
 
+.dropdown .btn {
+    margin-bottom: 0; /* Remove margin for button inside dropdown */
+}
+
 .dropdown-menu {
     position: absolute;
     top: 100%;
@@ -503,7 +498,7 @@ ul, ol {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    box-shadow: var(--shadow-lg);
+    box-shadow: var(--shadow-l);
     min-width: 150px;
     z-index: 100;
 }
@@ -663,6 +658,7 @@ ul, ol {
     border-bottom: 1px solid var(--border);
     display: flex;
     gap: var(--space-m);
+    margin-bottom: 0; /* Remove margin - tab-content has padding */
 }
 
 .tab {
@@ -736,7 +732,6 @@ ul, ol {
     display: flex;
     align-items: center;
     justify-content: center;
-    /* position: relative; */
 }
 
 .progress-text {
@@ -765,28 +760,31 @@ ul, ol {
 
 /* === Utilities === */
 .hidden { display: none !important; }
-.flex { display: flex; }
+.flex { 
+    display: flex;
+    gap: var(--gap, var(--space-m));
+}
+.flex > * {
+    margin-bottom: 0;
+}
 .flex-col { flex-direction: column; }
 .flex-row { flex-direction: row; }
 .items-center { align-items: center; }
 .justify-center { justify-content: center; }
 .justify-between { justify-content: space-between; }
+.gap-none { gap: var(--space-none); }
 .gap-s { gap: var(--space-s); }
 .gap-m { gap: var(--space-m); }
 .gap-l { gap: var(--space-l); }
 .text-center { text-align: center; }
 .text-muted { color: var(--text-muted); }
 .text-secondary { color: var(--text-secondary); }
-.mt-s { margin-top: var(--space-s); }
-.mt-m { margin-top: var(--space-m); }
-.mt-l { margin-top: var(--space-l); }
 .mb-s { margin-bottom: var(--space-s); }
 .mb-m { margin-bottom: var(--space-m); }
 .mb-l { margin-bottom: var(--space-l); }
 .p-s { padding: var(--space-s); }
 .p-m { padding: var(--space-m); }
 .p-l { padding: var(--space-l); }
-.rounded-full { border-radius: 50%; }
 
 /* === Responsive === */
 @media (max-width: 768px) {
