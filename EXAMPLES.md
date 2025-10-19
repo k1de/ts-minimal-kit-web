@@ -11,7 +11,6 @@ import { ClientApp } from './static/client.js';
 
 class MyApp extends ClientApp {
     override start(): void {
-        this.setLayout('nav');
         this.showNav('My App', {
             items: [{ text: 'Home', onclick: () => this.showHome() }],
         });
@@ -141,13 +140,9 @@ hooks.after.push((req, res, url) => {
 ## Layout
 
 ```typescript
-// Layout modes
-this.setLayout('default'); // Main content only
-this.setLayout('nav'); // With navigation
-this.setLayout('sidebar'); // With sidebar
-this.setLayout('nav-sidebar'); // Both
+// Layout is automatic! Just show the components you need:
 
-// Navigation
+// Navigation - automatically sets 'nav' layout
 this.showNav('App Name', {
     items: [
         { text: 'Home', onclick: () => this.showHome() },
@@ -155,7 +150,7 @@ this.showNav('App Name', {
     ],
 });
 
-// Sidebar
+// Sidebar - automatically sets 'sidebar' layout
 this.showSidebar({
     sections: [
         {
@@ -167,6 +162,9 @@ this.showSidebar({
         },
     ],
 });
+
+// Both nav and sidebar - automatically sets 'nav-sidebar' layout
+// Just call both methods, layout adjusts automatically!
 ```
 
 ## Basic HTML Elements

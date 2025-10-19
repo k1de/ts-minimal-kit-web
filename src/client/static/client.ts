@@ -286,6 +286,8 @@ interface FlexOptions extends BaseOptions {
 class ClientApp {
     private container: HTMLElement;
     private elementIdCounter = 0;
+    private hasNav = false;
+    private hasSidebar = false;
 
     constructor() {
         this.container = document.getElementById('main')!;
@@ -463,10 +465,19 @@ class ClientApp {
     // ========================================
 
     /**
-     * Set app layout mode
-     * @param layout - Layout type: 'default', 'nav', 'sidebar', or 'nav-sidebar'
+     * Update layout based on visible components
      */
-    setLayout(layout: Layout): void {
+    private updateLayout(): void {
+        let layout: Layout = 'default';
+        
+        if (this.hasNav && this.hasSidebar) {
+            layout = 'nav-sidebar';
+        } else if (this.hasNav) {
+            layout = 'nav';
+        } else if (this.hasSidebar) {
+            layout = 'sidebar';
+        }
+        
         document.getElementById('app')?.setAttribute('data-layout', layout);
     }
 
@@ -506,6 +517,9 @@ class ClientApp {
             <ul class="nav-menu">${navItems}</ul>
         `;
         nav.hidden = false;
+        
+        this.hasNav = true;
+        this.updateLayout();
     }
 
     /**
@@ -535,6 +549,9 @@ class ClientApp {
             .join('');
 
         sidebar.hidden = false;
+        
+        this.hasSidebar = true;
+        this.updateLayout();
     }
 
     // ========================================
@@ -1590,7 +1607,6 @@ class ClientApp {
 
 export { ClientApp };
 export type {
-    Layout,
     ButtonVariant,
     AlertType,
     ToastType,

@@ -5,7 +5,6 @@ import { ClientApp } from './static/client.js';
 class App extends ClientApp {
     // Example
     override start(): void {
-        this.setLayout('nav');
         this.showNav('My App', { items: [{ text: 'Theme', onclick: () => this.toggleTheme() }] });
         this.showHome();
     }
