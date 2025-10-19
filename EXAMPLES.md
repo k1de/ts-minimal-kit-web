@@ -347,21 +347,34 @@ this.spinner();
 this.toast('Saved!', { type: 'success' });
 this.toast('Error!', { type: 'danger', duration: 5000 });
 
-// Modal
+// Modal - regular (can close by clicking outside)
 this.modal(
     this.h('Confirm Action') +
     this.p('Are you sure you want to proceed?') +
-    this.divider() +
+    this.spacer('m') +
     this.flex([
         this.button('Cancel', { onclick: () => this.closeModal() }),
         this.button('OK', { 
             onclick: () => { 
-                this.confirm(); 
+                this.handleConfirm(); 
                 this.closeModal(); 
             }, 
             variant: 'primary' 
         })
     ], { gap: 's' })
+);
+
+// Modal - blocking (must use buttons to close)
+this.modal(
+    this.alert('Critical Action', { type: 'warning' }) +
+    this.h('This action cannot be undone') +
+    this.p('You must make a choice to continue.') +
+    this.spacer('m') +
+    this.button('I understand', {
+        onclick: () => this.closeModal(),
+        variant: 'danger'
+    }),
+    true  // block parameter - prevents closing by clicking outside
 );
 ```
 

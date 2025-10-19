@@ -1162,15 +1162,16 @@ class ClientApp {
     /**
      * Show modal dialog
      * @param content - Modal content HTML
+     * @param block - If true, prevents closing by clicking outside
      */
-    modal(content: string): void {
+    modal(content: string, block?: boolean): void {
         const modal = document.getElementById('modal');
         if (!modal) return;
 
         modal.innerHTML = `<div class="modal">${content}</div>`;
 
         modal.onclick = (e) => {
-            if (e.target === modal) this.closeModal();
+            if (!block && e.target === modal) this.closeModal();
         };
 
         modal.hidden = false;

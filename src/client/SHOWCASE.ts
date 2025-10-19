@@ -717,6 +717,36 @@ class ShowcaseApp extends ClientApp {
                             ),
                             variant: 'success',
                         }),
+                        this.button('Blocking Modal', {
+                            onclick: () => this.modal(
+                                this.alert('⚠️ Critical Action Required', { type: 'warning' }) +
+                                this.h('System Update') +
+                                this.p('This is a blocking modal. You cannot close it by clicking outside.') +
+                                this.p('You must accept or decline to proceed.') +
+                                this.spacer('m') +
+                                this.flex(
+                                    [
+                                        this.button('Decline', {
+                                            onclick: () => {
+                                                this.closeModal();
+                                                this.toast('Update declined', { type: 'info' });
+                                            },
+                                            variant: 'danger'
+                                        }),
+                                        this.button('Accept', {
+                                            onclick: () => {
+                                                this.closeModal();
+                                                this.toast('Update accepted!', { type: 'success' });
+                                            },
+                                            variant: 'primary'
+                                        }),
+                                    ],
+                                    { gap: 's' }
+                                ),
+                                true // block parameter - prevents closing by clicking outside
+                            ),
+                            variant: 'danger',
+                        }),
                     ],
                     { gap: 's' }
                 )
