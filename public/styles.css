@@ -44,9 +44,9 @@
     
     /* Sizing */
     --radius: 0.375rem;
-    --radius-lg: 0.5rem;
+    --radius-l: 0.5rem;
     --shadow: 0 1px 3px rgba(0,0,0,0.12);
-    --shadow-lg: 0 10px 25px rgba(0,0,0,0.12);
+    --shadow-l: 0 10px 25px rgba(0,0,0,0.12);
     --transition: 150ms ease;
     
     /* Layout */
@@ -95,7 +95,7 @@
     
     /* Adjusted shadows for dark theme */
     --shadow: 0 1px 3px rgba(0,0,0,0.3);
-    --shadow-lg: 0 10px 25px rgba(0,0,0,0.3);
+    --shadow-l: 0 10px 25px rgba(0,0,0,0.3);
 }
 
 /* === Reset === */
@@ -265,7 +265,7 @@ div {
 .card {
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-l);
     padding: var(--space-l);
     margin-bottom: var(--space-l);
     box-shadow: var(--shadow);
@@ -476,12 +476,12 @@ div {
 }
 
 /* Button sizes */
-.btn-sm {
+.btn-s {
     padding: var(--space-s) var(--space-m);
     font-size: 0.875rem;
 }
 
-.btn-lg {
+.btn-l {
     padding: var(--space-m) var(--space-l);
     font-size: 1.125rem;
 }
@@ -507,6 +507,44 @@ div {
 
 .btn-group .btn:last-child {
     border-radius: 0 var(--radius) var(--radius) 0;
+}
+
+/* === Dropdown === */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: var(--space-s);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
+    min-width: 150px;
+    z-index: 100;
+}
+
+.dropdown-item {
+    padding: var(--space-s) var(--space-m);
+    color: var(--text);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.dropdown-item:hover {
+    background: var(--bg-secondary);
+}
+
+.dropdown-item:first-child {
+    border-radius: var(--radius) var(--radius) 0 0;
+}
+
+.dropdown-item:last-child {
+    border-radius: 0 0 var(--radius) var(--radius);
 }
 
 /* === Badge === */
@@ -557,7 +595,7 @@ div {
 .toast {
     min-width: 300px;
     animation: slideIn 200ms ease;
-    box-shadow: var(--shadow-lg);
+    box-shadow: var(--shadow-l);
 }
 
 /* Notification variants using CSS variables */
@@ -694,8 +732,8 @@ div {
 
 .modal {
     background: var(--surface);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-lg);
+    border-radius: var(--radius-l);
+    box-shadow: var(--shadow-l);
     max-width: 500px;
     width: 100%;
     margin: var(--space-l);

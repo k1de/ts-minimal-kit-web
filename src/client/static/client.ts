@@ -182,6 +182,13 @@ interface BadgeOptions extends BaseOptions {
     variant?: ButtonVariant;
 }
 
+/** Dropdown options */
+interface DropdownOptions extends BaseOptions {
+    text: string;
+    items: Array<{ text: string; onclick?: () => void }>;
+    variant?: ButtonVariant;
+}
+
 /** Alert options */
 interface AlertOptions extends BaseOptions {
     type?: AlertType;
@@ -265,8 +272,6 @@ interface FlexOptions extends BaseOptions {
     gap?: Spacing;
     direction?: FlexDirection;
 }
-
-
 
 // ========================================
 // MAIN CLASS
@@ -422,16 +427,6 @@ class ClientApp {
         if (event === 'click') {
             element.style.cursor = 'pointer';
         }
-    }
-
-    /**
-     * Create DOM element from HTML string
-     * Using template element for better performance and security
-     */
-    private htmlToElement(html: string): HTMLElement {
-        const template = document.createElement('template');
-        template.innerHTML = html.trim();
-        return template.content.firstChild as HTMLElement;
     }
 
     /**
@@ -990,6 +985,61 @@ class ClientApp {
             .join('');
 
         return `<div${containerAttrs}>${groupButtons}</div>`;
+    }
+
+    /**
+     * Create a dropdown menu
+     * @param options - Dropdown options
+     */
+    dropdown(options: DropdownOptions): string {
+        const { text, items, variant = 'default', ...baseOptions } = options;
+        const id = baseOptions.id || this.generateId('dropdown');
+        const menuId = `${id}-menu`;
+
+        // Setup toggle functionality
+        setTimeout(() => {
+            const button = document.getElementById(id);
+            const menu = document.getElementById(menuId);
+
+            if (button && menu) {
+                button.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    menu.classList.toggle('hidden');
+                });
+
+                // Close on outside click
+                document.addEventListener('click', () => {
+                    menu.classList.add('hidden');
+                });
+            }
+        }, 0);
+
+        // Bind item click handlers
+        items.forEach((item, index) => {
+            if (item.onclick) {
+                this.addDelayedEventListener(`#${menuId} .dropdown-item:nth-child(${index + 1})`, () => {
+                    item.onclick!();
+                    document.getElementById(menuId)?.classList.add('hidden');
+                });
+            }
+        });
+
+        const className = variant === 'default' ? 'btn' : `btn btn-${variant}`;
+        const menuItems = items
+            .map(item => `<div class="dropdown-item">${item.text}</div>`)
+            .join('');
+
+        const attrs = this.buildAttrs({ ...baseOptions, class: 'dropdown' });
+
+        return `
+            <div${attrs}>
+                <button id="${id}" class="${className}">
+                    ${text}
+                    <span style="margin-left: 0.5em;">▼</span>
+                </button>
+                <div id="${menuId}" class="dropdown-menu hidden">${menuItems}</div>
+            </div>
+        `;
     }
 
     /**
