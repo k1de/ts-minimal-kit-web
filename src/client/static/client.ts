@@ -58,9 +58,8 @@ type FlexDirection = 'row' | 'col';
 
 /** CSS style properties - using native CSSStyleDeclaration without methods */
 type StyleOptions = Partial<{
-    [K in keyof CSSStyleDeclaration as CSSStyleDeclaration[K] extends Function ? never : K]: CSSStyleDeclaration[K]
+    [K in keyof CSSStyleDeclaration as CSSStyleDeclaration[K] extends Function ? never : K]: CSSStyleDeclaration[K];
 }>;
-
 
 // ========================================
 // INTERFACES
@@ -140,14 +139,9 @@ interface ToastOptions {
 /** Image options */
 interface ImageOptions extends BaseOptions {
     src: string;
-    width?: number | string;
-    height?: number | string;
-    fit?: 'cover' | 'contain' | 'fill' | 'none' | 'scale-down';
     alt?: string;
     loading?: 'lazy' | 'eager';
 }
-
-
 
 /** Button options */
 interface ButtonOptions extends BaseOptions {
@@ -226,14 +220,6 @@ interface FormGroupOptions extends BaseOptions {
 /** Grid options */
 interface GridOptions extends BaseOptions {
     columns?: GridColumns;
-}
-
-/** Text options */
-interface TextOptions extends BaseOptions {
-    size?: string;
-    color?: string;
-    weight?: string;
-    align?: string;
 }
 
 /** Link options */
@@ -431,7 +417,7 @@ class ClientApp {
                 .filter(([_, value]) => value !== undefined && value !== null)
                 .map(([key, value]) => {
                     // Convert camelCase to kebab-case (native CSSStyleDeclaration uses camelCase)
-                    const cssKey = key.replace(/[A-Z]/g, match => `-${match.toLowerCase()}`);
+                    const cssKey = key.replace(/[A-Z]/g, (match) => `-${match.toLowerCase()}`);
                     return `${cssKey}: ${value}`;
                 })
                 .join('; ');
@@ -682,27 +668,13 @@ class ClientApp {
      * @param options - Image options including src
      */
     image(options: ImageOptions): string {
-        const { src, width, height, fit = 'cover', alt = '', loading = 'lazy', ...baseOptions } = options;
-
-        const styleAttrs: string[] = [];
-        if (width) {
-            const w = typeof width === 'number' ? `${width}px` : width;
-            styleAttrs.push(`width: ${w}`);
-        }
-        if (height) {
-            const h = typeof height === 'number' ? `${height}px` : height;
-            styleAttrs.push(`height: ${h}`);
-        }
-        if (fit) {
-            styleAttrs.push(`object-fit: ${fit}`);
-        }
+        const { src, alt = '', loading = 'lazy', ...baseOptions } = options;
 
         const attrs = this.buildAttrs({
             ...baseOptions,
             src,
             alt,
             loading,
-            style: styleAttrs.length > 0 ? styleAttrs.join('; ') : undefined,
         });
 
         return `<img${attrs}>`;
@@ -725,12 +697,14 @@ class ClientApp {
 
         // Generate HTML strings directly (more efficient)
         const listItems = items
-            .map((item) => `
+            .map(
+                (item) => `
             <li class="list-item">
                 <div class="list-item-title">${item.title}</div>
                 ${item.content ? `<div class="list-item-content">${item.content}</div>` : ''}
             </li>
-        `)
+        `
+            )
             .join('');
 
         const attrs = this.buildAttrs({
@@ -740,8 +714,6 @@ class ClientApp {
         });
         return `<ul${attrs}>${listItems}</ul>`;
     }
-
-
 
     /**
      * Create a grid layout
@@ -995,9 +967,7 @@ class ClientApp {
         });
 
         const className = variant === 'default' ? 'btn' : `btn btn-${variant}`;
-        const menuItems = items
-            .map(item => `<div class="dropdown-item">${item.text}</div>`)
-            .join('');
+        const menuItems = items.map((item) => `<div class="dropdown-item">${item.text}</div>`).join('');
 
         const attrs = this.buildAttrs({ ...baseOptions, class: 'dropdown' });
 
@@ -1057,7 +1027,7 @@ class ClientApp {
         const tableId = baseOptions.id || this.generateId('table');
 
         const headerRow = headers.map((h) => `<th>${h}</th>`).join('');
-        const bodyRows = rows.map((row) => `<tr>${row.map(cell => `<td>${cell}</td>`).join('')}</tr>`).join('');
+        const bodyRows = rows.map((row) => `<tr>${row.map((cell) => `<td>${cell}</td>`).join('')}</tr>`).join('');
 
         const attrs = this.buildAttrs({
             ...baseOptions,
@@ -1072,8 +1042,6 @@ class ClientApp {
             </table>
         `;
     }
-
-
 
     /**
      * Create tabs
@@ -1451,7 +1419,6 @@ class ClientApp {
         return this.api('DELETE', endpoint);
     }
 
-
     /**
      * Create a heading
      * @param text - Heading text
@@ -1468,9 +1435,16 @@ class ClientApp {
      * @param options - Separator options
      */
     separator(options?: BaseOptions): string {
+        const defaultStyle: StyleOptions = {
+            border: 'none',
+            borderTop: '1px solid var(--border)',
+            marginTop: 'var(--space-l)',
+            marginBottom: 'var(--space-l)',
+        };
+
         const attrs = this.buildAttrs({
             ...options,
-            style: 'border: none; border-top: 1px solid var(--border); margin: var(--space-l) 0;',
+            style: options?.style || defaultStyle,
         });
         return `<hr${attrs}>`;
     }
@@ -1483,7 +1457,7 @@ class ClientApp {
     spacer(size: Spacing = 'm', options?: BaseOptions): string {
         const attrs = this.buildAttrs({
             ...options,
-            style: `height: var(--space-${size})`,
+            style: options?.style || { height: `var(--space-${size})` },
         });
         return `<div${attrs}></div>`;
     }
@@ -1506,24 +1480,11 @@ class ClientApp {
     /**
      * Create a text block with optional styling
      * @param content - Text content
-     * @param options - Text options
+     * @param options - Base options with style
      */
-    text(content: string, options?: TextOptions): string {
-        const { size, color, weight, align, ...baseOptions } = options || {};
-        const baseId = baseOptions.id;
-        const styles: string[] = [];
-
-        if (size) styles.push(`font-size: ${size}`);
-        if (color) styles.push(`color: ${color}`);
-        if (weight) styles.push(`font-weight: ${weight}`);
-        if (align) styles.push(`text-align: ${align}`);
-
-        const attrs = this.buildAttrs({
-            ...baseOptions,
-            style: styles.length > 0 ? styles.join('; ') : undefined,
-        });
-
-        return `<p${attrs}><span${this.getNestedId(baseId, 'content')}>${content}</span></p>`;
+    text(content: string, options?: BaseOptions): string {
+        const attrs = this.buildAttrs(options);
+        return `<p${attrs}>${content}</p>`;
     }
 }
 
