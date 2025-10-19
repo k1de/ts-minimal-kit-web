@@ -782,7 +782,12 @@ class ClientApp {
 
         // Generate HTML strings directly (more efficient)
         const listItems = items
-            .map((item) => this.createListItemHtml(item))
+            .map((item) => `
+            <li class="list-item">
+                <div class="list-item-title">${item.title}</div>
+                ${item.content ? `<div class="list-item-content">${item.content}</div>` : ''}
+            </li>
+        `)
             .join('');
 
         const attrs = this.buildAttrs({
@@ -793,107 +798,7 @@ class ClientApp {
         return `<ul${attrs}>${listItems}</ul>`;
     }
 
-    /**
-     * Create list item HTML
-     * Used both for string generation and DOM element creation
-     */
-    private createListItemHtml(item: ListItem): string {
-        return `
-            <li class="list-item">
-                <div class="list-item-title">${item.title}</div>
-                ${item.content ? `<div class="list-item-content">${item.content}</div>` : ''}
-            </li>
-        `;
-    }
 
-    /**
-     * Add item to existing list
-     * @param listId - List ID
-     * @param item - Item to add
-     * @param direction - Direction to add ('append' or 'prepend')
-     */
-    appendListItem(listId: string, item: ListItem, direction: 'append' | 'prepend' = 'append'): void {
-        const list = document.getElementById(listId);
-        if (!list) return;
-
-        const li = this.htmlToElement(this.createListItemHtml(item));
-
-        if (item.onclick) {
-            li.addEventListener('click', item.onclick);
-            li.style.cursor = 'pointer';
-        }
-
-        list[direction](li);
-    }
-
-    /**
-     * Prepend item to existing list
-     * @param listId - List ID
-     * @param item - Item to prepend
-     */
-    prependListItem(listId: string, item: ListItem): void {
-        this.appendListItem(listId, item, 'prepend');
-    }
-
-    /**
-     * Remove element by index from collection
-     * @param parentId - Parent element ID
-     * @param index - Element index to remove
-     * @param className - Class name to find elements
-     */
-    private removeElementByIndex(parentId: string, index: number, className: string): void {
-        const parent = document.getElementById(parentId);
-        if (!parent) return;
-
-        const elements = parent.getElementsByClassName(className);
-        if (index >= 0 && index < elements.length) {
-            elements[index]?.remove();
-        }
-    }
-
-    /**
-     * Remove list item by index
-     * @param listId - List ID
-     * @param index - Item index to remove
-     */
-    removeListItem(listId: string, index: number): void {
-        this.removeElementByIndex(listId, index, 'list-item');
-    }
-
-    /**
-     * Update list item at specific index
-     * @param listId - List ID
-     * @param index - Item index to update
-     * @param item - New item data
-     */
-    updateListItem(listId: string, index: number, item: ListItem): void {
-        const list = document.getElementById(listId);
-        if (!list) return;
-
-        const items = list.getElementsByClassName('list-item');
-        if (index < 0 || index >= items.length) return;
-
-        const oldItem = items[index] as HTMLElement;
-        const newItem = this.htmlToElement(this.createListItemHtml(item));
-
-        if (item.onclick) {
-            newItem.addEventListener('click', item.onclick);
-            newItem.style.cursor = 'pointer';
-        }
-
-        oldItem.replaceWith(newItem);
-    }
-
-    /**
-     * Get list item count
-     * @param listId - List ID
-     * @returns Number of items in the list
-     */
-    getListLength(listId: string): number {
-        const list = document.getElementById(listId);
-        if (!list) return 0;
-        return list.getElementsByClassName('list-item').length;
-    }
 
     /**
      * Create a grid layout
@@ -1153,7 +1058,7 @@ class ClientApp {
         const tableId = baseOptions.id || this.generateId('table');
 
         const headerRow = headers.map((h) => `<th>${h}</th>`).join('');
-        const bodyRows = rows.map((row) => this.createTableRowHtml(row)).join('');
+        const bodyRows = rows.map((row) => `<tr>${row.map(cell => `<td>${cell}</td>`).join('')}</tr>`).join('');
 
         const attrs = this.buildAttrs({
             ...baseOptions,
@@ -1169,79 +1074,7 @@ class ClientApp {
         `;
     }
 
-    /**
-     * Create table row HTML
-     * @param cells - Array of cell contents
-     * @returns HTML string for table row
-     */
-    private createTableRowHtml(cells: string[]): string {
-        return `<tr>${cells.map(cell => `<td>${cell}</td>`).join('')}</tr>`;
-    }
 
-    /**
-     * Add row to existing table
-     * @param tableId - Table ID
-     * @param row - Row data to add
-     * @param direction - Direction to add ('append' or 'prepend')
-     */
-    appendTableRow(tableId: string, row: string[], direction: 'append' | 'prepend' = 'append'): void {
-        const tbody = document.getElementById(`${tableId}-body`);
-        if (!tbody) return;
-
-        const tr = this.htmlToElement(this.createTableRowHtml(row));
-        tbody[direction](tr);
-    }
-
-    /**
-     * Prepend row to existing table
-     * @param tableId - Table ID
-     * @param row - Row data to prepend
-     */
-    prependTableRow(tableId: string, row: string[]): void {
-        this.appendTableRow(tableId, row, 'prepend');
-    }
-
-    /**
-     * Remove row from table by index
-     * @param tableId - Table ID
-     * @param index - Row index to remove
-     */
-    removeTableRow(tableId: string, index: number): void {
-        const tbody = document.getElementById(`${tableId}-body`);
-        if (!tbody) return;
-
-        const rows = tbody.getElementsByTagName('tr');
-        if (index >= 0 && index < rows.length) {
-            rows[index]?.remove();
-        }
-    }
-
-    /**
-     * Update table row at specific index
-     * @param tableId - Table ID
-     * @param index - Row index
-     * @param row - New row data
-     */
-    updateTableRow(tableId: string, index: number, row: string[]): void {
-        const tbody = document.getElementById(`${tableId}-body`);
-        if (!tbody) return;
-
-        const rows = tbody.getElementsByTagName('tr');
-        if (index >= 0 && index < rows.length && rows[index]) {
-            rows[index].innerHTML = this.createTableRowHtml(row).slice(4, -5); // Remove <tr> tags
-        }
-    }
-
-    /**
-     * Get table row count
-     * @param tableId - Table ID
-     * @returns Number of rows in the table body
-     */
-    getTableLength(tableId: string): number {
-        const tbody = document.getElementById(`${tableId}-body`);
-        if (!tbody) return 0;
-        return tbody.getElementsByTagName('tr').length;
-    }
 
     /**
      * Create tabs
@@ -1331,35 +1164,6 @@ class ClientApp {
                 </div>
             </div>
         `;
-    }
-
-    /**
-     * Update progress bar value
-     * @param id - Progress bar ID
-     * @param value - New value
-     * @param max - Optional new maximum value
-     */
-    updateProgress(id: string, value: number, max?: number): void {
-        const progressElement = document.getElementById(id);
-        if (!progressElement) return;
-
-        const currentMax = max || Number(progressElement.getAttribute('data-max')) || 100;
-        const percentage = Math.min(100, Math.max(0, (value / currentMax) * 100));
-
-        const barElement = document.getElementById(`${id}-bar`);
-        if (barElement) {
-            barElement.style.width = `${percentage}%`;
-
-            // Update text indicator if present
-            const showText = progressElement.hasAttribute('data-show-text');
-            if (showText) {
-                this.updateText(`${id}-value`, `${Math.round(percentage)}%`);
-            }
-        }
-
-        if (max !== undefined) {
-            progressElement.setAttribute('data-max', String(max));
-        }
     }
 
     /**
@@ -1695,7 +1499,7 @@ class ClientApp {
     divider(options?: BaseOptions): string {
         const attrs = this.buildAttrs({
             ...options,
-            style: 'border: none; border-top: 1px solid var(--border); margin: var(--space-lg) 0;',
+            style: 'border: none; border-top: 1px solid var(--border); margin: var(--space-l) 0;',
         });
         return `<hr${attrs}>`;
     }
