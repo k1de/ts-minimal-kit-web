@@ -208,9 +208,10 @@ div {
 
 .nav-menu {
     display: flex;
-    gap: var(--space-m);
+    align-items: center;
     list-style: none;
     margin-left: auto;
+    margin-bottom: 0;
 }
 
 .nav-item {

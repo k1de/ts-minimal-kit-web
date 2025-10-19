@@ -65,6 +65,7 @@ type FlexDirection = 'row' | 'col';
 interface BaseOptions {
     id?: string;
     className?: string;
+    style?: string;
 }
 
 /** Navigation item configuration */
@@ -228,11 +229,6 @@ interface TextOptions extends BaseOptions {
     color?: string;
     weight?: string;
     align?: string;
-}
-
-/** Div options */
-interface DivOptions extends BaseOptions {
-    style?: string;
 }
 
 /** Link options */
@@ -565,7 +561,7 @@ class ClientApp {
      * @param content - Content of the div
      * @param options - Div options
      */
-    div(content: string, options?: DivOptions): string {
+    div(content: string, options?: BaseOptions): string {
         const attrs = this.buildAttrs(options);
         return `<div${attrs}>${content}</div>`;
     }
