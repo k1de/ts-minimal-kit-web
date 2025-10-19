@@ -55,9 +55,7 @@ type ThemeVariant = 'dark' | 'light';
 type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
 type Spacing = 's' | 'm' | 'l';
 type FlexDirection = 'row' | 'col';
-type ScrollBehavior = 'smooth' | 'instant' | 'auto';
-type ScrollBlock = 'start' | 'center' | 'end' | 'nearest';
-type ScrollInline = 'start' | 'center' | 'end' | 'nearest';
+
 
 // ========================================
 // INTERFACES
@@ -268,13 +266,7 @@ interface FlexOptions extends BaseOptions {
     direction?: FlexDirection;
 }
 
-/** Scroll to element options */
-interface ScrollToElementOptions {
-    behavior?: ScrollBehavior;
-    block?: ScrollBlock;
-    inline?: ScrollInline;
-    offset?: number;
-}
+
 
 // ========================================
 // MAIN CLASS
@@ -342,27 +334,14 @@ class ClientApp {
     /**
      * Scroll to element by ID
      * @param elementId - Element ID to scroll to
-     * @param options - Scroll options
+     * @param smooth - Use smooth scrolling (default: true)
      */
-    scrollToElement(elementId: string, options?: ScrollToElementOptions): boolean {
+    scrollToElement(elementId: string, smooth: boolean = true): boolean {
         const element = document.getElementById(elementId);
         if (!element) {
             return false;
         }
-
-        const { behavior = 'smooth', block = 'start', inline = 'nearest', offset = 0 } = options || {};
-
-        if (offset !== 0) {
-            // Custom scroll with offset (useful for fixed headers)
-            const elementPosition = element.getBoundingClientRect().top;
-            const offsetPosition = elementPosition + window.pageYOffset - offset;
-
-            window.scrollTo({ top: offsetPosition, behavior });
-        } else {
-            // Standard scrollIntoView
-            element.scrollIntoView({ behavior, block, inline });
-        }
-
+        element.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto' });
         return true;
     }
 
@@ -1570,9 +1549,7 @@ export type {
     HeadingLevel,
     Spacing,
     FlexDirection,
-    ScrollBehavior,
-    ScrollBlock,
-    ScrollInline,
+
     // Options interfaces
     NavOptions,
     SidebarOptions,
@@ -1582,6 +1559,6 @@ export type {
     ModalOptions,
     ImageOptions,
     TableOptions,
-    ScrollToElementOptions,
+
     // ... export other options as needed
 };
