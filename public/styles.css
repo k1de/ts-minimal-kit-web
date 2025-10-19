@@ -115,10 +115,12 @@ body {
 /* Ensure all headings and paragraphs use proper text color */
 h1, h2, h3, h4, h5, h6 {
     color: var(--text);
+    margin-bottom: var(--space-s);
 }
 
 p {
     color: var(--text);
+    margin-bottom: var(--space-s);
 }
 
 /* Ensure all generic div content inherits text color */
@@ -315,6 +317,13 @@ div {
 /* === List === */
 .list {
     list-style: none;
+    padding-left: 0;
+}
+
+/* Fix for regular ul/ol lists */
+ul, ol {
+    padding-left: var(--space-l);
+    margin-bottom: var(--space-s);
 }
 
 .list-item {
@@ -732,15 +741,18 @@ div {
 
 .modal {
     background: var(--surface);
+    border: 1px solid var(--border);
     border-radius: var(--radius-l);
     box-shadow: var(--shadow-l);
     max-width: 500px;
     width: 100%;
     margin: var(--space-l);
+    padding: var(--space-l);
 }
 
 .modal-header {
-    padding: var(--space-l);
+    margin-bottom: var(--space-m);
+    padding-bottom: var(--space-m);
     border-bottom: 1px solid var(--border);
 }
 
@@ -751,12 +763,12 @@ div {
 }
 
 .modal-body {
-    padding: var(--space-l);
     color: var(--text);
 }
 
 .modal-footer {
-    padding: var(--space-l);
+    margin-top: var(--space-m);
+    padding-top: var(--space-m);
     border-top: 1px solid var(--border);
     display: flex;
     justify-content: flex-end;
