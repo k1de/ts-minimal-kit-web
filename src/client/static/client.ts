@@ -217,6 +217,7 @@ class ClientApp {
     private elementIdCounter = 0;
     private hasNav = false;
     private hasSidebar = false;
+    private dropdownInitialized = false;
 
     constructor() {
         this.container = document.getElementById('main')!;
@@ -234,6 +235,32 @@ class ClientApp {
         } else {
             this.start();
         }
+    }
+
+    /** Initialize global dropdown handler (once) */
+    private initDropdownHandler(): void {
+        if (this.dropdownInitialized) return;
+        this.dropdownInitialized = true;
+
+        document.addEventListener('click', (e) => {
+            const target = e.target as HTMLElement;
+
+            // Toggle dropdown when button clicked
+            if (target.closest('[data-dropdown-toggle]')) {
+                e.stopPropagation();
+                const buttonId = target.closest('[data-dropdown-toggle]')?.id;
+                if (buttonId) {
+                    const menu = document.getElementById(`${buttonId}-menu`);
+                    menu?.classList.toggle('hidden');
+                }
+                return;
+            }
+
+            // Close all dropdowns when clicking outside
+            document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                menu.classList.add('hidden');
+            });
+        });
     }
 
     /** Start the app - override this in your app */
@@ -766,28 +793,11 @@ class ClientApp {
 
     /** Create a dropdown menu */
     dropdown(options: DropdownOptions): string {
+        this.initDropdownHandler();
         const { text, items, variant = 'default', ...baseOptions } = options;
         const processedOptions = this.processOnclick(baseOptions, 'dropdown');
         const id = processedOptions?.id || this.generateId('dropdown');
         const menuId = `${id}-menu`;
-
-        // Setup toggle functionality
-        setTimeout(() => {
-            const button = document.getElementById(id);
-            const menu = document.getElementById(menuId);
-
-            if (button && menu) {
-                button.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    menu.classList.toggle('hidden');
-                });
-
-                // Close on outside click
-                document.addEventListener('click', () => {
-                    menu.classList.add('hidden');
-                });
-            }
-        }, 0);
 
         // Bind item click handlers
         items.forEach((item, index) => {
@@ -815,7 +825,7 @@ class ClientApp {
 
         return `
             <div${attrs}>
-                <button id="${id}" class="${className}">
+                <button id="${id}" class="${className}" data-dropdown-toggle>
                     ${text}
                     <span style="margin-left: 0.5em;">▼</span>
                 </button>
