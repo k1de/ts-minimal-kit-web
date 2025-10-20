@@ -130,7 +130,6 @@ img,
 .grid,
 .flex,
 .tabs,
-.form-group,
 .input,
 .textarea,
 .select,
@@ -141,7 +140,6 @@ img,
 .list,
 .progress,
 .btn,
-.btn-group,
 .dropdown {
     margin-top: 0;
     margin-bottom: var(--space-m);
@@ -394,15 +392,20 @@ ol {
 }
 
 /* === Forms === */
-.form-group {
-    margin-bottom: var(--space-l);
-}
 
 .label {
     display: block;
     margin-bottom: var(--space-s);
     font-weight: 500;
     color: var(--text);
+}
+
+.sublabel {
+    display: block;
+    margin-bottom: var(--space-s);
+    font-size: 0.750rem;
+    font-weight: 250;
+    color: var(--text-secondary);
 }
 
 /* Ensure all form elements text is visible */
@@ -429,12 +432,6 @@ ol {
 .textarea {
     resize: vertical;
     min-height: 100px;
-}
-
-.help-text {
-    margin-top: var(--space-s);
-    font-size: 0.875rem;
-    color: var(--text-secondary);
 }
 
 /* Checkbox & Radio */
@@ -505,26 +502,6 @@ ol {
     background: var(--warning);
     border-color: var(--warning);
     color: white;
-}
-
-/* Button group */
-.btn-group {
-    display: inline-flex;
-}
-
-.btn-group .btn {
-    border-radius: 0;
-    margin-left: -1px;
-    margin-bottom: 0; /* Remove margin for buttons inside group */
-}
-
-.btn-group .btn:first-child {
-    border-radius: var(--radius) 0 0 var(--radius);
-    margin-left: 0;
-}
-
-.btn-group .btn:last-child {
-    border-radius: 0 var(--radius) var(--radius) 0;
 }
 
 /* === Dropdown === */

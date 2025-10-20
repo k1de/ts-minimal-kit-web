@@ -19,10 +19,7 @@ class MyApp extends ClientApp {
 
     showHome(): void {
         this.clear();
-        this.append(this.card(
-            this.heading('Welcome', 1) + 
-            this.paragraph('Hello World')
-        ));
+        this.append(this.card(this.heading('Welcome', 1) + this.text('Hello World')));
     }
 }
 
@@ -179,7 +176,6 @@ this.heading('Subsection', 3); // <h3>
 this.heading('Default H2'); // <h2> by default
 
 // Text elements
-this.paragraph('This is a paragraph');
 this.text('Styled text', {
     size: '1.25rem',
     color: 'var(--primary)',
@@ -226,9 +222,9 @@ this.card('Any content here');
 // Card with composed content
 this.card(
     this.heading('Card Title') + // defaults to h2
-    this.separator() +
-    this.paragraph('Card content') +
-    this.button('Action', { variant: 'primary' })
+        this.separator() +
+        this.text('Card content') +
+        this.button('Action', { variant: 'primary' })
 );
 
 // Tabs
@@ -241,14 +237,7 @@ this.tabs({
 });
 
 // Grid (2-8 columns)
-this.grid(
-    [
-        this.card('Content 1'),
-        this.card('Content 2'), 
-        this.card('Content 3')
-    ],
-    { columns: 3 }
-);
+this.grid([this.card('Content 1'), this.card('Content 2'), this.card('Content 3')], { columns: 3 });
 
 // List
 this.list({
@@ -293,12 +282,12 @@ this.radioGroup({
     selected: 'red',
 });
 
-// Form group (label + input + help)
-this.formGroup({
-    label: 'Email',
-    input: this.input('email', { type: 'email' }),
-    help: 'We never share your email',
-});
+// Form with label and input - compose with methods
+this.div(
+    this.text('Email', { className: 'label' }) +
+        this.text('We never share your email', { className: 'sublabel' })
+        this.input('email', { type: 'email' }) +
+);
 ```
 
 ## UI Components
@@ -308,14 +297,6 @@ this.formGroup({
 this.button('Click me', { onclick: () => alert('Hi!') });
 this.button('Save', { variant: 'primary' });
 this.button('Delete', { variant: 'danger' });
-
-// Button Group
-this.buttonGroup({
-    buttons: [
-        { text: 'Edit', onclick: () => this.edit() },
-        { text: 'Delete', onclick: () => this.delete(), variant: 'danger' },
-    ],
-});
 
 // Dropdown
 this.dropdown({
@@ -350,31 +331,34 @@ this.toast('Error!', { type: 'danger', duration: 5000 });
 // Modal - regular (can close by clicking outside)
 this.modal(
     this.heading('Confirm Action') +
-    this.paragraph('Are you sure you want to proceed?') +
-    this.spacer('m') +
-    this.flex([
-        this.button('Cancel', { onclick: () => this.closeModal() }),
-        this.button('OK', { 
-            onclick: () => { 
-                this.handleConfirm(); 
-                this.closeModal(); 
-            }, 
-            variant: 'primary' 
-        })
-    ], { gap: 's' })
+        this.text('Are you sure you want to proceed?') +
+        this.spacer('m') +
+        this.flex(
+            [
+                this.button('Cancel', { onclick: () => this.closeModal() }),
+                this.button('OK', {
+                    onclick: () => {
+                        this.handleConfirm();
+                        this.closeModal();
+                    },
+                    variant: 'primary',
+                }),
+            ],
+            { gap: 's' }
+        )
 );
 
 // Modal - blocking (must use buttons to close)
 this.modal(
     this.alert('Critical Action', { type: 'warning' }) +
-    this.heading('This action cannot be undone') +
-    this.paragraph('You must make a choice to continue.') +
-    this.spacer('m') +
-    this.button('I understand', {
-        onclick: () => this.closeModal(),
-        variant: 'danger'
-    }),
-    true  // block parameter - prevents closing by clicking outside
+        this.heading('This action cannot be undone') +
+        this.text('You must make a choice to continue.') +
+        this.spacer('m') +
+        this.button('I understand', {
+            onclick: () => this.closeModal(),
+            variant: 'danger',
+        }),
+    true // block parameter - prevents closing by clicking outside
 );
 ```
 
@@ -452,11 +436,10 @@ this.updateText('my-btn-text', 'New Label');
 ### ID Pattern
 
 For component with `id`, nested elements follow:
+
 -   `{id}-value` - Value element (progress)
 -   `{id}-text` - Text element (button, badge)
 -   `{id}-message` - Message element (alert)
--   `{id}-label` - Label element (formGroup)
--   `{id}-help` - Help text element (formGroup)
 
 ## Project Structure
 

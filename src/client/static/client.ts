@@ -1,44 +1,13 @@
-// client.ts - Minimal UI skeleton framework (static file)
+// client.ts - Minimal UI framework
 
 /**
- * ========================================
  * MINIMAL UI FRAMEWORK
- * ========================================
- *
- * A lightweight, TypeScript-based UI framework for building web applications
- * with minimal dependencies and maximum simplicity.
- *
- * ## Core Principles:
- * - Single source of truth for UI components
- * - Consistent API across all methods
- * - Automatic event binding with delayed attachment
- * - Built-in theme support (dark/light)
- * - Zero external dependencies
- *
- * ## API Convention:
- * All methods follow a consistent pattern:
- * - First parameter: main content or data (required)
- * - Second parameter: options object (optional)
- * - All HTML-generating methods return strings
- * - All options objects extend BaseOptions with id and className
- *
- * ## Usage Example:
- * ```typescript
- * class MyApp extends ClientApp {
- *     override start() {
- *         this.setLayout('nav-sidebar');
- *         this.showNav('My App', {
- *             items: [{ text: 'Home', href: '#' }]
- *         });
- *
- *         const content = this.card('Title', {
- *             content: 'Card content',
- *             id: 'my-card'
- *         });
- *         this.append(content);
- *     }
- * }
- * ```
+ * 
+ * Lightweight TypeScript UI framework with zero dependencies.
+ * All components support onclick handlers via BaseOptions.
+ * Methods return HTML strings for efficient rendering.
+ * 
+ * Usage: Extend ClientApp and override start() method.
  */
 
 // ========================================
@@ -70,13 +39,17 @@ interface BaseOptions {
     id?: string;
     className?: string;
     style?: string | StyleOptions;
+    onclick?: () => void;
+}
+
+/** Navigation item options */
+interface NavItemOptions extends BaseOptions {
+    href?: string;
 }
 
 /** Navigation item configuration */
-interface NavItem {
+interface NavItem extends NavItemOptions {
     text: string;
-    href?: string;
-    onclick?: () => void;
 }
 
 /** Navigation options */
@@ -96,10 +69,9 @@ interface SidebarOptions extends BaseOptions {
 }
 
 /** List item configuration */
-interface ListItem {
+interface ListItem extends BaseOptions {
     title: string;
     content?: string;
-    onclick?: () => void;
 }
 
 /** List options */
@@ -145,24 +117,25 @@ interface ImageOptions extends BaseOptions {
 
 /** Button options */
 interface ButtonOptions extends BaseOptions {
-    onclick?: () => void;
     variant?: ButtonVariant;
 }
 
-/** Button group options */
-interface ButtonGroupOptions extends BaseOptions {
-    buttons: Array<{ text: string; onclick?: () => void; variant?: ButtonVariant }>;
-}
+
 
 /** Badge options */
 interface BadgeOptions extends BaseOptions {
     variant?: ButtonVariant;
 }
 
+/** Dropdown item */
+interface DropdownItem extends BaseOptions {
+    text: string;
+}
+
 /** Dropdown options */
 interface DropdownOptions extends BaseOptions {
     text: string;
-    items: Array<{ text: string; onclick?: () => void }>;
+    items: DropdownItem[];
     variant?: ButtonVariant;
 }
 
@@ -210,12 +183,7 @@ interface RadioGroupOptions extends BaseOptions {
     selected?: string;
 }
 
-/** Form group options */
-interface FormGroupOptions extends BaseOptions {
-    label: string;
-    input: string;
-    help?: string;
-}
+
 
 /** Grid options */
 interface GridOptions extends BaseOptions {
@@ -226,7 +194,6 @@ interface GridOptions extends BaseOptions {
 interface LinkOptions extends BaseOptions {
     href: string;
     target?: string;
-    onclick?: () => void;
 }
 
 /** Flex container options */
@@ -259,9 +226,7 @@ class ClientApp {
         }, 0);
     }
 
-    /**
-     * Initialize the app
-     */
+    /** Initialize the app */
     private init(): void {
         this.initHashNavigation();
         if (document.readyState === 'loading') {
@@ -271,17 +236,13 @@ class ClientApp {
         }
     }
 
-    /**
-     * Start the app - override this in your app
-     */
+    /** Start the app - override this in your app */
     protected start(): void {
         // Override this method in your app
         console.log('Override start() method to begin.');
     }
 
-    /**
-     * Initialize hash navigation
-     */
+    /** Initialize hash navigation */
     private initHashNavigation(): void {
         // Handle hash changes
         window.addEventListener('hashchange', () => this.handleHashChange());
@@ -289,9 +250,7 @@ class ClientApp {
         this.handleHashChange();
     }
 
-    /**
-     * Handle hash change
-     */
+    /** Handle hash change */
     private handleHashChange(): void {
         const hash = window.location.hash.slice(1); // Remove #
         // Call override method if exists
@@ -300,11 +259,7 @@ class ClientApp {
         }
     }
 
-    /**
-     * Scroll to element by ID
-     * @param elementId - Element ID to scroll to
-     * @param smooth - Use smooth scrolling (default: true)
-     */
+    /** Scroll to element by ID */
     scrollToElement(elementId: string, smooth: boolean = true): boolean {
         const element = document.getElementById(elementId);
         if (!element) {
@@ -314,14 +269,10 @@ class ClientApp {
         return true;
     }
 
-    /**
-     * Override this to handle hash changes in your app
-     */
+    /** Override this to handle hash changes in your app */
     protected onHashChange?(hash: string): void;
 
-    /**
-     * Navigate to hash
-     */
+    /** Navigate to hash */
     navigateTo(hash: string): void {
         if (window.location.hash !== `#${hash}`) {
             window.location.hash = hash;
@@ -331,32 +282,37 @@ class ClientApp {
         }
     }
 
-    /**
-     * Get current hash
-     */
+    /** Get current hash */
     getCurrentHash(): string {
         return window.location.hash.slice(1);
     }
 
-    /**
-     * Generate unique element ID
-     */
+    /** Generate unique element ID */
     private generateId(prefix: string): string {
         return `${prefix}-${++this.elementIdCounter}`;
     }
 
-    /**
-     * Generate nested element ID
-     */
+    /** Generate nested element ID */
     private getNestedId(baseId: string | undefined, suffix: string): string {
         if (!baseId) return '';
         return ` id="${baseId}-${suffix}"`;
     }
 
-    /**
-     * Add event listener with timeout
-     * Supports both element IDs and CSS selectors
-     */
+    /** Process onclick handler and generate ID if needed */
+    private processOnclick<T extends BaseOptions>(options: T | undefined, defaultPrefix: string, event: string = 'click'): T | undefined {
+        if (!options?.onclick) return options;
+
+        const processedOptions = options.id ? options : {
+            ...options,
+            id: this.generateId(defaultPrefix)
+        } as T;
+
+        this.addDelayedEventListener(processedOptions.id!, options.onclick, event);
+
+        return processedOptions;
+    }
+
+    /** Add event listener with timeout (supports IDs and CSS selectors) */
     private addDelayedEventListener(idOrSelector: string, handler: () => void, event: string = 'click'): void {
         setTimeout(() => {
             // Check if it's a CSS selector (starts with . # [ or contains space/special chars)
@@ -369,12 +325,7 @@ class ClientApp {
         }, 0);
     }
 
-    /**
-     * Add event listener to element with common setup
-     * @param element - HTML element or null
-     * @param handler - Event handler function
-     * @param event - Event type (default: 'click')
-     */
+    /** Add event listener to element with common setup */
     private addEventListener(element: HTMLElement | null, handler: () => void, event: string = 'click'): void {
         if (!element) return;
 
@@ -393,21 +344,19 @@ class ClientApp {
         }
     }
 
-    /**
-     * Build HTML attributes from any object
-     * Converts className to class attribute
-     * Converts style object to string
-     * @param attrs - Attributes object
-     * @returns HTML attributes string
-     */
+    /** Build HTML attributes from object (converts className to class, style object to string) */
     private buildAttrs(attrs?: Record<string, any> | BaseOptions): string {
         if (!attrs) return '';
 
-        // Handle BaseOptions case (convert className to class)
+        // Handle BaseOptions case (convert className to class, exclude onclick)
         const processedAttrs: Record<string, any> = { ...attrs };
         if ('className' in processedAttrs && !('class' in processedAttrs)) {
             processedAttrs.class = processedAttrs.className;
             delete processedAttrs.className;
+        }
+        // Remove onclick from attributes if present
+        if ('onclick' in processedAttrs) {
+            delete processedAttrs.onclick;
         }
 
         // Handle style object
@@ -440,9 +389,7 @@ class ClientApp {
     // LAYOUT METHODS
     // ========================================
 
-    /**
-     * Update layout based on visible components
-     */
+    /** Update layout based on visible components */
     private updateLayout(): void {
         let layout: Layout = 'default';
 
@@ -457,24 +404,17 @@ class ClientApp {
         document.getElementById('app')?.setAttribute('data-layout', layout);
     }
 
-    /**
-     * Create navigation item HTML
-     * @param item - Navigation item
-     * @param id - Element ID
-     * @param className - CSS class name
-     */
-    private createNavItem(item: NavItem, id: string, className: string): string {
-        if (item.onclick) {
-            this.addDelayedEventListener(id, item.onclick);
-        }
-        return `<li><a href="${item.href || '#'}" id="${id}" class="${className}">${item.text}</a></li>`;
+    /** Create navigation item HTML */
+    private createNavItem(text: string, options?: NavItemOptions): string {
+        const processed = this.processOnclick(options, 'nav-item');
+        const attrs = this.buildAttrs({
+            ...processed,
+            href: options?.href || '#'
+        });
+        return `<li><a${attrs}>${text}</a></li>`;
     }
 
-    /**
-     * Show navigation bar
-     * @param brand - Brand text or logo
-     * @param options - Navigation options including items
-     */
+    /** Show navigation bar */
     showNav(brand: string, options?: NavOptions): void {
         const nav = document.getElementById('nav');
         if (!nav) return;
@@ -484,7 +424,12 @@ class ClientApp {
             : options.items
                 .map((item, i) => {
                     const id = options.id ? `${options.id}-item-${i}` : `nav-item-${i}`;
-                    return this.createNavItem(item, id, 'nav-item');
+                    const { text, ...itemOptions } = item;
+                    return this.createNavItem(text, {
+                        ...itemOptions,
+                        id: item.id || id,
+                        className: item.className ? `nav-item ${item.className}` : 'nav-item'
+                    });
                 })
                 .join('');
 
@@ -498,10 +443,7 @@ class ClientApp {
         this.updateLayout();
     }
 
-    /**
-     * Show sidebar
-     * @param options - Sidebar options including sections
-     */
+    /** Show sidebar */
     showSidebar(options: SidebarOptions): void {
         const sidebar = document.getElementById('sidebar');
         if (!sidebar) return;
@@ -511,7 +453,12 @@ class ClientApp {
                 const items = section.items
                     .map((item, i) => {
                         const id = options.id ? `${options.id}-${sectionIndex}-${i}` : `sidebar-${sectionIndex}-${i}`;
-                        return this.createNavItem(item, id, 'sidebar-item');
+                        const { text, ...itemOptions } = item;
+                        return this.createNavItem(text, {
+                            ...itemOptions,
+                            id: item.id || id,
+                            className: item.className ? `sidebar-item ${item.className}` : 'sidebar-item'
+                        });
                     })
                     .join('');
 
@@ -534,25 +481,17 @@ class ClientApp {
     // CONTENT METHODS
     // ========================================
 
-    /**
-     * Clear main content
-     */
+    /** Clear main content */
     clear(): void {
         this.container.innerHTML = '';
     }
 
-    /**
-     * Add HTML content (replaces existing)
-     * @param content - HTML content to set
-     */
+    /** Add HTML content (replaces existing) */
     html(content: string): void {
         this.container.innerHTML = content;
     }
 
-    /**
-     * Append HTML content
-     * @param content - HTML content to append
-     */
+    /** Append HTML content */
     append(content: string): void {
         this.container.insertAdjacentHTML('beforeend', content);
     }
@@ -561,87 +500,45 @@ class ClientApp {
     // BASIC HTML ELEMENTS
     // ========================================
 
-    /**
-     * Create a div element
-     * @param content - Content of the div
-     * @param options - Div options
-     */
+    /** Create a div element */
     div(content: string, options?: BaseOptions): string {
-        const attrs = this.buildAttrs(options);
+        const processedOptions = this.processOnclick(options, 'div');
+        const attrs = this.buildAttrs(processedOptions);
         return `<div${attrs}>${content}</div>`;
     }
 
-    /**
-     * Create a span element
-     * @param content - Content of the span
-     * @param options - Span options
-     */
+    /** Create a span element */
     span(content: string, options?: BaseOptions): string {
-        return `<span${this.buildAttrs(options)}>${content}</span>`;
+        const processedOptions = this.processOnclick(options, 'span');
+        return `<span${this.buildAttrs(processedOptions)}>${content}</span>`;
     }
 
-    /**
-     * Create a link element
-     * @param text - Link text
-     * @param options - Link options including href
-     */
+    /** Create a link element */
     link(text: string, options: LinkOptions): string {
-        const { href, target, onclick, ...baseOptions } = options;
-
-        if (onclick) {
-            const id = options.id || this.generateId('link');
-            this.addDelayedEventListener(id, onclick);
-            const attrs = this.buildAttrs({
-                ...baseOptions,
-                href,
-                id,
-                target,
-            });
-            return `<a${attrs}>${text}</a>`;
-        }
+        const { href, target, ...baseOptions } = options;
+        const processedOptions = this.processOnclick(baseOptions, 'link');
 
         const attrs = this.buildAttrs({
-            ...baseOptions,
+            ...processedOptions,
             href,
             target,
         });
         return `<a${attrs}>${text}</a>`;
     }
 
-    /**
-     * Create a paragraph element
-     * @param content - Paragraph content
-     * @param options - Paragraph options
-     */
-    paragraph(content: string, options?: BaseOptions): string {
-        return `<p${this.buildAttrs(options)}>${content}</p>`;
-    }
-
-    /**
-     * Create a list (ordered or unordered)
-     * @param items - List items
-     * @param tag - HTML tag ('ul' or 'ol')
-     * @param options - List options
-     */
+    /** Create a list (ordered or unordered) */
     private createList(items: string[], tag: 'ul' | 'ol', options?: BaseOptions): string {
+        const processedOptions = this.processOnclick(options, tag);
         const listItems = items.map((item) => `<li>${item}</li>`).join('');
-        return `<${tag}${this.buildAttrs(options)}>${listItems}</${tag}>`;
+        return `<${tag}${this.buildAttrs(processedOptions)}>${listItems}</${tag}>`;
     }
 
-    /**
-     * Create an unordered list
-     * @param items - List items
-     * @param options - List options
-     */
+    /** Create an unordered list */
     ul(items: string[], options?: BaseOptions): string {
         return this.createList(items, 'ul', options);
     }
 
-    /**
-     * Create an ordered list
-     * @param items - List items
-     * @param options - List options
-     */
+    /** Create an ordered list */
     ol(items: string[], options?: BaseOptions): string {
         return this.createList(items, 'ol', options);
     }
@@ -650,28 +547,23 @@ class ClientApp {
     // COMPONENT METHODS
     // ========================================
 
-    /**
-     * Create a card container
-     * @param content - Card content
-     * @param options - Card options
-     */
+    /** Create a card container */
     card(content: string, options?: BaseOptions): string {
+        const processedOptions = this.processOnclick(options, 'card');
         const attrs = this.buildAttrs({
-            ...options,
-            class: options?.className ? `card ${options.className}` : 'card',
+            ...processedOptions,
+            class: processedOptions?.className ? `card ${processedOptions.className}` : 'card',
         });
         return `<div${attrs}>${content}</div>`;
     }
 
-    /**
-     * Create an image element
-     * @param options - Image options including src
-     */
+    /** Create an image element */
     image(options: ImageOptions): string {
         const { src, alt = '', loading = 'lazy', ...baseOptions } = options;
+        const processedOptions = this.processOnclick(baseOptions, 'img');
 
         const attrs = this.buildAttrs({
-            ...baseOptions,
+            ...processedOptions,
             src,
             alt,
             loading,
@@ -680,52 +572,57 @@ class ClientApp {
         return `<img${attrs}>`;
     }
 
-    /**
-     * Create an interactive list
-     * @param options - List options including items
-     */
+    /** Create an interactive list */
     list(options: ListOptions): string {
         const { items, ...baseOptions } = options;
-        const listId = options.id || this.generateId('list');
+        const processedOptions = this.processOnclick(baseOptions, 'list');
+        const listId = processedOptions?.id || this.generateId('list');
 
         // Bind click handlers for items with onclick
         items.forEach((item, index) => {
+            const itemId = item.id || `${listId}-item-${index}`;
             if (item.onclick) {
-                this.addDelayedEventListener(`#${listId} .list-item:nth-child(${index + 1})`, item.onclick);
+                this.addDelayedEventListener(itemId, item.onclick);
             }
         });
 
         // Generate HTML strings directly (more efficient)
         const listItems = items
             .map(
-                (item) => `
-            <li class="list-item">
+                (item, index) => {
+                    const itemId = item.id || `${listId}-item-${index}`;
+                    const itemAttrs = this.buildAttrs({
+                        ...item,
+                        id: itemId,
+                        class: 'list-item'
+                    });
+                    return `
+            <li${itemAttrs}>
                 <div class="list-item-title">${item.title}</div>
                 ${item.content ? `<div class="list-item-content">${item.content}</div>` : ''}
             </li>
-        `
+        `;
+                }
             )
             .join('');
 
         const attrs = this.buildAttrs({
-            ...baseOptions,
-            class: baseOptions.className ? `list ${baseOptions.className}` : 'list',
+            ...processedOptions,
+            class: processedOptions?.className ? `list ${processedOptions.className}` : 'list',
             id: listId,
         });
         return `<ul${attrs}>${listItems}</ul>`;
     }
 
-    /**
-     * Create a grid layout
-     * @param items - Grid items
-     * @param options - Grid options
-     */
+    /** Create a grid layout */
     grid(items: string[], options?: GridOptions): string {
         const { columns = 3, ...baseOptions } = options || {};
+        const processedOptions = this.processOnclick(baseOptions, 'grid');
+
         const className = `grid grid-${columns}`;
         const attrs = this.buildAttrs({
-            ...baseOptions,
-            class: baseOptions.className ? `${className} ${baseOptions.className}` : className,
+            ...processedOptions,
+            class: processedOptions?.className ? `${className} ${processedOptions.className}` : className,
         });
         return `<div${attrs}>${items.join('')}</div>`;
     }
@@ -734,39 +631,18 @@ class ClientApp {
     // FORM METHODS
     // ========================================
 
-    /**
-     * Create a form group
-     * @param options - Form group options
-     */
-    formGroup(options: FormGroupOptions): string {
-        const { label, input, help, ...baseOptions } = options;
-        const baseId = baseOptions.id;
-        const attrs = this.buildAttrs({
-            ...baseOptions,
-            class: baseOptions.className ? `form-group ${baseOptions.className}` : 'form-group',
-        });
-        return `
-            <div${attrs}>
-                <label class="label"${this.getNestedId(baseId, 'label')}>${label}</label>
-                ${input}
-                ${help ? `<div class="help-text"${this.getNestedId(baseId, 'help')}>${help}</div>` : ''}
-            </div>
-        `;
-    }
 
-    /**
-     * Create an input field
-     * @param id - Input ID
-     * @param options - Input options
-     */
+
+    /** Create an input field */
     input(id: string, options?: InputOptions): string {
         const { type = 'text', placeholder, value, ...baseOptions } = options || {};
+        const processedOptions = this.processOnclick({ ...baseOptions, id }, 'input');
 
         const attrs = this.buildAttrs({
-            ...baseOptions,
+            ...processedOptions,
             type,
             id,
-            class: baseOptions.className || 'input',
+            class: processedOptions?.className || 'input',
             placeholder,
             value,
         });
@@ -774,17 +650,15 @@ class ClientApp {
         return `<input${attrs}>`;
     }
 
-    /**
-     * Create a textarea
-     * @param id - Textarea ID
-     * @param options - Textarea options
-     */
+    /** Create a textarea */
     textarea(id: string, options?: TextareaOptions): string {
         const { placeholder, value, rows, ...baseOptions } = options || {};
+        const processedOptions = this.processOnclick({ ...baseOptions, id }, 'textarea');
+
         const attrs = this.buildAttrs({
-            ...baseOptions,
+            ...processedOptions,
             id,
-            class: baseOptions.className || 'textarea',
+            class: processedOptions?.className || 'textarea',
             placeholder,
             rows,
         });
@@ -792,18 +666,15 @@ class ClientApp {
         return `<textarea${attrs}>${value || ''}</textarea>`;
     }
 
-    /**
-     * Create a select dropdown
-     * @param id - Select ID
-     * @param options - Select options
-     */
+    /** Create a select dropdown */
     select(id: string, options: SelectOptions): string {
         const { options: selectOptions, selected, ...baseOptions } = options;
+        const processedOptions = this.processOnclick({ ...baseOptions, id }, 'select', 'change');
 
         const attrs = this.buildAttrs({
-            ...baseOptions,
+            ...processedOptions,
             id,
-            class: baseOptions.className || 'select',
+            class: processedOptions?.className || 'select',
         });
 
         const optionElements = selectOptions
@@ -819,14 +690,12 @@ class ClientApp {
         return `<select${attrs}>${optionElements}</select>`;
     }
 
-    /**
-     * Create a checkbox
-     * @param id - Checkbox ID
-     * @param options - Checkbox options
-     */
+    /** Create a checkbox */
     checkbox(id: string, options: CheckboxOptions): string {
         const { label, checked, ...baseOptions } = options;
-        const containerAttrs = this.buildAttrs(baseOptions);
+        const processedOptions = this.processOnclick({ ...baseOptions, id }, 'checkbox', 'change');
+
+        const containerAttrs = this.buildAttrs(processedOptions);
 
         const inputAttrs = this.buildAttrs({
             type: 'checkbox',
@@ -842,13 +711,12 @@ class ClientApp {
         `;
     }
 
-    /**
-     * Create a radio button group
-     * @param options - Radio group options
-     */
+    /** Create a radio button group */
     radioGroup(options: RadioGroupOptions): string {
         const { name, options: radioOptions, selected, ...baseOptions } = options;
-        const containerAttrs = this.buildAttrs(baseOptions);
+        const processedOptions = this.processOnclick(baseOptions, 'radio-group', 'change');
+
+        const containerAttrs = this.buildAttrs(processedOptions);
 
         const radios = radioOptions
             .map((opt) => {
@@ -876,23 +744,17 @@ class ClientApp {
     // BUTTON METHODS
     // ========================================
 
-    /**
-     * Create a button
-     * @param text - Button text
-     * @param options - Button options
-     */
+    /** Create a button */
     button(text: string, options?: ButtonOptions): string {
-        const { onclick, variant = 'default', ...baseOptions } = options || {};
-        const id = baseOptions.id || this.generateId('btn');
-
-        if (onclick) {
-            this.addDelayedEventListener(id, onclick);
-        }
+        const { variant = 'default', ...baseOptions } = options || {};
+        const processedOptions = this.processOnclick(baseOptions, 'btn');
+        const id = processedOptions?.id;
 
         const className = variant === 'default' ? 'btn' : `btn btn-${variant}`;
-        const finalClassName = baseOptions.className ? `${className} ${baseOptions.className}` : className;
+        const finalClassName = processedOptions?.className ? `${className} ${processedOptions.className}` : className;
 
         const attrs = this.buildAttrs({
+            ...processedOptions,
             id,
             class: finalClassName,
         });
@@ -900,42 +762,13 @@ class ClientApp {
         return `<button${attrs}><span${this.getNestedId(id, 'text')}>${text}</span></button>`;
     }
 
-    /**
-     * Create a button group
-     * @param options - Button group options
-     */
-    buttonGroup(options: ButtonGroupOptions): string {
-        const { buttons, ...baseOptions } = options;
-        const containerAttrs = this.buildAttrs({
-            ...baseOptions,
-            class: 'btn-group',
-        });
 
-        const groupButtons = buttons
-            .map((btn) => {
-                const id = this.generateId('btn');
-                if (btn.onclick) {
-                    this.addDelayedEventListener(id, btn.onclick);
-                }
-                const className = btn.variant ? `btn btn-${btn.variant}` : 'btn';
-                const btnAttrs = this.buildAttrs({
-                    id,
-                    class: className,
-                });
-                return `<button${btnAttrs}>${btn.text}</button>`;
-            })
-            .join('');
 
-        return `<div${containerAttrs}>${groupButtons}</div>`;
-    }
-
-    /**
-     * Create a dropdown menu
-     * @param options - Dropdown options
-     */
+    /** Create a dropdown menu */
     dropdown(options: DropdownOptions): string {
         const { text, items, variant = 'default', ...baseOptions } = options;
-        const id = baseOptions.id || this.generateId('dropdown');
+        const processedOptions = this.processOnclick(baseOptions, 'dropdown');
+        const id = processedOptions?.id || this.generateId('dropdown');
         const menuId = `${id}-menu`;
 
         // Setup toggle functionality
@@ -958,8 +791,9 @@ class ClientApp {
 
         // Bind item click handlers
         items.forEach((item, index) => {
+            const itemId = item.id || `${menuId}-item-${index}`;
             if (item.onclick) {
-                this.addDelayedEventListener(`#${menuId} .dropdown-item:nth-child(${index + 1})`, () => {
+                this.addDelayedEventListener(itemId, () => {
                     item.onclick!();
                     document.getElementById(menuId)?.classList.add('hidden');
                 });
@@ -967,9 +801,17 @@ class ClientApp {
         });
 
         const className = variant === 'default' ? 'btn' : `btn btn-${variant}`;
-        const menuItems = items.map((item) => `<div class="dropdown-item">${item.text}</div>`).join('');
+        const menuItems = items.map((item, index) => {
+            const itemId = item.id || `${menuId}-item-${index}`;
+            const itemAttrs = this.buildAttrs({
+                ...item,
+                id: itemId,
+                class: 'dropdown-item'
+            });
+            return `<div${itemAttrs}>${item.text}</div>`;
+        }).join('');
 
-        const attrs = this.buildAttrs({ ...baseOptions, class: 'dropdown' });
+        const attrs = this.buildAttrs({ ...processedOptions, class: 'dropdown' });
 
         return `
             <div${attrs}>
@@ -982,19 +824,16 @@ class ClientApp {
         `;
     }
 
-    /**
-     * Create a badge
-     * @param text - Badge text
-     * @param options - Badge options
-     */
+    /** Create a badge */
     badge(text: string, options?: BadgeOptions): string {
         const { variant = 'default', ...baseOptions } = options || {};
-        const baseId = baseOptions.id;
+        const processedOptions = this.processOnclick(baseOptions, 'badge');
+
+        const baseId = processedOptions?.id;
         const className = variant === 'default' ? 'badge' : `badge badge-${variant}`;
+        const finalClassName = processedOptions?.className ? `${className} ${processedOptions.className}` : className;
 
-        const finalClassName = baseOptions.className ? `${className} ${baseOptions.className}` : className;
-
-        const attrs = this.buildAttrs({ ...baseOptions, className: finalClassName });
+        const attrs = this.buildAttrs({ ...processedOptions, className: finalClassName });
         return `<span${attrs}><span${this.getNestedId(baseId, 'text')}>${text}</span></span>`;
     }
 
@@ -1002,36 +841,31 @@ class ClientApp {
     // FEEDBACK METHODS
     // ========================================
 
-    /**
-     * Create an alert message
-     * @param message - Alert message
-     * @param options - Alert options
-     */
+    /** Create an alert message */
     alert(message: string, options?: AlertOptions): string {
         const { type = 'info', ...baseOptions } = options || {};
-        const baseId = baseOptions.id;
+        const processedOptions = this.processOnclick(baseOptions, 'alert');
+
+        const baseId = processedOptions?.id;
         const className = `alert alert-${type}`;
+        const finalClassName = processedOptions?.className ? `${className} ${processedOptions.className}` : className;
 
-        const finalClassName = baseOptions.className ? `${className} ${baseOptions.className}` : className;
-
-        const attrs = this.buildAttrs({ ...baseOptions, className: finalClassName });
+        const attrs = this.buildAttrs({ ...processedOptions, className: finalClassName });
         return `<div${attrs}><span${this.getNestedId(baseId, 'message')}>${message}</span></div>`;
     }
 
-    /**
-     * Create a table
-     * @param options - Table options
-     */
+    /** Create a table */
     table(options: TableOptions): string {
         const { headers, rows, ...baseOptions } = options;
-        const tableId = baseOptions.id || this.generateId('table');
+        const processedOptions = this.processOnclick(baseOptions, 'table');
+        const tableId = processedOptions?.id || this.generateId('table');
 
         const headerRow = headers.map((h) => `<th>${h}</th>`).join('');
         const bodyRows = rows.map((row) => `<tr>${row.map((cell) => `<td>${cell}</td>`).join('')}</tr>`).join('');
 
         const attrs = this.buildAttrs({
-            ...baseOptions,
-            class: baseOptions.className ? `table ${baseOptions.className}` : 'table',
+            ...processedOptions,
+            class: processedOptions?.className ? `table ${processedOptions.className}` : 'table',
             id: tableId,
         });
 
@@ -1043,13 +877,11 @@ class ClientApp {
         `;
     }
 
-    /**
-     * Create tabs
-     * @param options - Tabs options
-     */
+    /** Create tabs */
     tabs(options: TabsOptions): string {
         const { items, ...baseOptions } = options;
-        const id = baseOptions.id || this.generateId('tabs');
+        const processedOptions = this.processOnclick(baseOptions, 'tabs');
+        const id = processedOptions?.id || this.generateId('tabs');
 
         setTimeout(() => {
             const container = document.getElementById(id);
@@ -1086,7 +918,7 @@ class ClientApp {
             })
             .join('');
 
-        const attrs = this.buildAttrs({ ...baseOptions, id });
+        const attrs = this.buildAttrs({ ...processedOptions, id });
 
         return `
             <div${attrs}>
@@ -1096,22 +928,19 @@ class ClientApp {
         `;
     }
 
-    /**
-     * Create a progress bar
-     * @param value - Current value
-     * @param options - Progress options
-     */
+    /** Create a progress bar */
     progress(value: number, options?: ProgressOptions): string {
         const { max = 100, showText = false, ...baseOptions } = options || {};
+        const processedOptions = this.processOnclick(baseOptions, 'progress');
         const percentage = Math.min(100, Math.max(0, (value / max) * 100));
-        const progressId = baseOptions.id || this.generateId('progress');
+        const progressId = processedOptions?.id || this.generateId('progress');
         const barId = `${progressId}-bar`;
         const valueId = `${progressId}-value`;
 
         const textIndicator = showText ? `<span class="progress-text" id="${valueId}">${Math.round(percentage)}%</span>` : '';
 
         const attrs = this.buildAttrs({
-            ...baseOptions,
+            ...processedOptions,
             class: 'progress',
             id: progressId,
             'data-max': max,
@@ -1133,20 +962,14 @@ class ClientApp {
         `;
     }
 
-    /**
-     * Create a spinner
-     * @param options - Spinner options
-     */
+    /** Create a spinner */
     spinner(options?: BaseOptions): string {
-        const attrs = this.buildAttrs(options);
+        const processedOptions = this.processOnclick(options, 'spinner');
+        const attrs = this.buildAttrs(processedOptions);
         return `<div class="spinner"${attrs}></div>`;
     }
 
-    /**
-     * Show modal dialog
-     * @param content - Modal content HTML
-     * @param block - If true, prevents closing by clicking outside
-     */
+    /** Show modal dialog */
     modal(content: string, block?: boolean): void {
         const modal = document.getElementById('modal');
         if (!modal) return;
@@ -1160,9 +983,7 @@ class ClientApp {
         modal.hidden = false;
     }
 
-    /**
-     * Close modal dialog
-     */
+    /** Close modal dialog */
     closeModal(): void {
         const modal = document.getElementById('modal');
         if (modal) {
@@ -1172,11 +993,7 @@ class ClientApp {
         }
     }
 
-    /**
-     * Show toast notification
-     * @param message - Toast message
-     * @param options - Toast options
-     */
+    /** Show toast notification */
     toast(message: string, options?: ToastOptions): void {
         const { type = 'info', duration = 3000 } = options || {};
         const container = document.getElementById('toast');
@@ -1194,52 +1011,29 @@ class ClientApp {
     // DOM UTILITIES
     // ========================================
 
-    /**
-     * Get element by ID
-     * @param id - Element ID
-     * @returns HTMLElement or null
-     */
+    /** Get element by ID */
     get(id: string): HTMLElement | null {
         return document.getElementById(id);
     }
 
-    /**
-     * Get input element value
-     * @param id - Input element ID
-     * @returns Input value or empty string
-     */
+    /** Get input element value */
     val(id: string): string {
         const element = this.get(id) as HTMLInputElement;
         return element?.value || '';
     }
 
-    /**
-     * Set input element value
-     * @param id - Input element ID
-     * @param value - Value to set
-     */
+    /** Set input element value */
     setVal(id: string, value: string): void {
         const element = this.get(id) as HTMLInputElement;
         if (element) element.value = value;
     }
 
-    /**
-     * Add event listener to element
-     * @param id - Element ID
-     * @param event - Event name
-     * @param handler - Event handler
-     */
+    /** Add event listener to element */
     on(id: string, event: string, handler: (e: Event) => void): void {
         this.get(id)?.addEventListener(event, handler);
     }
 
-    /**
-     * Update element content (text or HTML)
-     * @param id - Element ID
-     * @param content - Content to set
-     * @param isHtml - Whether content is HTML (default: false)
-     * @returns Success status
-     */
+    /** Update element content (text or HTML) */
     private updateContent(id: string, content: string, isHtml: boolean = false): boolean {
         const element = this.get(id);
         if (element) {
@@ -1253,31 +1047,17 @@ class ClientApp {
         return false;
     }
 
-    /**
-     * Update text content of an element
-     * @param id - Element ID
-     * @param text - Text to set
-     * @returns Success status
-     */
+    /** Update text content of an element */
     updateText(id: string, text: string): boolean {
         return this.updateContent(id, text, false);
     }
 
-    /**
-     * Update HTML content of an element
-     * @param id - Element ID
-     * @param html - HTML to set
-     * @returns Success status
-     */
+    /** Update HTML content of an element */
     updateHtml(id: string, html: string): boolean {
         return this.updateContent(id, html, true);
     }
 
-    /**
-     * Set element visibility
-     * @param id - Element ID
-     * @param visible - Whether element should be visible
-     */
+    /** Set element visibility */
     setVisibility(id: string, visible: boolean): void {
         const element = this.get(id);
         if (element) {
@@ -1285,26 +1065,17 @@ class ClientApp {
         }
     }
 
-    /**
-     * Show element
-     * @param id - Element ID
-     */
+    /** Show element */
     show(id: string): void {
         this.setVisibility(id, true);
     }
 
-    /**
-     * Hide element
-     * @param id - Element ID
-     */
+    /** Hide element */
     hide(id: string): void {
         this.setVisibility(id, false);
     }
 
-    /**
-     * Toggle element visibility
-     * @param id - Element ID
-     */
+    /** Toggle element visibility */
     toggle(id: string): void {
         const element = this.get(id);
         if (element) {
@@ -1316,10 +1087,7 @@ class ClientApp {
     // THEME METHODS
     // ========================================
 
-    /**
-     * Set specific theme
-     * @param theme - Theme variant: 'dark' or 'light'
-     */
+    /** Set specific theme */
     setTheme(theme: ThemeVariant): void {
         const app = document.getElementById('app');
         const toast = document.getElementById('toast');
@@ -1327,9 +1095,7 @@ class ClientApp {
         toast?.setAttribute('data-theme', theme);
     }
 
-    /**
-     * Toggle between dark and light theme
-     */
+    /** Toggle between dark and light theme */
     toggleTheme(): ThemeVariant {
         const app = document.getElementById('app');
         const current = app?.getAttribute('data-theme');
@@ -1338,9 +1104,7 @@ class ClientApp {
         return theme;
     }
 
-    /**
-     * Get current theme
-     */
+    /** Get current theme */
     getTheme(): ThemeVariant {
         return (document.getElementById('app')?.getAttribute('data-theme') as ThemeVariant) || 'light';
     }
@@ -1349,13 +1113,7 @@ class ClientApp {
     // REST API METHODS
     // ========================================
 
-    /**
-     * Make API request
-     * @param method - HTTP method
-     * @param endpoint - API endpoint
-     * @param data - Request data (optional)
-     * @returns Promise with response data
-     */
+    /** Make API request */
     async api(method: string, endpoint: string, data?: any): Promise<any> {
         const options: RequestInit = {
             method,
@@ -1381,60 +1139,35 @@ class ClientApp {
         }
     }
 
-    /**
-     * GET request
-     * @param endpoint - API endpoint
-     * @returns Promise with response data
-     */
+    /** GET request */
     async apiGet(endpoint: string): Promise<any> {
         return this.api('GET', endpoint);
     }
 
-    /**
-     * POST request
-     * @param endpoint - API endpoint
-     * @param data - Request data
-     * @returns Promise with response data
-     */
+    /** POST request */
     async apiPost(endpoint: string, data: any): Promise<any> {
         return this.api('POST', endpoint, data);
     }
 
-    /**
-     * PUT request
-     * @param endpoint - API endpoint
-     * @param data - Request data
-     * @returns Promise with response data
-     */
+    /** PUT request */
     async apiPut(endpoint: string, data: any): Promise<any> {
         return this.api('PUT', endpoint, data);
     }
 
-    /**
-     * DELETE request
-     * @param endpoint - API endpoint
-     * @returns Promise with response data
-     */
+    /** DELETE request */
     async apiDelete(endpoint: string): Promise<any> {
         return this.api('DELETE', endpoint);
     }
 
-    /**
-     * Create a heading
-     * @param text - Heading text
-     * @param level - Heading level (1-6, default: 2)
-     * @param options - Heading options
-     */
+    /** Create a heading */
     heading(text: string, level: HeadingLevel = 2, options?: BaseOptions): string {
-        const attrs = this.buildAttrs(options);
+        const processedOptions = this.processOnclick(options, 'heading');
+        const attrs = this.buildAttrs(processedOptions);
         return `<h${level}${attrs}>${text}</h${level}>`;
     }
 
-    /**
-     * Create a separator (horizontal rule)
-     * @param options - Separator options
-     */
-    separator(options?: BaseOptions): string {
+    /** Create a separator (horizontal rule) */
+    separator(options?: Omit<BaseOptions, 'onclick'>): string {
         const defaultStyle: StyleOptions = {
             border: 'none',
             borderTop: '1px solid var(--border)',
@@ -1449,12 +1182,8 @@ class ClientApp {
         return `<hr${attrs}>`;
     }
 
-    /**
-     * Create a spacer
-     * @param size - Spacer size
-     * @param options - Spacer options
-     */
-    spacer(size: Spacing = 'm', options?: BaseOptions): string {
+    /** Create a spacer */
+    spacer(size: Spacing = 'm', options?: Omit<BaseOptions, 'onclick'>): string {
         const attrs = this.buildAttrs({
             ...options,
             style: options?.style || { height: `var(--space-${size})` },
@@ -1462,28 +1191,22 @@ class ClientApp {
         return `<div${attrs}></div>`;
     }
 
-    /**
-     * Create a flex container
-     * @param items - Flex items
-     * @param options - Flex options
-     */
+    /** Create a flex container */
     flex(items: string[], options?: FlexOptions): string {
         const { gap = 'm', direction = 'row', ...baseOptions } = options || {};
+        const processedOptions = this.processOnclick(baseOptions, 'flex');
+
         const className = `flex flex-${direction} gap-${gap}`;
+        const finalClassName = processedOptions?.className ? `${className} ${processedOptions.className}` : className;
 
-        const finalClassName = baseOptions.className ? `${className} ${baseOptions.className}` : className;
-
-        const attrs = this.buildAttrs({ ...baseOptions, className: finalClassName });
+        const attrs = this.buildAttrs({ ...processedOptions, className: finalClassName });
         return `<div${attrs}>${items.join('')}</div>`;
     }
 
-    /**
-     * Create a text block with optional styling
-     * @param content - Text content
-     * @param options - Base options with style
-     */
+    /** Create a text block with optional styling */
     text(content: string, options?: BaseOptions): string {
-        const attrs = this.buildAttrs(options);
+        const processedOptions = this.processOnclick(options, 'text');
+        const attrs = this.buildAttrs(processedOptions);
         return `<p${attrs}>${content}</p>`;
     }
 }
@@ -1494,6 +1217,7 @@ class ClientApp {
 
 export { ClientApp };
 export type {
+    // Types
     ButtonVariant,
     AlertType,
     ToastType,
@@ -1503,14 +1227,38 @@ export type {
     Spacing,
     FlexDirection,
     StyleOptions,
+    Layout,
+    NotificationType,
 
-    // Options interfaces
+    // Base interfaces
+    BaseOptions,
+    NavItemOptions,
+
+    // Component interfaces
+    NavItem,
     NavOptions,
+    SidebarSection,
     SidebarOptions,
+    ListItem,
     ListOptions,
-    ButtonOptions,
+    SelectOption,
+    SelectOptions,
+    TabItem,
+    TabsOptions,
+    ToastOptions,
     ImageOptions,
+    ButtonOptions,
+    BadgeOptions,
+    DropdownItem,
+    DropdownOptions,
+    AlertOptions,
     TableOptions,
-
-    // ... export other options as needed
+    ProgressOptions,
+    InputOptions,
+    TextareaOptions,
+    CheckboxOptions,
+    RadioGroupOptions,
+    GridOptions,
+    LinkOptions,
+    FlexOptions
 };

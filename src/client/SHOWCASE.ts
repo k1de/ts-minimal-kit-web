@@ -127,7 +127,7 @@ class ShowcaseApp extends ClientApp {
         this.append(
             this.div(
                 this.heading('Welcome to UI Framework', 1) +
-                this.paragraph('A minimal TypeScript framework with zero dependencies')
+                this.text('A minimal TypeScript framework with zero dependencies')
             )
         );
 
@@ -135,7 +135,7 @@ class ShowcaseApp extends ClientApp {
         this.append(
             this.card(
                 this.heading('Core Principles') +
-                this.paragraph('This framework provides:') +
+                this.text('This framework provides:') +
                 this.ul([
                     'Zero external dependencies',
                     'Full TypeScript support',
@@ -153,19 +153,19 @@ class ShowcaseApp extends ClientApp {
                 [
                     this.card(
                         this.heading('30+', 2, { style: { textAlign: 'center', color: 'var(--primary)' } }) +
-                        this.div('UI Elements', { className: 'text-center text-muted' })
+                        this.text('UI Elements', { className: 'text-center text-muted' })
                     ),
                     this.card(
                         this.heading('50+', 2, { style: { textAlign: 'center', color: 'var(--success)' } }) +
-                        this.div('Helper Functions', { className: 'text-center text-muted' })
+                        this.text('Helper Functions', { className: 'text-center text-muted' })
                     ),
                     this.card(
                         this.heading('2', 2, { style: { textAlign: 'center', color: 'var(--warning)' } }) +
-                        this.div('Dark & Light', { className: 'text-center text-muted' })
+                        this.text('Dark & Light', { className: 'text-center text-muted' })
                     ),
                     this.card(
                         this.heading('0', 2, { style: { textAlign: 'center', color: 'var(--danger)' } }) +
-                        this.div('Zero External', { className: 'text-center text-muted' })
+                        this.text('Zero External', { className: 'text-center text-muted' })
                     ),
                 ],
                 { columns: 4 }
@@ -173,7 +173,7 @@ class ShowcaseApp extends ClientApp {
         );
 
         // Quick navigation
-        this.append(this.card(this.heading('Quick Start') + this.paragraph('Explore framework capabilities')));
+        this.append(this.card(this.heading('Quick Start') + this.text('Explore framework capabilities')));
 
         this.append(
             this.flex(
@@ -199,7 +199,7 @@ class ShowcaseApp extends ClientApp {
     private showTypography(): void {
         this.clear();
 
-        this.append(this.div(this.heading('Typography') + this.paragraph('Text elements and formatting')));
+        this.append(this.div(this.heading('Typography') + this.text('Text elements and formatting')));
 
         // Headings
         this.append(
@@ -219,7 +219,7 @@ class ShowcaseApp extends ClientApp {
         this.append(
             this.card(
                 this.heading('Text Styles') +
-                this.paragraph('Regular paragraph text') +
+                this.text('Regular paragraph text') +
                 this.text('Large blue text', {
                     style: {
                         fontSize: '1.5rem',
@@ -276,7 +276,7 @@ class ShowcaseApp extends ClientApp {
     private showButtons(): void {
         this.clear();
 
-        this.append(this.div(this.heading('Buttons') + this.paragraph('Interactive button components')));
+        this.append(this.div(this.heading('Buttons') + this.text('Interactive button components')));
 
         // Button variants
         this.append(
@@ -309,19 +309,7 @@ class ShowcaseApp extends ClientApp {
             )
         );
 
-        // Button group
-        this.append(
-            this.card(
-                this.heading('Button Group') +
-                this.buttonGroup({
-                    buttons: [
-                        { text: 'Left', onclick: () => console.log('Left') },
-                        { text: 'Center', onclick: () => console.log('Center'), variant: 'primary' },
-                        { text: 'Right', onclick: () => console.log('Right') },
-                    ],
-                })
-            )
-        );
+
 
         // Dropdown
         this.append(
@@ -352,7 +340,7 @@ class ShowcaseApp extends ClientApp {
     private showBadges(): void {
         this.clear();
 
-        this.append(this.div(this.heading('Badges') + this.paragraph('Small status indicators')));
+        this.append(this.div(this.heading('Badges') + this.text('Small status indicators')));
 
         this.append(
             this.card(
@@ -377,7 +365,7 @@ class ShowcaseApp extends ClientApp {
                 this.div(this.heading('Product Title', 4) + this.badge('New', { variant: 'success' }), {
                     className: 'flex items-center gap-s',
                 }) +
-                this.paragraph('Product description with inline badge.') +
+                this.text('Product description with inline badge.') +
                 this.separator() +
                 this.flex([this.span('Status:'), this.badge('Active', { variant: 'primary' })], { gap: 's' })
             )
@@ -387,14 +375,14 @@ class ShowcaseApp extends ClientApp {
     private showCards(): void {
         this.clear();
 
-        this.append(this.div(this.heading('Cards') + this.paragraph('Container components')));
+        this.append(this.div(this.heading('Cards') + this.text('Container components')));
 
         // Basic cards
         this.append(this.card('This is a basic card with simple content.'));
 
         this.append(
             this.card(
-                this.heading('Card with Title') + this.paragraph('Card content goes here. Cards can contain any HTML content.')
+                this.heading('Card with Title') + this.text('Card content goes here. Cards can contain any HTML content.')
             )
         );
 
@@ -402,7 +390,7 @@ class ShowcaseApp extends ClientApp {
         this.append(
             this.card(
                 this.heading('Parent Card') +
-                this.paragraph('Cards can contain other components:') +
+                this.text('Cards can contain other components:') +
                 this.grid([this.card('First nested card'), this.card('Second nested card')], { columns: 2 })
             )
         );
@@ -411,7 +399,7 @@ class ShowcaseApp extends ClientApp {
     private showGrid(): void {
         this.clear();
 
-        this.append(this.div(this.heading('Grid Layout') + this.paragraph('Responsive grid system')));
+        this.append(this.div(this.heading('Grid Layout') + this.text('Responsive grid system')));
 
         // Grid examples
         const gridExamples = [2, 3, 4]
@@ -443,7 +431,7 @@ class ShowcaseApp extends ClientApp {
     private showFlex(): void {
         this.clear();
 
-        this.append(this.div(this.heading('Flex Layout') + this.paragraph('Flexible box layouts')));
+        this.append(this.div(this.heading('Flex Layout') + this.text('Flexible box layouts')));
 
         // Row flex
         this.append(
@@ -492,7 +480,7 @@ class ShowcaseApp extends ClientApp {
     private showTabs(): void {
         this.clear();
 
-        this.append(this.div(this.heading('Tabs') + this.paragraph('Tabbed content containers')));
+        this.append(this.div(this.heading('Tabs') + this.text('Tabbed content containers')));
 
         this.append(
             this.card(
@@ -501,12 +489,12 @@ class ShowcaseApp extends ClientApp {
                     items: [
                         {
                             label: 'Tab 1',
-                            content: this.paragraph('Content for the first tab'),
+                            content: this.text('Content for the first tab'),
                         },
                         {
                             label: 'Tab 2',
                             content:
-                                this.paragraph('Content for the second tab') +
+                                this.text('Content for the second tab') +
                                 this.button('Button in tab', { variant: 'primary' }),
                         },
                         {
@@ -525,7 +513,7 @@ class ShowcaseApp extends ClientApp {
     private showTables(): void {
         this.clear();
 
-        this.append(this.div(this.heading('Tables') + this.paragraph('Data tables')));
+        this.append(this.div(this.heading('Tables') + this.text('Data tables')));
 
         this.append(
             this.card(
@@ -563,7 +551,7 @@ class ShowcaseApp extends ClientApp {
     private showLists(): void {
         this.clear();
 
-        this.append(this.div(this.heading('Lists') + this.paragraph('Interactive list components')));
+        this.append(this.div(this.heading('Lists') + this.text('Interactive list components')));
 
         this.append(
             this.card(
@@ -597,7 +585,7 @@ class ShowcaseApp extends ClientApp {
     private showAlerts(): void {
         this.clear();
 
-        this.append(this.div(this.heading('Alerts') + this.paragraph('Alert messages')));
+        this.append(this.div(this.heading('Alerts') + this.text('Alert messages')));
 
         this.append(
             this.card(
@@ -640,7 +628,7 @@ class ShowcaseApp extends ClientApp {
     private showModals(): void {
         this.clear();
 
-        this.append(this.div(this.heading('Modals') + this.paragraph('Modal dialogs')));
+        this.append(this.div(this.heading('Modals') + this.text('Modal dialogs')));
 
         this.append(
             this.card(
@@ -651,7 +639,7 @@ class ShowcaseApp extends ClientApp {
                             onclick: () =>
                                 this.modal(
                                     this.heading('Simple Modal') +
-                                    this.paragraph('This is a simple modal dialog.') +
+                                    this.text('This is a simple modal dialog.') +
                                     this.spacer('m') +
                                     this.button('Close', {
                                         onclick: () => this.closeModal(),
@@ -663,7 +651,7 @@ class ShowcaseApp extends ClientApp {
                             onclick: () =>
                                 this.modal(
                                     this.heading('Confirm Action') +
-                                    this.paragraph('Are you sure you want to proceed?') +
+                                    this.text('Are you sure you want to proceed?') +
                                     this.spacer('m') +
                                     this.flex(
                                         [
@@ -687,14 +675,14 @@ class ShowcaseApp extends ClientApp {
                             onclick: () =>
                                 this.modal(
                                     this.heading('User Form') +
-                                    this.formGroup({
-                                        label: 'Name',
-                                        input: this.input('modal-name', { placeholder: 'Enter name' }),
-                                    }) +
-                                    this.formGroup({
-                                        label: 'Email',
-                                        input: this.input('modal-email', { type: 'email', placeholder: 'Enter email' }),
-                                    }) +
+                                    this.div(
+                                        this.text('Name', { className: 'label' }) +
+                                        this.input('modal-name', { placeholder: 'Enter name' }),
+                                    ) +
+                                    this.div(
+                                        this.text('Email', { className: 'label' }) +
+                                        this.input('modal-email', { type: 'email', placeholder: 'Enter email' }),
+                                    ) +
                                     this.spacer('m') +
                                     this.flex(
                                         [
@@ -725,10 +713,10 @@ class ShowcaseApp extends ClientApp {
                                 this.modal(
                                     this.alert('⚠️ Critical Action Required', { type: 'warning' }) +
                                     this.heading('System Update') +
-                                    this.paragraph(
+                                    this.text(
                                         'This is a blocking modal. You cannot close it by clicking outside.'
                                     ) +
-                                    this.paragraph('You must accept or decline to proceed.') +
+                                    this.text('You must accept or decline to proceed.') +
                                     this.spacer('m') +
                                     this.flex(
                                         [
@@ -763,7 +751,7 @@ class ShowcaseApp extends ClientApp {
     private showProgress(): void {
         this.clear();
 
-        this.append(this.div(this.heading('Progress Indicators') + this.paragraph('Loading and progress states')));
+        this.append(this.div(this.heading('Progress Indicators') + this.text('Loading and progress states')));
 
         // Progress bars
         this.append(
@@ -822,29 +810,29 @@ class ShowcaseApp extends ClientApp {
     private showForms(): void {
         this.clear();
 
-        this.append(this.div(this.heading('Forms') + this.paragraph('Form elements and inputs')));
+        this.append(this.div(this.heading('Forms') + this.text('Form elements and inputs')));
 
         // Text inputs
         this.append(
             this.card(
                 this.heading('Text Inputs') +
-                this.formGroup({
-                    label: 'Text Input',
-                    input: this.input('text-input', { placeholder: 'Enter text...' }),
-                    help: 'Basic text input field',
-                }) +
-                this.formGroup({
-                    label: 'Email Input',
-                    input: this.input('email-input', { type: 'email', placeholder: 'user@example.com' }),
-                }) +
-                this.formGroup({
-                    label: 'Password Input',
-                    input: this.input('password-input', { type: 'password', placeholder: 'Enter password' }),
-                }) +
-                this.formGroup({
-                    label: 'Textarea',
-                    input: this.textarea('textarea', { placeholder: 'Enter long text...', rows: 4 }),
-                })
+                this.div(
+                    this.text('Text Input', { className: 'label' }) +
+                    this.text('Basic text input field', { className: 'sublabel' }) +
+                    this.input('text-input', { placeholder: 'Enter text...' }),
+                ) +
+                this.div(
+                    this.text('Email Input', { className: 'label' }) +
+                    this.input('email-input', { type: 'email', placeholder: 'user@example.com' }),
+                ) +
+                this.div(
+                    this.text('Password Input', { className: 'label' }) +
+                    this.input('password-input', { type: 'password', placeholder: 'Enter password' }),
+                ) +
+                this.div(
+                    this.text('Textarea', { className: 'label' }) +
+                    this.textarea('textarea', { placeholder: 'Enter long text...', rows: 4 }),
+                )
             )
         );
 
@@ -852,9 +840,9 @@ class ShowcaseApp extends ClientApp {
         this.append(
             this.card(
                 this.heading('Select Elements') +
-                this.formGroup({
-                    label: 'Select Dropdown',
-                    input: this.select('country', {
+                this.div(
+                    this.text('Select Dropdown', { className: 'label' }) +
+                    this.select('country', {
                         options: [
                             { value: 'us', text: 'United States' },
                             { value: 'uk', text: 'United Kingdom' },
@@ -862,7 +850,7 @@ class ShowcaseApp extends ClientApp {
                         ],
                         selected: 'us',
                     }),
-                })
+                )
             )
         );
 
@@ -892,18 +880,18 @@ class ShowcaseApp extends ClientApp {
         this.append(
             this.card(
                 this.heading('Complete Form') +
-                this.formGroup({
-                    label: 'Full Name',
-                    input: this.input('name', { placeholder: 'John Doe' }),
-                }) +
-                this.formGroup({
-                    label: 'Email',
-                    input: this.input('email', { type: 'email', placeholder: 'john@example.com' }),
-                }) +
-                this.formGroup({
-                    label: 'Message',
-                    input: this.textarea('message', { placeholder: 'Your message...', rows: 3 }),
-                }) +
+                this.div(
+                    this.text('Full Name', { className: 'label' }) +
+                    this.input('name', { placeholder: 'John Doe' }),
+                ) +
+                this.div(
+                    this.text('Email', { className: 'label' }) +
+                    this.input('email', { type: 'email', placeholder: 'john@example.com' }),
+                ) +
+                this.div(
+                    this.text('Message', { className: 'label' }) +
+                    this.textarea('message', { placeholder: 'Your message...', rows: 3 }),
+                ) +
                 this.checkbox('agree', { label: 'I agree to terms' }) +
                 this.spacer('m') +
                 this.flex(
@@ -933,7 +921,7 @@ class ShowcaseApp extends ClientApp {
     private showComponents(): void {
         this.clear();
 
-        this.append(this.div(this.heading('All Components') + this.paragraph('Complete component showcase')));
+        this.append(this.div(this.heading('All Components') + this.text('Complete component showcase')));
 
         // Component categories with examples
         const categories = [
@@ -952,7 +940,7 @@ class ShowcaseApp extends ClientApp {
         this.append(
             this.card(
                 this.heading('Navigation') +
-                this.paragraph('Use hash navigation:') +
+                this.text('Use hash navigation:') +
                 this.flex(
                     [
                         this.button('Go to Forms', {
@@ -971,13 +959,13 @@ class ShowcaseApp extends ClientApp {
     private showLayouts(): void {
         this.clear();
 
-        this.append(this.div(this.heading('Layouts') + this.paragraph('Layout options and combinations')));
+        this.append(this.div(this.heading('Layouts') + this.text('Layout options and combinations')));
 
         // Layout modes
         this.append(
             this.card(
                 this.heading('Layout Modes') +
-                this.paragraph('The framework supports 4 layout modes:') +
+                this.text('The framework supports 4 layout modes:') +
                 this.ol([
                     'default - Content only',
                     'nav - With navigation bar',
@@ -1000,7 +988,7 @@ class ShowcaseApp extends ClientApp {
                 this.spacer('l') +
                 this.badge('End') +
                 this.separator() +
-                this.paragraph('Dividers create visual separation')
+                this.text('Dividers create visual separation')
             )
         );
     }
