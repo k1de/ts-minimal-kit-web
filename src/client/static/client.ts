@@ -98,7 +98,7 @@ interface TabItem {
 }
 
 /** Tabs options */
-interface TabsOptions extends BaseOptions {
+interface TabsOptions extends Omit<BaseOptions, 'onclick'> {
     items: TabItem[];
 }
 
@@ -133,7 +133,7 @@ interface DropdownItem extends BaseOptions {
 }
 
 /** Dropdown options */
-interface DropdownOptions extends BaseOptions {
+interface DropdownOptions extends Omit<BaseOptions, 'onclick'> {
     text: string;
     items: DropdownItem[];
     variant?: ButtonVariant;
@@ -171,13 +171,13 @@ interface TextareaOptions extends BaseOptions {
 }
 
 /** Checkbox options */
-interface CheckboxOptions extends BaseOptions {
+interface CheckboxOptions extends Omit<BaseOptions, 'onclick'> {
     label: string;
     checked?: boolean;
 }
 
 /** Radio group options */
-interface RadioGroupOptions extends BaseOptions {
+interface RadioGroupOptions extends Omit<BaseOptions, 'onclick'> {
     name: string;
     options: SelectOption[];
     selected?: string;
@@ -250,12 +250,6 @@ class ClientApp {
         });
     }
 
-    /** Start the app - override this in your app */
-    protected start(): void {
-        // Override this method in your app
-        console.log('Override start() method to begin.');
-    }
-
     /** Initialize hash navigation */
     private initHashNavigation(): void {
         // Handle hash changes
@@ -271,6 +265,12 @@ class ClientApp {
         if (this.onHashChange) {
             this.onHashChange(hash);
         }
+    }
+
+    /** Start the app - override this in your app */
+    protected start(): void {
+        // Override this method in your app
+        console.log('Override start() method to begin.');
     }
 
     /** Scroll to element by ID */
@@ -420,9 +420,9 @@ class ClientApp {
 
     /** Create navigation item HTML */
     private createNavItem(text: string, options?: NavItemOptions): string {
-        const processed = this.processOnclick(options, 'nav-item');
+        const processedOptions = this.processOnclick(options, 'nav-item');
         const attrs = this.buildAttrs({
-            ...processed,
+            ...processedOptions,
             href: options?.href || '#'
         });
         return `<li><a${attrs}>${text}</a></li>`;
@@ -707,9 +707,8 @@ class ClientApp {
     /** Create a checkbox */
     checkbox(id: string, options: CheckboxOptions): string {
         const { label, checked, ...baseOptions } = options;
-        const processedOptions = this.processOnclick({ ...baseOptions, id }, 'checkbox', 'change');
 
-        const containerAttrs = this.buildAttrs(processedOptions);
+        const containerAttrs = this.buildAttrs({ ...baseOptions, id });
 
         const inputAttrs = this.buildAttrs({
             type: 'checkbox',
@@ -728,9 +727,8 @@ class ClientApp {
     /** Create a radio button group */
     radioGroup(options: RadioGroupOptions): string {
         const { name, options: radioOptions, selected, ...baseOptions } = options;
-        const processedOptions = this.processOnclick(baseOptions, 'radio-group', 'change');
 
-        const containerAttrs = this.buildAttrs(processedOptions);
+        const containerAttrs = this.buildAttrs(baseOptions);
 
         const radios = radioOptions
             .map((opt) => {
@@ -782,8 +780,7 @@ class ClientApp {
     dropdown(options: DropdownOptions): string {
         this.initDropdownHandler();
         const { text, items, variant = 'default', ...baseOptions } = options;
-        const processedOptions = this.processOnclick(baseOptions, 'dropdown');
-        const id = processedOptions?.id || this.generateId('dropdown');
+        const id = baseOptions.id || this.generateId('dropdown');
         const menuId = `${id}-menu`;
 
         setTimeout(() => {
@@ -820,7 +817,7 @@ class ClientApp {
             return `<div${itemAttrs}>${item.text}</div>`;
         }).join('');
 
-        const attrs = this.buildAttrs({ ...processedOptions, class: 'dropdown' });
+        const attrs = this.buildAttrs({ ...baseOptions, class: 'dropdown' });
 
         return `
             <div${attrs}>
@@ -889,8 +886,7 @@ class ClientApp {
     /** Create tabs */
     tabs(options: TabsOptions): string {
         const { items, ...baseOptions } = options;
-        const processedOptions = this.processOnclick(baseOptions, 'tabs');
-        const id = processedOptions?.id || this.generateId('tabs');
+        const id = baseOptions.id || this.generateId('tabs');
 
         setTimeout(() => {
             const container = document.getElementById(id);
@@ -934,7 +930,7 @@ class ClientApp {
             })
             .join('');
 
-        const attrs = this.buildAttrs({ ...processedOptions, id });
+        const attrs = this.buildAttrs({ ...baseOptions, id });
 
         return `
             <div${attrs}>
