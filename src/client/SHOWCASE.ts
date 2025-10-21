@@ -41,6 +41,7 @@ class ShowcaseApp extends ClientApp {
                     title: 'Data',
                     items: [
                         { text: 'Tables', onclick: () => this.navigateTo('tables') },
+                        { text: 'Images', onclick: () => this.navigateTo('images') },
                     ],
                 },
                 {
@@ -71,6 +72,9 @@ class ShowcaseApp extends ClientApp {
                 break;
             case 'badges':
                 this.showBadges();
+                break;
+            case 'images':
+                this.showImages();
                 break;
             case 'cards':
                 this.showCards();
@@ -157,7 +161,7 @@ class ShowcaseApp extends ClientApp {
                         this.text('Components', { className: 'text-center text-muted' })
                     ),
                     this.card(
-                        this.heading('40+', 2, { style: { textAlign: 'center', color: 'var(--success)' } }) +
+                        this.heading('25+', 2, { style: { textAlign: 'center', color: 'var(--success)' } }) +
                         this.text('Helper Methods', { className: 'text-center text-muted' })
                     ),
                     this.card(
@@ -292,6 +296,93 @@ class ShowcaseApp extends ClientApp {
                         { text: 'Delete', onclick: () => this.toast('Delete clicked', { type: 'danger' }) },
                     ],
                     variant: 'primary',
+                })
+            )
+        );
+    }
+
+    private showImages(): void {
+        this.clear();
+
+        this.append(this.div(this.heading('Images') + this.text('Image components with various options')));
+
+        // Basic image
+        this.append(
+            this.card(
+                this.heading('Basic Image') +
+                this.image({
+                    src: 'https://picsum.photos/400/300',
+                    alt: 'Random landscape',
+                })
+            )
+        );
+
+        // Image grid
+        this.append(
+            this.card(
+                this.heading('Image Grid') +
+                this.grid(
+                    [
+                        this.image({
+                            src: 'https://picsum.photos/seed/1/300/200',
+                            alt: 'Image 1',
+                        }),
+                        this.image({
+                            src: 'https://picsum.photos/seed/2/300/200',
+                            alt: 'Image 2',
+                        }),
+                        this.image({
+                            src: 'https://picsum.photos/seed/3/300/200',
+                            alt: 'Image 3',
+                        }),
+                    ],
+                    { columns: 3 }
+                )
+            )
+        );
+
+        // Clickable images
+        this.append(
+            this.card(
+                this.heading('Clickable Images') +
+                this.text('Images can have onclick handlers') +
+                this.spacer('s') +
+                this.flex(
+                    [
+                        this.image({
+                            src: 'https://picsum.photos/seed/10/150/150',
+                            alt: 'Click me 1',
+                            onclick: () => this.toast('Image 1 clicked!', { type: 'info' }),
+                            style: { cursor: 'pointer', borderRadius: 'var(--radius)' },
+                        }),
+                        this.image({
+                            src: 'https://picsum.photos/seed/11/150/150',
+                            alt: 'Click me 2',
+                            onclick: () => this.toast('Image 2 clicked!', { type: 'success' }),
+                            style: { cursor: 'pointer', borderRadius: '50%' },
+                        }),
+                        this.image({
+                            src: 'https://picsum.photos/seed/12/150/150',
+                            alt: 'Click me 3',
+                            onclick: () => this.toast('Image 3 clicked!', { type: 'warning' }),
+                            style: { cursor: 'pointer', borderRadius: 'var(--radius)' },
+                        }),
+                    ],
+                    { gap: 'm' }
+                )
+            )
+        );
+
+        // Responsive image
+        this.append(
+            this.card(
+                this.heading('Responsive Image') +
+                this.text('Images scale to container width by default') +
+                this.spacer('s') +
+                this.image({
+                    src: 'https://picsum.photos/800/400',
+                    alt: 'Wide landscape',
+                    style: { maxWidth: '100%', height: 'auto' },
                 })
             )
         );
@@ -912,17 +1003,20 @@ class ShowcaseApp extends ClientApp {
 
         // Component categories with examples
         const categories = [
+            { name: 'Typography', items: ['Headings', 'Text', 'Links', 'Lists', 'Separators', 'Spacers'] },
             { name: 'Layouts', items: ['Cards', 'Grids', 'Flex', 'Tabs'] },
-            { name: 'Forms', items: ['Inputs', 'Selects', 'Checkboxes'] },
-            { name: 'Data', items: ['Tables'] },
+            { name: 'Forms', items: ['Inputs', 'Textarea', 'Selects', 'Checkboxes', 'Radio Groups'] },
+            { name: 'Data', items: ['Tables', 'Images'] },
             { name: 'Actions', items: ['Buttons', 'Dropdowns', 'Modals'] },
             { name: 'Feedback', items: ['Alerts', 'Toasts', 'Badges'] },
             { name: 'Progress', items: ['Progress bars', 'Spinners'] },
         ];
 
-        categories.forEach((category) => {
-            this.append(this.card(this.heading(category.name) + this.ul(category.items)));
-        });
+        const cards = categories.map((category) => 
+            this.card(this.heading(category.name) + this.ul(category.items))
+        );
+
+        this.append(this.grid(cards, { columns: 3 }));
 
         // Navigation example
         this.append(
