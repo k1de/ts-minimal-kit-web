@@ -137,7 +137,6 @@ img,
 .radio,
 .alert,
 .table,
-.list,
 .progress,
 .btn,
 .dropdown {
@@ -322,41 +321,10 @@ div {
     box-shadow: var(--shadow);
 }
 
-/* === List === */
-.list {
-    list-style: none;
-    padding-left: 0;
-}
-
 /* Fix for regular ul/ol lists */
 ul,
 ol {
     padding-left: var(--space-l);
-}
-
-.list-item {
-    padding: var(--space-m);
-    border-bottom: 1px solid var(--border);
-    transition: var(--transition);
-}
-
-.list-item:hover {
-    background: var(--bg-secondary);
-}
-
-.list-item:last-child {
-    border-bottom: none;
-}
-
-.list-item-title {
-    font-weight: 500;
-    color: var(--text);
-    margin-bottom: var(--space-s);
-}
-
-.list-item-content {
-    color: var(--text-secondary);
-    font-size: 0.875rem;
 }
 
 /* === Grid === */
@@ -658,7 +626,7 @@ ol {
 
 .table th,
 .table td {
-    padding: var(--space-s);
+    padding: var(--space-m);
     text-align: left;
     vertical-align: middle;
     border-bottom: 1px solid var(--border);
@@ -854,6 +822,30 @@ ol {
 }
 .p-l {
     padding: var(--space-l);
+}
+
+/* Table utilities */
+.table-fit {
+    width: fit-content;
+}
+.table-center td {
+    text-align: center;
+}
+.table-right td {
+    text-align: right;
+}
+.table-compact {
+    font-size: 0.75rem;
+}
+.table-compact th,
+.table-compact td {
+    padding: var(--space-s);
+}
+.table-striped tbody tr:nth-child(even) {
+    background: rgba(from var(--bg-secondary) r g b / 0.5);
+}
+.table-striped tbody tr:nth-child(even):hover {
+    background: var(--bg-secondary);
 }
 
 /* === Responsive === */
