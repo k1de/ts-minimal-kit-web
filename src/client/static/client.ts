@@ -2,11 +2,11 @@
 
 /**
  * MINIMAL UI FRAMEWORK
- * 
+ *
  * Lightweight TypeScript UI framework with zero dependencies.
  * All components support onclick handlers via BaseOptions.
  * Methods return HTML strings for efficient rendering.
- * 
+ *
  * Usage: Extend ClientApp and override start() method.
  */
 
@@ -68,8 +68,6 @@ interface SidebarOptions extends BaseOptions {
     sections: SidebarSection[];
 }
 
-
-
 /** Select option configuration */
 interface SelectOption {
     value: string;
@@ -110,8 +108,6 @@ interface ImageOptions extends BaseOptions {
 interface ButtonOptions extends BaseOptions {
     variant?: ButtonVariant;
 }
-
-
 
 /** Badge options */
 interface BadgeOptions extends BaseOptions {
@@ -174,8 +170,6 @@ interface RadioGroupOptions extends Omit<BaseOptions, 'onclick'> {
     selected?: string;
 }
 
-
-
 /** Grid options */
 interface GridOptions extends BaseOptions {
     columns?: GridColumns;
@@ -235,7 +229,7 @@ class ClientApp {
 
         // Close all dropdowns on outside click
         document.addEventListener('click', () => {
-            document.querySelectorAll('.dropdown-menu').forEach(menu => {
+            document.querySelectorAll('.dropdown-menu').forEach((menu) => {
                 menu.classList.add('hidden');
             });
         });
@@ -304,13 +298,19 @@ class ClientApp {
     }
 
     /** Process onclick handler and generate ID if needed */
-    private processOnclick<T extends BaseOptions>(options: T | undefined, defaultPrefix: string, event: string = 'click'): T | undefined {
+    private processOnclick<T extends BaseOptions>(
+        options: T | undefined,
+        defaultPrefix: string,
+        event: string = 'click'
+    ): T | undefined {
         if (!options?.onclick) return options;
 
-        const processedOptions = options.id ? options : {
-            ...options,
-            id: this.generateId(defaultPrefix)
-        } as T;
+        const processedOptions = options.id
+            ? options
+            : ({
+                ...options,
+                id: this.generateId(defaultPrefix),
+            } as T);
 
         this.addDelayedEventListener(processedOptions.id!, options.onclick, event);
 
@@ -409,7 +409,7 @@ class ClientApp {
         const processedOptions = this.processOnclick(options, 'nav-item');
         const attrs = this.buildAttrs({
             ...processedOptions,
-            href: options?.href || '#'
+            href: options?.href || '#',
         });
         return `<li><a${attrs}>${text}</a></li>`;
     }
@@ -428,7 +428,7 @@ class ClientApp {
                     return this.createNavItem(text, {
                         ...itemOptions,
                         id: item.id || id,
-                        className: item.className ? `nav-item ${item.className}` : 'nav-item'
+                        className: item.className ? `nav-item ${item.className}` : 'nav-item',
                     });
                 })
                 .join('');
@@ -457,7 +457,7 @@ class ClientApp {
                         return this.createNavItem(text, {
                             ...itemOptions,
                             id: item.id || id,
-                            className: item.className ? `sidebar-item ${item.className}` : 'sidebar-item'
+                            className: item.className ? `sidebar-item ${item.className}` : 'sidebar-item',
                         });
                     })
                     .join('');
@@ -572,8 +572,6 @@ class ClientApp {
         return `<img${attrs}>`;
     }
 
-
-
     /** Create a grid layout */
     grid(items: string[], options?: GridOptions): string {
         const { columns = 3, ...baseOptions } = options || {};
@@ -590,8 +588,6 @@ class ClientApp {
     // ========================================
     // FORM METHODS
     // ========================================
-
-
 
     /** Create an input field */
     input(id: string, options?: InputOptions): string {
@@ -717,8 +713,6 @@ class ClientApp {
         return `<button${attrs}><span${this.getNestedId(id, 'text')}>${text}</span></button>`;
     }
 
-
-
     /** Create a dropdown menu */
     dropdown(options: DropdownOptions): string {
         this.initDropdownHandler();
@@ -750,15 +744,17 @@ class ClientApp {
         }, 0);
 
         const className = variant === 'default' ? 'btn' : `btn btn-${variant}`;
-        const menuItems = items.map((item, index) => {
-            const itemId = item.id || `${menuId}-item-${index}`;
-            const itemAttrs = this.buildAttrs({
-                ...item,
-                id: itemId,
-                class: 'dropdown-item'
-            });
-            return `<div${itemAttrs}>${item.text}</div>`;
-        }).join('');
+        const menuItems = items
+            .map((item, index) => {
+                const itemId = item.id || `${menuId}-item-${index}`;
+                const itemAttrs = this.buildAttrs({
+                    ...item,
+                    id: itemId,
+                    class: 'dropdown-item',
+                });
+                return `<div${itemAttrs}>${item.text}</div>`;
+            })
+            .join('');
 
         const attrs = this.buildAttrs({ ...baseOptions, class: 'dropdown' });
 
@@ -809,9 +805,9 @@ class ClientApp {
         const tableId = baseOptions.id || this.generateId('table');
 
         // Normalize rows to string[][]
-        const normalizedRows: string[][] = Array.isArray(rows[0]) 
-            ? rows as string[][] 
-            : (rows as string[]).map(item => [item]);
+        const normalizedRows: string[][] = Array.isArray(rows[0])
+            ? (rows as string[][])
+            : (rows as string[]).map((item) => [item]);
 
         const headerRow = headers ? headers.map((h) => `<th>${h}</th>`).join('') : '';
         const bodyRows = normalizedRows.map((row) => `<tr>${row.map((cell) => `<td>${cell}</td>`).join('')}</tr>`).join('');
@@ -1222,5 +1218,5 @@ export type {
     RadioGroupOptions,
     GridOptions,
     LinkOptions,
-    FlexOptions
+    FlexOptions,
 };

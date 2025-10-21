@@ -12,7 +12,6 @@ class ShowcaseApp extends ClientApp {
             items: [
                 { text: 'Home', onclick: () => this.navigateTo('home') },
                 { text: 'Components', onclick: () => this.navigateTo('components') },
-                { text: 'Forms', onclick: () => this.navigateTo('forms') },
                 { text: 'Layouts', onclick: () => this.navigateTo('layouts') },
                 { text: 'Theme', onclick: () => this.swapThemeAndSave() },
             ],
@@ -42,6 +41,12 @@ class ShowcaseApp extends ClientApp {
                     title: 'Data',
                     items: [
                         { text: 'Tables', onclick: () => this.navigateTo('tables') },
+                    ],
+                },
+                {
+                    title: 'Forms',
+                    items: [
+                        { text: 'Inputs', onclick: () => this.navigateTo('forms') },
                     ],
                 },
                 {
@@ -148,20 +153,20 @@ class ShowcaseApp extends ClientApp {
             this.grid(
                 [
                     this.card(
-                        this.heading('30+', 2, { style: { textAlign: 'center', color: 'var(--primary)' } }) +
-                        this.text('UI Elements', { className: 'text-center text-muted' })
+                        this.heading('25+', 2, { style: { textAlign: 'center', color: 'var(--primary)' } }) +
+                        this.text('Components', { className: 'text-center text-muted' })
                     ),
                     this.card(
-                        this.heading('50+', 2, { style: { textAlign: 'center', color: 'var(--success)' } }) +
-                        this.text('Helper Functions', { className: 'text-center text-muted' })
+                        this.heading('40+', 2, { style: { textAlign: 'center', color: 'var(--success)' } }) +
+                        this.text('Helper Methods', { className: 'text-center text-muted' })
                     ),
                     this.card(
                         this.heading('2', 2, { style: { textAlign: 'center', color: 'var(--warning)' } }) +
-                        this.text('Dark & Light', { className: 'text-center text-muted' })
+                        this.text('Themes', { className: 'text-center text-muted' })
                     ),
                     this.card(
                         this.heading('0', 2, { style: { textAlign: 'center', color: 'var(--danger)' } }) +
-                        this.text('Zero External', { className: 'text-center text-muted' })
+                        this.text('Dependencies', { className: 'text-center text-muted' })
                     ),
                 ],
                 { columns: 4 }
@@ -211,49 +216,17 @@ class ShowcaseApp extends ClientApp {
             )
         );
 
-        // Text styles
+        // Text utilities
         this.append(
             this.card(
-                this.heading('Text Styles') +
-                this.text('Regular paragraph text') +
-                this.text('Large blue text', {
-                    style: {
-                        fontSize: '1.5rem',
-                        color: 'var(--primary)',
-                    },
-                }) +
-                this.text('Bold centered text', {
-                    style: {
-                        fontWeight: 'bold',
-                        textAlign: 'center',
-                    },
-                }) +
-                this.text('Small muted text', {
-                    style: {
-                        fontSize: '0.875rem',
-                        color: 'var(--text-muted)',
-                    },
-                })
-            )
-        );
-
-        // Links
-        this.append(
-            this.card(
-                this.heading('Links') +
-                this.link('External link', {
-                    href: 'https://example.com',
-                    target: '_blank',
-                }) +
-                this.spacer('s') +
-                this.link('Interactive link', {
-                    href: '#',
-                    onclick: () => this.toast('Link clicked!', { type: 'info' }),
-                }) +
-                this.spacer('s') +
-                this.link('Navigate to home', {
-                    href: '#home',
-                })
+                this.heading('Text Utilities') +
+                this.div(this.text('Default text alignment')) +
+                this.div(this.text('.text-center', { className: 'text-center' })) +
+                this.div(this.text('.text-right', { className: 'text-right' })) +
+                this.separator() +
+                this.text('Default text color') +
+                this.text('.text-secondary', { className: 'text-secondary' }) +
+                this.text('.text-muted', { className: 'text-muted' })
             )
         );
 
@@ -261,9 +234,9 @@ class ShowcaseApp extends ClientApp {
         this.append(
             this.card(
                 this.heading('Lists') +
-                this.heading('Unordered List', 4) +
+                this.heading('Unordered', 4) +
                 this.ul(['First item', 'Second item', 'Third item']) +
-                this.heading('Ordered List', 4) +
+                this.heading('Ordered', 4) +
                 this.ol(['Step one', 'Step two', 'Step three'])
             )
         );
@@ -319,15 +292,6 @@ class ShowcaseApp extends ClientApp {
                         { text: 'Delete', onclick: () => this.toast('Delete clicked', { type: 'danger' }) },
                     ],
                     variant: 'primary',
-                }) +
-                this.spacer('m') +
-                this.dropdown({
-                    text: 'Options',
-                    items: [
-                        { text: 'Settings', onclick: () => console.log('Settings') },
-                        { text: 'Profile', onclick: () => console.log('Profile') },
-                        { text: 'Logout', onclick: () => console.log('Logout') },
-                    ],
                 })
             )
         );
@@ -427,48 +391,44 @@ class ShowcaseApp extends ClientApp {
     private showFlex(): void {
         this.clear();
 
-        this.append(this.div(this.heading('Flex Layout') + this.text('Flexible box layouts')));
+        this.append(this.div(this.heading('Flex Layout') + this.text('Flexible box layouts with utilities')));
 
-        // Row flex
+        // Direction & gap
         this.append(
             this.card(
-                this.heading('Flex Row') +
+                this.heading('Direction & Gap') +
+                this.heading('Row (default)', 5) +
                 this.flex(
-                    [
-                        this.button('Button 1', { variant: 'primary' }),
-                        this.button('Button 2', { variant: 'success' }),
-                        this.button('Button 3', { variant: 'warning' }),
-                    ],
+                    [this.badge('A'), this.badge('B'), this.badge('C')],
                     { direction: 'row', gap: 'm' }
-                )
-            )
-        );
-
-        // Column flex
-        this.append(
-            this.card(
-                this.heading('Flex Column') +
+                ) +
+                this.heading('Column', 5) +
                 this.flex(
-                    [
-                        this.alert('First item', { type: 'info' }),
-                        this.alert('Second item', { type: 'success' }),
-                        this.alert('Third item', { type: 'warning' }),
-                    ],
+                    [this.badge('First'), this.badge('Second'), this.badge('Third')],
                     { direction: 'col', gap: 's' }
                 )
             )
         );
 
-        // Gap sizes
+        // Alignment utilities
         this.append(
             this.card(
-                this.heading('Gap Sizes') +
-                this.heading('Small Gap', 5) +
-                this.flex([this.badge('A'), this.badge('B'), this.badge('C')], { gap: 's' }) +
-                this.heading('Medium Gap', 5) +
-                this.flex([this.badge('A'), this.badge('B'), this.badge('C')], { gap: 'm' }) +
-                this.heading('Large Gap', 5) +
-                this.flex([this.badge('A'), this.badge('B'), this.badge('C')], { gap: 'l' })
+                this.heading('Alignment Utilities') +
+                this.heading('items-center', 5) +
+                this.div(
+                    this.heading('Large', 2) + this.text('Normal text') + this.badge('badge'),
+                    { className: 'flex items-center gap-m' }
+                ) +
+                this.heading('justify-center', 5) +
+                this.div(
+                    this.badge('A') + this.badge('B') + this.badge('C'),
+                    { className: 'flex justify-center gap-s' }
+                ) +
+                this.heading('justify-between', 5) +
+                this.div(
+                    this.badge('Start') + this.badge('End'),
+                    { className: 'flex justify-between' }
+                )
             )
         );
     }
@@ -480,25 +440,42 @@ class ShowcaseApp extends ClientApp {
 
         this.append(
             this.card(
-                this.heading('Simple Tabs') +
+                this.heading('Tab Navigation') +
                 this.tabs({
                     items: [
                         {
-                            label: 'Tab 1',
-                            content: this.text('Content for the first tab'),
+                            label: 'Overview',
+                            content:
+                                this.heading('Project Overview', 4) +
+                                this.text('This section contains general project information.') +
+                                this.separator() +
+                                this.flex([
+                                    this.badge('Active', { variant: 'success' }),
+                                    this.badge('3 members', { variant: 'primary' }),
+                                    this.badge('Updated today')
+                                ], { gap: 's' }),
                         },
                         {
-                            label: 'Tab 2',
+                            label: 'Tasks',
                             content:
-                                this.text('Content for the second tab') +
-                                this.button('Button in tab', { variant: 'primary' }),
+                                this.heading('Task List', 4) +
+                                this.table({
+                                    rows: [
+                                        'Complete documentation',
+                                        'Review pull requests',
+                                        'Update dependencies'
+                                    ]
+                                }) +
+                                this.button('Add Task', { variant: 'primary' }),
                         },
                         {
-                            label: 'Tab 3',
+                            label: 'Progress',
                             content:
-                                this.alert('Alert in third tab', { type: 'info' }) +
+                                this.heading('Project Progress', 4) +
+                                this.text('Overall completion') +
+                                this.progress(75, { showText: true }) +
                                 this.spacer('m') +
-                                this.progress(75, { showText: true }),
+                                this.alert('On track for deadline', { type: 'success' }),
                         },
                     ],
                 })
@@ -508,81 +485,83 @@ class ShowcaseApp extends ClientApp {
 
     private showTables(): void {
         this.clear();
+        const separator = this.separator({ style: { color: 'black' } })
 
-        this.append(this.div(this.heading('Tables') + this.text('Versatile data display component')));
+        this.append(this.div(this.heading('Tables') + this.text('Data display with utility classes')));
 
-        // Simple list (no headers)
+        // Standard table
         this.append(
             this.card(
-                this.heading('Simple List') +
-                this.text('Table without headers works as a list') +
-                this.spacer('s') +
+                this.heading('Basic Table') +
                 this.table({
-                    rows: ['First item', 'Second item', 'Third item', 'Fourth item'],
-                    id: 'simple-list'
-                })
-            )
-        );
-
-        // Standard table with headers
-        this.append(
-            this.card(
-                this.heading('User Table') +
-                this.text('Table with headers and structured data') +
-                this.spacer('s') +
-                this.table({
-                    headers: ['ID', 'Name', 'Email', 'Status'],
+                    headers: ['ID', 'Name', 'Status'],
                     rows: [
-                        ['1', 'John Doe', 'john@example.com', this.badge('Active', { variant: 'success' })],
-                        ['2', 'Jane Smith', 'jane@example.com', this.badge('Pending', { variant: 'warning' })],
-                        ['3', 'Bob Johnson', 'bob@example.com', this.badge('Inactive', { variant: 'danger' })],
+                        ['1', 'John Doe', this.badge('Active', { variant: 'success' })],
+                        ['2', 'Jane Smith', this.badge('Pending', { variant: 'warning' })],
+                        ['3', 'Bob Johnson', this.badge('Inactive', { variant: 'danger' })],
                     ],
-                    id: 'user-table'
+                    id: 'basic-table'
                 })
             )
         );
 
-        // Mixed content table
+        // Table utilities
         this.append(
             this.card(
-                this.heading('Mixed Content') +
-                this.text('Tables can contain any HTML components') +
+                this.heading('Table Utilities') +
+                this.heading('.table-compact', 5) +
+                this.text('Smaller padding and font size') +
                 this.spacer('s') +
                 this.table({
-                    headers: ['Task', 'Priority', 'Actions'],
+                    headers: ['Col 1', 'Col 2', 'Col 3'],
                     rows: [
-                        [
-                            'Review code',
-                            this.badge('High', { variant: 'danger' }),
-                            this.button('View', { variant: 'primary' })
-                        ],
-                        [
-                            'Update docs',
-                            this.badge('Medium', { variant: 'warning' }),
-                            this.button('View', { variant: 'primary' })
-                        ],
-                        [
-                            'Test features',
-                            this.badge('Low', { variant: 'success' }),
-                            this.button('View', { variant: 'primary' })
-                        ],
+                        ['Compact', 'data', this.badge('Sm')],
+                        ['takes', 'less', this.badge('Sm')],
+                        ['vertical', 'space', this.badge('Sm')],
                     ],
+                    className: 'table-compact'
+                }) +
+                separator +
+                this.heading('.table-striped', 5) +
+                this.text('Alternating row colors') +
+                this.spacer('s') +
+                this.table({
+                    headers: ['Item', 'Price'],
+                    rows: [['Coffee', '$3'], ['Tea', '$2'], ['Juice', '$4'], ['Water', '$1']],
+                    className: 'table-striped'
+                }) +
+                separator +
+                this.heading('.table-center', 5) +
+                this.text('Center-aligned content') +
+                this.spacer('s') +
+                this.table({
+                    headers: ['A', 'B', 'C'],
+                    rows: [['1', '2', '3'], ['4', '5', '6']],
+                    className: 'table-center'
+                }) +
+                separator +
+                this.heading('.table-fit', 5) +
+                this.text('Width adjusts to content') +
+                this.spacer('s') +
+                this.table({
+                    headers: ['Code', 'Name'],
+                    rows: [['US', 'USA'], ['UK', 'United Kingdom']],
+                    className: 'table-fit'
                 })
             )
         );
 
-        // Simple data list
+        // Simple list
         this.append(
             this.card(
-                this.heading('Feature List') +
-                this.text('Single column list for simple items') +
+                this.heading('As List') +
+                this.text('No headers = simple list') +
                 this.spacer('s') +
                 this.table({
                     rows: [
                         this.badge('Zero dependencies', { variant: 'success' }),
                         this.badge('Full TypeScript', { variant: 'primary' }),
-                        this.badge('Dark/Light themes', { variant: 'warning' }),
-                        this.badge('Component-based', { variant: 'success' }),
+                        this.badge('Component-based', { variant: 'warning' }),
                     ]
                 })
             )
@@ -784,8 +763,7 @@ class ShowcaseApp extends ClientApp {
         this.append(
             this.card(
                 this.heading('Loading Spinner') +
-                this.div(this.spinner(), { style: { textAlign: 'center', padding: 'var(--space-l)' } }) +
-                this.text('Loading...', { style: { textAlign: 'center' } })
+                this.div(this.spinner(), { style: { textAlign: 'center', padding: 'var(--space-l)' } })
             )
         );
 

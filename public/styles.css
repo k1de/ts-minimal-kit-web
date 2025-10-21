@@ -517,7 +517,7 @@ ol {
 /* === Badge === */
 .badge {
     display: inline-block;
-    padding: var(--space-s) var(--space-s);
+    padding: 0.25rem 0.5rem;
     font-size: 0.75rem;
     font-weight: 600;
     border-radius: 1rem;
@@ -605,6 +605,12 @@ ol {
     display: flex;
     flex-direction: column;
     gap: var(--space-m);
+}
+
+/* Adjust toast position when nav is present */
+body:has([data-layout='nav']) .toast-container,
+body:has([data-layout='nav-sidebar']) .toast-container {
+    top: calc(var(--nav-height) - var(--space-s));
 }
 
 @keyframes slideIn {
@@ -799,6 +805,9 @@ ol {
 .text-center {
     text-align: center;
 }
+.text-right {
+    text-align: right;
+}
 .text-muted {
     color: var(--text-muted);
 }
@@ -828,10 +837,12 @@ ol {
 .table-fit {
     width: fit-content;
 }
-.table-center td {
+.table-center td,
+.table-center th {
     text-align: center;
 }
-.table-right td {
+.table-right td,
+.table-right th {
     text-align: right;
 }
 .table-compact {
