@@ -187,6 +187,24 @@ interface FlexOptions extends BaseOptions {
     direction?: FlexDirection;
 }
 
+/** Code options */
+interface CodeOptions extends Omit<BaseOptions, 'onclick'> {
+    language?: string;
+    block?: boolean;
+}
+
+/** Accordion item configuration */
+interface AccordionItem {
+    title: string;
+    content: string;
+    open?: boolean;
+}
+
+/** Accordion options */
+interface AccordionOptions extends Omit<BaseOptions, 'onclick'> {
+    items: AccordionItem[];
+}
+
 // ========================================
 // MAIN CLASS
 // ========================================
@@ -419,25 +437,33 @@ class ClientApp {
         const nav = document.getElementById('nav');
         if (!nav) return;
 
-        const navItems: string = !options
-            ? ''
-            : options.items
-                .map((item, i) => {
-                    const id = options.id ? `${options.id}-item-${i}` : `nav-item-${i}`;
-                    const { text, ...itemOptions } = item;
-                    return this.createNavItem(text, {
-                        ...itemOptions,
-                        id: item.id || id,
-                        className: item.className ? `nav-item ${item.className}` : 'nav-item',
-                    });
-                })
-                .join('');
+        const { items = [], ...baseOptions } = options || { items: [] };
 
-        nav.innerHTML = `
-            <div class="nav-brand">${brand}</div>
-            <ul class="nav-menu">${navItems}</ul>
+        const navItems: string = items
+            .map((item, i) => {
+                const id = baseOptions.id ? `${baseOptions.id}-item-${i}` : `nav-item-${i}`;
+                const { text, ...itemOptions } = item;
+                return this.createNavItem(text, {
+                    ...itemOptions,
+                    id: item.id || id,
+                    className: item.className ? `nav-item ${item.className}` : 'nav-item',
+                });
+            })
+            .join('');
+
+        const baseClassName = baseOptions.className ? `nav ${baseOptions.className}` : 'nav';
+        const attrs = this.buildAttrs({
+            ...baseOptions,
+            id: 'nav',
+            className: baseClassName,
+        });
+
+        nav.outerHTML = `
+            <nav${attrs}>
+                <div class="nav-brand">${brand}</div>
+                <ul class="nav-menu">${navItems}</ul>
+            </nav>
         `;
-        nav.hidden = false;
 
         this.hasNav = true;
         this.updateLayout();
@@ -448,11 +474,13 @@ class ClientApp {
         const sidebar = document.getElementById('sidebar');
         if (!sidebar) return;
 
-        sidebar.innerHTML = options.sections
+        const { sections, ...baseOptions } = options;
+
+        const content = sections
             .map((section, sectionIndex) => {
                 const items = section.items
                     .map((item, i) => {
-                        const id = options.id ? `${options.id}-${sectionIndex}-${i}` : `sidebar-${sectionIndex}-${i}`;
+                        const id = baseOptions.id ? `${baseOptions.id}-${sectionIndex}-${i}` : `sidebar-${sectionIndex}-${i}`;
                         const { text, ...itemOptions } = item;
                         return this.createNavItem(text, {
                             ...itemOptions,
@@ -471,7 +499,14 @@ class ClientApp {
             })
             .join('');
 
-        sidebar.hidden = false;
+        const baseClassName = baseOptions.className ? `sidebar ${baseOptions.className}` : 'sidebar';
+        const attrs = this.buildAttrs({
+            ...baseOptions,
+            id: 'sidebar',
+            className: baseClassName,
+        });
+
+        sidebar.outerHTML = `<aside${attrs}>${content}</aside>`;
 
         this.hasSidebar = true;
         this.updateLayout();
@@ -583,6 +618,62 @@ class ClientApp {
             class: processedOptions?.className ? `${className} ${processedOptions.className}` : className,
         });
         return `<div${attrs}>${items.join('')}</div>`;
+    }
+
+    /** Create inline or block code */
+    code(content: string, options?: CodeOptions): string {
+        const { language, block = false, ...baseOptions } = options || {};
+
+        if (block) {
+            // Block code with <pre><code>
+            const codeClass = language ? `language-${language}` : '';
+            const codeAttrs = this.buildAttrs({
+                class: codeClass || undefined,
+            });
+            const preAttrs = this.buildAttrs({
+                ...baseOptions,
+                class: baseOptions?.className ? `code-block ${baseOptions.className}` : 'code-block',
+            });
+            return `<pre${preAttrs}><code${codeAttrs}>${content}</code></pre>`;
+        } else {
+            // Inline code
+            const attrs = this.buildAttrs({
+                ...baseOptions,
+                class: baseOptions?.className ? `code ${baseOptions.className}` : 'code',
+            });
+            return `<code${attrs}>${content}</code>`;
+        }
+    }
+
+    /** Create an accordion */
+    accordion(options: AccordionOptions): string {
+        const { items, ...baseOptions } = options;
+        const id = baseOptions.id || this.generateId('accordion');
+
+        const accordionItems = items
+            .map((item, index) => {
+                const detailsId = `${id}-item-${index}`;
+                const openAttr = item.open ? ' open' : '';
+                const detailsAttrs = this.buildAttrs({
+                    id: detailsId,
+                    class: 'accordion-item',
+                });
+                return `
+                    <details${detailsAttrs}${openAttr}>
+                        <summary class="accordion-title">${item.title}</summary>
+                        <div class="accordion-content">${item.content}</div>
+                    </details>
+                `;
+            })
+            .join('');
+
+        const attrs = this.buildAttrs({
+            ...baseOptions,
+            id,
+            class: baseOptions?.className ? `accordion ${baseOptions.className}` : 'accordion',
+        });
+
+        return `<div${attrs}>${accordionItems}</div>`;
     }
 
     // ========================================
@@ -1219,4 +1310,7 @@ export type {
     GridOptions,
     LinkOptions,
     FlexOptions,
+    CodeOptions,
+    AccordionItem,
+    AccordionOptions,
 };

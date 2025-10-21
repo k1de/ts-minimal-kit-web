@@ -252,6 +252,24 @@ this.image({
         objectFit: 'cover',
     }
 });
+
+// Code - inline
+this.code('const x = 42;');
+
+// Code - block
+this.code('function hello() {\n    console.log("Hello");\n}', {
+    block: true,
+    language: 'javascript',
+});
+
+// Accordion
+this.accordion({
+    items: [
+        { title: 'Section 1', content: 'Content 1', open: true },
+        { title: 'Section 2', content: 'Content 2' },
+        { title: 'Section 3', content: 'Content 3' },
+    ],
+});
 ```
 
 ## Forms
