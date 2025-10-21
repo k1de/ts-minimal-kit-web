@@ -177,10 +177,12 @@ this.heading('Default H2'); // <h2> by default
 
 // Text elements
 this.text('Styled text', {
-    size: '1.25rem',
-    color: 'var(--primary)',
-    weight: 'bold',
-    align: 'center',
+    style: {
+        fontSize: '1.25rem',
+        color: 'var(--primary)',
+        fontWeight: 'bold',
+        textAlign: 'center',
+    }
 });
 
 // Basic containers
@@ -202,7 +204,8 @@ this.ul(['Item 1', 'Item 2', 'Item 3']);
 this.ol(['First', 'Second', 'Third'], { className: 'ordered-list' });
 
 // Layout helpers
-this.separator(); // Horizontal line
+this.separator(); // Default horizontal line
+this.separator({ style: { borderTop: '2px solid var(--primary)' } }); // Custom style
 this.spacer('m'); // Medium space
 this.spacer('l'); // Large space
 
@@ -242,10 +245,12 @@ this.grid([this.card('Content 1'), this.card('Content 2'), this.card('Content 3'
 // Image
 this.image({
     src: 'photo.jpg',
-    width: 300,
-    height: 200,
-    fit: 'cover',
     alt: 'Description',
+    style: {
+        width: '300px',
+        height: '200px',
+        objectFit: 'cover',
+    }
 });
 ```
 
@@ -276,11 +281,11 @@ this.radioGroup({
     selected: 'red',
 });
 
-// Form with label and input - compose with methods
+// Label + input composition
 this.div(
     this.text('Email', { className: 'label' }) +
-        this.text('We never share your email', { className: 'sublabel' })
-        this.input('email', { type: 'email' }) +
+        this.text('We never share your email', { className: 'sublabel' }) +
+        this.input('email', { type: 'email' })
 );
 ```
 
@@ -394,18 +399,24 @@ protected onHashChange(hash: string): void {
 this.scrollToElement('section-id');        // Smooth scroll by default
 this.scrollToElement('section-id', false); // Instant scroll
 
-// DOM utilities
-this.clear();                          // Clear content
-this.html('<p>Replace all</p>');      // Replace content
-this.append('<p>Add text</p>');       // Append content
-this.get('element-id');               // Get element
-this.val('input-id');                 // Get input value
-this.setVal('input-id', 'new');       // Set input value
-this.updateText('span-id', 'New');    // Update text
+// Content manipulation
+this.clear();                     // Clear content
+this.html('<p>Replace all</p>');  // Replace content
+this.append('<p>Add text</p>');   // Append content
+
+// Element access
+this.get('element-id');           // Get element
+this.updateText('span-id', 'New'); // Update text
 this.updateHtml('div-id', '<b>HTML</b>'); // Update HTML
-this.show('element-id');              // Show element
-this.hide('element-id');              // Hide element
-this.toggle('element-id');            // Toggle visibility
+
+// Visibility
+this.show('element-id');          // Show element
+this.hide('element-id');          // Hide element
+this.toggle('element-id');        // Toggle visibility
+
+// Input values
+this.val('input-id');             // Get input value
+this.setVal('input-id', 'new');   // Set input value
 
 // Theme
 this.toggleTheme();                   // Toggle dark/light
