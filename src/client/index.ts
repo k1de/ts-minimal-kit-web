@@ -18,7 +18,7 @@ class App extends ClientApp {
         this.append(
             this.card(
                 this.heading('Welcome') +
-                this.paragraph('Start building your app!')
+                this.text('Start building your app!')
             )
         );
     }

@@ -237,26 +237,13 @@ class ClientApp {
         }
     }
 
-    /** Initialize global dropdown handler (once) */
+    /** Initialize global dropdown closer (once) */
     private initDropdownHandler(): void {
         if (this.dropdownInitialized) return;
         this.dropdownInitialized = true;
 
-        document.addEventListener('click', (e) => {
-            const target = e.target as HTMLElement;
-
-            // Toggle dropdown when button clicked
-            if (target.closest('[data-dropdown-toggle]')) {
-                e.stopPropagation();
-                const buttonId = target.closest('[data-dropdown-toggle]')?.id;
-                if (buttonId) {
-                    const menu = document.getElementById(`${buttonId}-menu`);
-                    menu?.classList.toggle('hidden');
-                }
-                return;
-            }
-
-            // Close all dropdowns when clicking outside
+        // Close all dropdowns on outside click
+        document.addEventListener('click', () => {
             document.querySelectorAll('.dropdown-menu').forEach(menu => {
                 menu.classList.add('hidden');
             });
@@ -799,16 +786,28 @@ class ClientApp {
         const id = processedOptions?.id || this.generateId('dropdown');
         const menuId = `${id}-menu`;
 
-        // Bind item click handlers
-        items.forEach((item, index) => {
-            const itemId = item.id || `${menuId}-item-${index}`;
-            if (item.onclick) {
-                this.addDelayedEventListener(itemId, () => {
-                    item.onclick!();
-                    document.getElementById(menuId)?.classList.add('hidden');
-                });
+        setTimeout(() => {
+            const button = document.getElementById(id);
+            const menu = document.getElementById(menuId);
+
+            if (button && menu) {
+                // Toggle menu on button click
+                button.onclick = (e) => {
+                    e.stopPropagation();
+                    menu.classList.toggle('hidden');
+                };
+
+                // Handle item clicks via delegation
+                menu.onclick = (e) => {
+                    const itemEl = (e.target as HTMLElement).closest('.dropdown-item');
+                    if (!itemEl) return;
+
+                    const index = Array.from(menu.children).indexOf(itemEl);
+                    items[index]?.onclick?.();
+                    menu.classList.add('hidden');
+                };
             }
-        });
+        }, 0);
 
         const className = variant === 'default' ? 'btn' : `btn btn-${variant}`;
         const menuItems = items.map((item, index) => {
@@ -825,7 +824,7 @@ class ClientApp {
 
         return `
             <div${attrs}>
-                <button id="${id}" class="${className}" data-dropdown-toggle>
+                <button id="${id}" class="${className}">
                     ${text}
                     <span style="margin-left: 0.5em;">▼</span>
                 </button>
@@ -895,18 +894,25 @@ class ClientApp {
 
         setTimeout(() => {
             const container = document.getElementById(id);
-            const tabs = container?.querySelectorAll('.tab');
-            const contents = container?.querySelectorAll('.tab-panel');
+            if (!container) return;
 
-            tabs?.forEach((tab, index) => {
-                tab.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    tabs.forEach((t) => t.classList.remove('active'));
-                    contents?.forEach((c) => c.classList.add('hidden'));
-                    tab.classList.add('active');
-                    contents?.[index]?.classList.remove('hidden');
-                });
-            });
+            // One handler for entire container
+            container.onclick = (e) => {
+                const tab = (e.target as HTMLElement).closest('.tab');
+                if (!tab) return;
+
+                e.preventDefault();
+                const tabs = container.querySelectorAll('.tab');
+                const panels = container.querySelectorAll('.tab-panel');
+                const index = Array.from(tabs).indexOf(tab);
+
+                // Switch active tab
+                tabs.forEach((t) => t.classList.remove('active'));
+                panels.forEach((c) => c.classList.add('hidden'));
+
+                tab.classList.add('active');
+                panels[index]?.classList.remove('hidden');
+            };
         }, 0);
 
         const tabElements = items
@@ -983,6 +989,11 @@ class ClientApp {
     modal(content: string, block?: boolean): void {
         const modal = document.getElementById('modal');
         if (!modal) return;
+
+        // Clear previous state
+        if (modal.onclick) {
+            modal.onclick = null;
+        }
 
         modal.innerHTML = `<div class="modal">${content}</div>`;
 
