@@ -341,27 +341,13 @@ ol {
     margin-bottom: 0;
 }
 
-.grid-2 {
-    grid-template-columns: repeat(2, 1fr);
-}
-.grid-3 {
-    grid-template-columns: repeat(3, 1fr);
-}
-.grid-4 {
-    grid-template-columns: repeat(4, 1fr);
-}
-.grid-5 {
-    grid-template-columns: repeat(5, 1fr);
-}
-.grid-6 {
-    grid-template-columns: repeat(6, 1fr);
-}
-.grid-7 {
-    grid-template-columns: repeat(7, 1fr);
-}
-.grid-8 {
-    grid-template-columns: repeat(8, 1fr);
-}
+.grid-2 { grid-template-columns: repeat(2, 1fr); }
+.grid-3 { grid-template-columns: repeat(3, 1fr); }
+.grid-4 { grid-template-columns: repeat(4, 1fr); }
+.grid-5 { grid-template-columns: repeat(5, 1fr); }
+.grid-6 { grid-template-columns: repeat(6, 1fr); }
+.grid-7 { grid-template-columns: repeat(7, 1fr); }
+.grid-8 { grid-template-columns: repeat(8, 1fr); }
 
 /* === Forms === */
 
@@ -529,25 +515,10 @@ ol {
     color: var(--text-secondary);
 }
 
-.badge-primary {
-    background: var(--primary);
-    color: white;
-}
-
-.badge-success {
-    background: var(--success);
-    color: white;
-}
-
-.badge-danger {
-    background: var(--danger);
-    color: white;
-}
-
-.badge-warning {
-    background: var(--warning);
-    color: white;
-}
+.badge-primary { background: var(--primary); color: white; }
+.badge-success { background: var(--success); color: white; }
+.badge-danger { background: var(--danger); color: white; }
+.badge-warning { background: var(--warning); color: white; }
 
 /* === Code === */
 .code,
@@ -847,128 +818,226 @@ body:has([data-layout='nav-sidebar']) .toast-container {
     }
 }
 
-/* === Utilities === */
-.hidden {
-    display: none !important;
-}
-.flex {
-    display: flex;
-}
+/* ============================================
+   UTILITIES
+   ============================================ */
 
-.flex > * {
-    margin-bottom: 0;
-}
-.flex-col {
-    flex-direction: column;
-}
-.flex-row {
-    flex-direction: row;
-}
-.items-center {
-    align-items: center;
-}
-.justify-center {
-    justify-content: center;
-}
-.justify-between {
-    justify-content: space-between;
-}
-.gap-none {
-    gap: var(--space-none);
-}
-.gap-s {
-    gap: var(--space-s);
-}
-.gap-m {
-    gap: var(--space-m);
-}
-.gap-l {
-    gap: var(--space-l);
-}
-.text-center {
-    text-align: center;
-}
-.text-right {
-    text-align: right;
-}
-.text-muted {
-    color: var(--text-muted);
-}
-.text-secondary {
-    color: var(--text-secondary);
-}
-.mb-s {
-    margin-bottom: var(--space-s);
-}
-.mb-m {
-    margin-bottom: var(--space-m);
-}
-.mb-l {
-    margin-bottom: var(--space-l);
-}
-.p-s {
-    padding: var(--space-s);
-}
-.p-m {
-    padding: var(--space-m);
-}
-.p-l {
-    padding: var(--space-l);
-}
+/* ──────────────────────────────────────────
+   Display & Visibility
+   ────────────────────────────────────────── */
 
-/* Table utilities */
-.table-fit {
-    width: fit-content;
-}
+/* Force hide element */
+.hidden { display: none !important; }
+
+/* Block-level element (takes full width) */
+.block { display: block; }
+
+/* Inline-block element (respects width/height, stays inline) */
+.inline-block { display: inline-block; }
+
+/* ──────────────────────────────────────────
+   Flexbox Layout
+   ────────────────────────────────────────── */
+
+/* Enable flexbox */
+.flex { display: flex; }
+.flex > * { margin-bottom: 0; } /* Remove bottom margin from flex children */
+
+/* Vertical flex direction */
+.flex-col { flex-direction: column; }
+
+/* Horizontal flex direction (default) */
+.flex-row { flex-direction: row; }
+
+/* Allow flex items to wrap */
+.flex-wrap { flex-wrap: wrap; }
+
+/* Flex grow to fill available space */
+.flex-1 { flex: 1 1 0%; }
+
+/* ──────────────────────────────────────────
+   Flexbox Alignment
+   ────────────────────────────────────────── */
+
+/* Align items to start (top in row, left in column) */
+.items-start { align-items: flex-start; }
+
+/* Center items vertically */
+.items-center { align-items: center; }
+
+/* Align items to end (bottom in row, right in column) */
+.items-end { align-items: flex-end; }
+
+/* Justify content to start (left in row) */
+.justify-start { justify-content: flex-start; }
+
+/* Center content horizontally */
+.justify-center { justify-content: center; }
+
+/* Justify content to end (right in row) */
+.justify-end { justify-content: flex-end; }
+
+/* Space items evenly with gaps between */
+.justify-between { justify-content: space-between; }
+
+/* ──────────────────────────────────────────
+   Gap (spacing between flex/grid items)
+   ────────────────────────────────────────── */
+
+/* No gap (0) */
+.gap-none { gap: var(--space-none); }
+
+/* Small gap (0.5rem) */
+.gap-s { gap: var(--space-s); }
+
+/* Medium gap (1rem) */
+.gap-m { gap: var(--space-m); }
+
+/* Large gap (1.5rem) */
+.gap-l { gap: var(--space-l); }
+
+/* ──────────────────────────────────────────
+   Margin
+   ────────────────────────────────────────── */
+
+/* Remove all margins */
+.m-0 { margin: 0; }
+
+/* Remove top margin */
+.mt-0 { margin-top: 0; }
+
+/* Remove bottom margin */
+.mb-0 { margin-bottom: 0; }
+
+/* Small bottom margin (0.5rem) */
+.mb-s { margin-bottom: var(--space-s); }
+
+/* Medium bottom margin (1rem) */
+.mb-m { margin-bottom: var(--space-m); }
+
+/* Large bottom margin (1.5rem) */
+.mb-l { margin-bottom: var(--space-l); }
+
+/* Push element to the right */
+.ml-auto { margin-left: auto; }
+
+/* Push element to the left */
+.mr-auto { margin-right: auto; }
+
+/* Center element horizontally */
+.mx-auto { margin-left: auto; margin-right: auto; }
+
+/* ──────────────────────────────────────────
+   Padding
+   ────────────────────────────────────────── */
+
+/* Remove all padding */
+.p-0 { padding: 0; }
+
+/* Small padding (0.5rem) */
+.p-s { padding: var(--space-s); }
+
+/* Medium padding (1rem) */
+.p-m { padding: var(--space-m); }
+
+/* Large padding (1.5rem) */
+.p-l { padding: var(--space-l); }
+
+/* ──────────────────────────────────────────
+   Sizing (width & height)
+   ────────────────────────────────────────── */
+
+/* Full width */
+.w-full { width: 100%; }
+
+/* Width fits content */
+.w-fit { width: fit-content; }
+
+/* Full height */
+.h-full { height: 100%; }
+
+/* ──────────────────────────────────────────
+   Text & Typography
+   ────────────────────────────────────────── */
+
+/* Align text to left */
+.text-left { text-align: left; }
+
+/* Center text */
+.text-center { text-align: center; }
+
+/* Align text to right */
+.text-right { text-align: right; }
+
+/* Secondary text color */
+.text-secondary { color: var(--text-secondary); }
+
+/* Muted text color (lighter) */
+.text-muted { color: var(--text-muted); }
+
+/* Semi-bold font weight */
+.font-semibold { font-weight: 600; }
+
+/* Bold font weight */
+.font-bold { font-weight: 800; }
+
+/* Truncate text with ellipsis */
+.truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* ──────────────────────────────────────────
+   Interactive
+   ────────────────────────────────────────── */
+   
+/* Add scrollbars when content overflows */
+.overflow-auto { overflow: auto; }
+
+/* Pointer cursor for clickable elements */
+.cursor-pointer { cursor: pointer; }
+
+/* Not-allowed cursor for disabled/unavailable elements */
+.cursor-not-allowed { cursor: not-allowed; }
+
+/* 50% opacity (semi-transparent) */
+.opacity-50 { opacity: 0.5; }
+
+/* ──────────────────────────────────────────
+   Component-Specific Utilities
+   ────────────────────────────────────────── */
+
+/* Table fits content width (alias for .w-fit) */
+.table-fit { width: fit-content; }
+
+/* Center-align all table cells */
 .table-center td,
-.table-center th {
-    text-align: center;
-}
+.table-center th { text-align: center; }
+
+/* Right-align all table cells */
 .table-right td,
-.table-right th {
-    text-align: right;
-}
-.table-compact {
-    font-size: 0.75rem;
-}
+.table-right th { text-align: right; }
+
+/* Compact table font size */
+.table-compact { font-size: 0.75rem; }
+
+/* Compact table cell padding */
 .table-compact th,
-.table-compact td {
-    padding: var(--space-s);
-}
-.table-striped tbody tr:nth-child(even) {
-    background: rgba(from var(--bg-secondary) r g b / 0.5);
-}
-.table-striped tbody tr:nth-child(even):hover {
-    background: var(--bg-secondary);
-}
+.table-compact td { padding: var(--space-s); }
 
-/* Accordion utilities */
-.accordion-compact .accordion-title {
-    padding: var(--space-s);
-    font-size: 0.75rem;
-}
+/* Striped rows (even) */
+.table-striped tbody tr:nth-child(even) { background: rgba(from var(--bg-secondary) r g b / 0.25); }
+.table-striped tbody tr:nth-child(even):hover { background: var(--bg-secondary); } /* Striped rows hover */
 
-.accordion-compact .accordion-content {
-    padding: var(--space-s);
-    font-size: 0.75rem;
-}
+/* Compact accordion title & content */
+.accordion-compact .accordion-title,
+.accordion-compact .accordion-content { padding: var(--space-s); font-size: 0.75rem; }
 
-/* Sidebar utilities */
-.sidebar-compact .sidebar-section {
-    margin-bottom: var(--space-s);
-}
+/* Compact sidebar section spacing */
+.sidebar-compact .sidebar-section { margin-bottom: var(--space-s); }
 
-.sidebar-compact .sidebar-title {
-    padding: 0.25rem 0;
-    font-size: 0.75rem;
-    margin-bottom: 0.25rem;
-}
+/* Compact sidebar title */
+.sidebar-compact .sidebar-title { padding: 0.25rem 0; font-size: 0.75rem; margin-bottom: 0.25rem; }
 
-.sidebar-compact .sidebar-item {
-    padding: 0.25rem var(--space-m);
-    font-size: 0.875rem;
-    margin-bottom: 0.125rem;
-}
+/* Compact sidebar item */
+.sidebar-compact .sidebar-item { padding: 0.25rem var(--space-m); font-size: 0.875rem; margin-bottom: 0.125rem; }
 
 /* === Responsive === */
 @media (max-width: 768px) {

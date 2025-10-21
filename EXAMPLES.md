@@ -216,6 +216,97 @@ this.flex(
 );
 ```
 
+## Utility Classes
+
+```typescript
+// Single utility class - autocomplete with Ctrl+Space
+this.button('Click', { className: 'flex' });
+this.div('Content', { className: 'text-center' });
+
+// Array of utility classes
+this.div('Content', { 
+    className: ['flex', 'items-center', 'gap-m'] 
+});
+
+// Mix utility and custom classes
+this.card('Card', { 
+    className: ['my-card', 'p-l', 'mb-l'] 
+});
+
+// Conditional classes (false/undefined/null filtered automatically)
+const isActive = true;
+const hasError = false;
+
+this.button('Toggle', {
+    className: [
+        'btn-primary',
+        isActive && 'opacity-50',        // Added
+        hasError && 'cursor-not-allowed', // Filtered
+        'ml-auto'
+    ]
+});
+
+// Flex layout with utilities
+this.flex([
+    this.button('Left'),
+    this.button('Right', { className: 'ml-auto' })
+], {
+    className: ['w-full', 'p-m']
+});
+
+// Grid with utilities
+this.grid([
+    this.card('Card 1', { className: 'text-center' }),
+    this.card('Card 2', { className: 'text-center' }),
+    this.card('Card 3', { className: 'text-center' })
+], {
+    columns: 3,
+    className: 'mb-l'
+});
+
+// Table with utilities
+this.table({
+    headers: ['Name', 'Status'],
+    rows: [['John', 'Active'], ['Jane', 'Pending']],
+    className: ['table-compact', 'table-striped', 'w-full']
+});
+
+// Complex layout
+this.card(
+    this.heading('User Profile') +
+    this.separator() +
+    this.flex([
+        this.div('Info', { className: 'flex-1' }),
+        this.button('Edit', { className: ['btn-primary', 'ml-auto'] })
+    ], {
+        className: ['items-center', 'gap-m']
+    }),
+    { className: ['p-l', 'mb-l'] }
+);
+```
+
+### Available Utilities
+
+**Display:** `hidden`, `block`, `inline-block`
+
+**Flexbox:** `flex`, `flex-col`, `flex-row`, `flex-wrap`, `flex-1`
+
+**Alignment:** `items-start`, `items-center`, `items-end`, `justify-start`, `justify-center`, `justify-end`, `justify-between`
+
+**Gap:** `gap-none`, `gap-s`, `gap-m`, `gap-l`
+
+**Margin:** `m-0`, `mt-0`, `mb-0`, `mb-s`, `mb-m`, `mb-l`, `ml-auto`, `mr-auto`, `mx-auto`
+
+**Padding:** `p-0`, `p-s`, `p-m`, `p-l`
+
+**Sizing:** `w-full`, `w-fit`, `h-full`
+
+**Text:** `text-left`, `text-center`, `text-right`, `text-secondary`, `text-muted`, `font-semibold`, `font-bold`, `truncate`
+
+**Interactive:** `overflow-auto`, `cursor-pointer`, `cursor-not-allowed`, `opacity-50`
+
+**Component-Specific:** `table-fit`, `table-center`, `table-right`, `table-compact`, `table-striped`, `accordion-compact`, `sidebar-compact`
+
 ## Content Components
 
 ```typescript

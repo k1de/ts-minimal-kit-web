@@ -14,6 +14,79 @@
 // TYPE DEFINITIONS
 // ========================================
 
+// Utility classes from styles.css
+type UtilityClass =
+    // Display & Visibility
+    | 'hidden'
+    | 'block'
+    | 'inline-block'
+    // Flexbox Layout
+    | 'flex'
+    | 'flex-col'
+    | 'flex-row'
+    | 'flex-wrap'
+    | 'flex-1'
+    // Flexbox Alignment
+    | 'items-start'
+    | 'items-center'
+    | 'items-end'
+    | 'justify-start'
+    | 'justify-center'
+    | 'justify-end'
+    | 'justify-between'
+    // Gap
+    | 'gap-none'
+    | 'gap-s'
+    | 'gap-m'
+    | 'gap-l'
+    // Margin
+    | 'm-0'
+    | 'mt-0'
+    | 'mb-0'
+    | 'mb-s'
+    | 'mb-m'
+    | 'mb-l'
+    | 'ml-auto'
+    | 'mr-auto'
+    | 'mx-auto'
+    // Padding
+    | 'p-0'
+    | 'p-s'
+    | 'p-m'
+    | 'p-l'
+    // Sizing
+    | 'w-full'
+    | 'w-fit'
+    | 'h-full'
+    // Text & Typography
+    | 'text-left'
+    | 'text-center'
+    | 'text-right'
+    | 'text-secondary'
+    | 'text-muted'
+    | 'font-semibold'
+    | 'font-bold'
+    | 'truncate'
+    // Interactive
+    | 'overflow-auto'
+    | 'cursor-pointer'
+    | 'cursor-not-allowed'
+    | 'opacity-50'
+    // Component-Specific
+    | 'table-fit'
+    | 'table-center'
+    | 'table-right'
+    | 'table-compact'
+    | 'table-striped'
+    | 'accordion-compact'
+    | 'sidebar-compact';
+
+// ClassName types with proper autocomplete
+// The (string & {}) trick prevents TypeScript from collapsing the union
+type ClassNameValue = UtilityClass | (string & {});
+// Allow false/undefined/null in arrays for conditional expressions like: isActive && 'active'
+type ClassName = ClassNameValue | (ClassNameValue | false | undefined | null)[] | undefined;
+
 type Layout = 'default' | 'nav' | 'sidebar' | 'nav-sidebar';
 type ButtonVariant = 'default' | 'primary' | 'success' | 'warning' | 'danger';
 type NotificationType = 'info' | 'success' | 'warning' | 'danger' | 'error';
@@ -37,7 +110,7 @@ type StyleOptions = Partial<{
 /** Base options for all UI components */
 interface BaseOptions {
     id?: string;
-    className?: string;
+    className?: ClassName;
     style?: string | StyleOptions;
     onclick?: () => void;
 }
@@ -362,6 +435,16 @@ class ClientApp {
         }
     }
 
+    /** Normalize className to string */
+    private normalizeClassName(className: ClassName): string | undefined {
+        if (!className) return undefined;
+        if (typeof className === 'string') return className;
+        if (Array.isArray(className)) {
+            return className.filter(Boolean).join(' ') || undefined;
+        }
+        return className;
+    }
+
     /** Build HTML attributes from object (converts className to class, style object to string) */
     private buildAttrs(attrs?: Record<string, any> | BaseOptions): string {
         if (!attrs) return '';
@@ -369,7 +452,10 @@ class ClientApp {
         // Handle BaseOptions case (convert className to class, exclude onclick)
         const processedAttrs: Record<string, any> = { ...attrs };
         if ('className' in processedAttrs && !('class' in processedAttrs)) {
-            processedAttrs.class = processedAttrs.className;
+            const normalizedClassName = this.normalizeClassName(processedAttrs.className);
+            if (normalizedClassName) {
+                processedAttrs.class = normalizedClassName;
+            }
             delete processedAttrs.className;
         }
         // Remove onclick from attributes if present
@@ -1265,6 +1351,9 @@ class ClientApp {
 export { ClientApp };
 export type {
     // Types
+    UtilityClass,
+    ClassNameValue,
+    ClassName,
     ButtonVariant,
     AlertType,
     ToastType,
