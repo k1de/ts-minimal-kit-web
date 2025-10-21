@@ -322,7 +322,6 @@ div {
     border: 1px solid var(--border);
     border-radius: var(--radius-l);
     padding: var(--space-l);
-    margin-bottom: var(--space-l); /* Larger gap between cards */
     box-shadow: var(--shadow);
 }
 
