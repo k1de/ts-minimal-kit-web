@@ -111,7 +111,7 @@ npm install
 ### Components
 
 Layouts: cards, sections, grids, flex, tabs.
-Forms: inputs, selects, checkboxes, tables, lists.
+Forms: inputs, selects, checkboxes, tables.
 Actions: buttons, dropdowns, modals.
 Feedback: alerts, toasts, badges.
 Progress: progress bars, spinners.

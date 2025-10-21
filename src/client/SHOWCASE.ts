@@ -42,7 +42,6 @@ class ShowcaseApp extends ClientApp {
                     title: 'Data',
                     items: [
                         { text: 'Tables', onclick: () => this.navigateTo('tables') },
-                        { text: 'Lists', onclick: () => this.navigateTo('lists') },
                     ],
                 },
                 {
@@ -82,9 +81,6 @@ class ShowcaseApp extends ClientApp {
                 break;
             case 'tables':
                 this.showTables();
-                break;
-            case 'lists':
-                this.showLists();
                 break;
             case 'alerts':
                 this.showAlerts();
@@ -513,74 +509,87 @@ class ShowcaseApp extends ClientApp {
     private showTables(): void {
         this.clear();
 
-        this.append(this.div(this.heading('Tables') + this.text('Data tables')));
+        this.append(this.div(this.heading('Tables') + this.text('Versatile data display component')));
 
+        // Simple list (no headers)
+        this.append(
+            this.card(
+                this.heading('Simple List') +
+                this.text('Table without headers works as a list') +
+                this.spacer('s') +
+                this.table({
+                    rows: ['First item', 'Second item', 'Third item', 'Fourth item'],
+                    id: 'simple-list'
+                })
+            )
+        );
+
+        // Standard table with headers
         this.append(
             this.card(
                 this.heading('User Table') +
+                this.text('Table with headers and structured data') +
+                this.spacer('s') +
                 this.table({
-                    headers: ['ID', 'Name', 'Email', 'Status', 'Actions'],
+                    headers: ['ID', 'Name', 'Email', 'Status'],
                     rows: [
-                        [
-                            '1',
-                            'John Doe',
-                            'john@example.com',
-                            this.badge('Active', { variant: 'success' }),
-                            this.button('Edit', { variant: 'primary' }),
-                        ],
-                        [
-                            '2',
-                            'Jane Smith',
-                            'jane@example.com',
-                            this.badge('Pending', { variant: 'warning' }),
-                            this.button('Edit', { variant: 'primary' }),
-                        ],
-                        [
-                            '3',
-                            'Bob Johnson',
-                            'bob@example.com',
-                            this.badge('Inactive', { variant: 'danger' }),
-                            this.button('Edit', { variant: 'primary' }),
-                        ],
+                        ['1', 'John Doe', 'john@example.com', this.badge('Active', { variant: 'success' })],
+                        ['2', 'Jane Smith', 'jane@example.com', this.badge('Pending', { variant: 'warning' })],
+                        ['3', 'Bob Johnson', 'bob@example.com', this.badge('Inactive', { variant: 'danger' })],
                     ],
+                    id: 'user-table'
                 })
             )
         );
-    }
 
-    private showLists(): void {
-        this.clear();
-
-        this.append(this.div(this.heading('Lists') + this.text('Interactive list components')));
-
+        // Mixed content table
         this.append(
             this.card(
-                this.heading('Interactive List') +
-                this.list({
-                    items: [
-                        {
-                            title: 'Clickable Item',
-                            content: 'Click to trigger an action',
-                            onclick: () => this.toast('Item clicked!', { type: 'info' }),
-                        },
-                        {
-                            title: 'Another Item',
-                            content: 'This one also has an action',
-                            onclick: () => this.toast('Another item clicked!', { type: 'success' }),
-                        },
-                        {
-                            title: 'Static Item',
-                            content: 'This item has no click action',
-                        },
-                        {
-                            title: 'Last Item',
-                            content: 'With description text',
-                        },
+                this.heading('Mixed Content') +
+                this.text('Tables can contain any HTML components') +
+                this.spacer('s') +
+                this.table({
+                    headers: ['Task', 'Priority', 'Actions'],
+                    rows: [
+                        [
+                            'Review code',
+                            this.badge('High', { variant: 'danger' }),
+                            this.button('View', { variant: 'primary' })
+                        ],
+                        [
+                            'Update docs',
+                            this.badge('Medium', { variant: 'warning' }),
+                            this.button('View', { variant: 'primary' })
+                        ],
+                        [
+                            'Test features',
+                            this.badge('Low', { variant: 'success' }),
+                            this.button('View', { variant: 'primary' })
+                        ],
                     ],
                 })
             )
         );
+
+        // Simple data list
+        this.append(
+            this.card(
+                this.heading('Feature List') +
+                this.text('Single column list for simple items') +
+                this.spacer('s') +
+                this.table({
+                    rows: [
+                        this.badge('Zero dependencies', { variant: 'success' }),
+                        this.badge('Full TypeScript', { variant: 'primary' }),
+                        this.badge('Dark/Light themes', { variant: 'warning' }),
+                        this.badge('Component-based', { variant: 'success' }),
+                    ]
+                })
+            )
+        );
     }
+
+
 
     private showAlerts(): void {
         this.clear();
@@ -926,7 +935,8 @@ class ShowcaseApp extends ClientApp {
         // Component categories with examples
         const categories = [
             { name: 'Layouts', items: ['Cards', 'Grids', 'Flex', 'Tabs'] },
-            { name: 'Forms', items: ['Inputs', 'Selects', 'Checkboxes', 'Tables', 'Lists'] },
+            { name: 'Forms', items: ['Inputs', 'Selects', 'Checkboxes'] },
+            { name: 'Data', items: ['Tables'] },
             { name: 'Actions', items: ['Buttons', 'Dropdowns', 'Modals'] },
             { name: 'Feedback', items: ['Alerts', 'Toasts', 'Badges'] },
             { name: 'Progress', items: ['Progress bars', 'Spinners'] },

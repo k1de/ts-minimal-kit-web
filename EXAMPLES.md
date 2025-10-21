@@ -239,12 +239,6 @@ this.tabs({
 // Grid (2-8 columns)
 this.grid([this.card('Content 1'), this.card('Content 2'), this.card('Content 3')], { columns: 3 });
 
-// List
-this.list({
-    items: [{ title: 'Item 1' }, { title: 'Item 2', content: 'Details' }, { title: 'Item 3', onclick: () => alert('Clicked') }],
-    id: 'my-list',
-});
-
 // Image
 this.image({
     src: 'photo.jpg',
@@ -365,7 +359,12 @@ this.modal(
 ## Tables
 
 ```typescript
-// Create table
+// Simple list (no headers)
+this.table({
+    rows: ['Item 1', 'Item 2', 'Item 3'],
+});
+
+// Table with headers
 this.table({
     headers: ['Name', 'Email', 'Status'],
     rows: [

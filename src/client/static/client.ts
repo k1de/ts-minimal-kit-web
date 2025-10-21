@@ -68,16 +68,7 @@ interface SidebarOptions extends BaseOptions {
     sections: SidebarSection[];
 }
 
-/** List item configuration */
-interface ListItem extends BaseOptions {
-    title: string;
-    content?: string;
-}
 
-/** List options */
-interface ListOptions extends Omit<BaseOptions, 'onclick'> {
-    items: ListItem[];
-}
 
 /** Select option configuration */
 interface SelectOption {
@@ -145,9 +136,9 @@ interface AlertOptions extends BaseOptions {
 }
 
 /** Table options */
-interface TableOptions extends BaseOptions {
-    headers: string[];
-    rows: string[][];
+interface TableOptions extends Omit<BaseOptions, 'onclick'> {
+    headers?: string[];
+    rows: string[] | string[][];
 }
 
 /** Progress options */
@@ -581,51 +572,7 @@ class ClientApp {
         return `<img${attrs}>`;
     }
 
-    /** Create an interactive list */
-    list(options: ListOptions): string {
-        const { items, ...baseOptions } = options;
-        const listId = baseOptions.id || this.generateId('list');
 
-        // Bind click handlers for items with onclick
-        items.forEach((item, index) => {
-            const itemId = item.id || `${listId}-item-${index}`;
-            if (item.onclick) {
-                setTimeout(() => {
-                    const el = document.getElementById(itemId);
-                    if (el) {
-                        el.onclick = () => item.onclick!();
-                    }
-                }, 0);
-            }
-        });
-
-        // Generate HTML strings directly (more efficient)
-        const listItems = items
-            .map(
-                (item, index) => {
-                    const itemId = item.id || `${listId}-item-${index}`;
-                    const itemAttrs = this.buildAttrs({
-                        ...item,
-                        id: itemId,
-                        class: 'list-item'
-                    });
-                    return `
-            <li${itemAttrs}>
-                <div class="list-item-title">${item.title}</div>
-                ${item.content ? `<div class="list-item-content">${item.content}</div>` : ''}
-            </li>
-        `;
-                }
-            )
-            .join('');
-
-        const attrs = this.buildAttrs({
-            ...baseOptions,
-            class: baseOptions?.className ? `list ${baseOptions.className}` : 'list',
-            id: listId,
-        });
-        return `<ul${attrs}>${listItems}</ul>`;
-    }
 
     /** Create a grid layout */
     grid(items: string[], options?: GridOptions): string {
@@ -859,21 +806,25 @@ class ClientApp {
     /** Create a table */
     table(options: TableOptions): string {
         const { headers, rows, ...baseOptions } = options;
-        const processedOptions = this.processOnclick(baseOptions, 'table');
-        const tableId = processedOptions?.id || this.generateId('table');
+        const tableId = baseOptions.id || this.generateId('table');
 
-        const headerRow = headers.map((h) => `<th>${h}</th>`).join('');
-        const bodyRows = rows.map((row) => `<tr>${row.map((cell) => `<td>${cell}</td>`).join('')}</tr>`).join('');
+        // Normalize rows to string[][]
+        const normalizedRows: string[][] = Array.isArray(rows[0]) 
+            ? rows as string[][] 
+            : (rows as string[]).map(item => [item]);
+
+        const headerRow = headers ? headers.map((h) => `<th>${h}</th>`).join('') : '';
+        const bodyRows = normalizedRows.map((row) => `<tr>${row.map((cell) => `<td>${cell}</td>`).join('')}</tr>`).join('');
 
         const attrs = this.buildAttrs({
-            ...processedOptions,
-            class: processedOptions?.className ? `table ${processedOptions.className}` : 'table',
+            ...baseOptions,
+            class: baseOptions?.className ? `table ${baseOptions.className}` : 'table',
             id: tableId,
         });
 
         return `
             <table${attrs}>
-                <thead><tr>${headerRow}</tr></thead>
+                ${headers ? `<thead><tr>${headerRow}</tr></thead>` : ''}
                 <tbody id="${tableId}-body">${bodyRows}</tbody>
             </table>
         `;
@@ -1252,8 +1203,6 @@ export type {
     NavOptions,
     SidebarSection,
     SidebarOptions,
-    ListItem,
-    ListOptions,
     SelectOption,
     SelectOptions,
     TabItem,
