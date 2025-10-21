@@ -1140,16 +1140,12 @@ class ClientApp {
 
     /** Set specific theme */
     setTheme(theme: ThemeVariant): void {
-        const app = document.getElementById('app');
-        const toast = document.getElementById('toast');
-        app?.setAttribute('data-theme', theme);
-        toast?.setAttribute('data-theme', theme);
+        document.documentElement.setAttribute('data-theme', theme);
     }
 
     /** Toggle between dark and light theme */
     toggleTheme(): ThemeVariant {
-        const app = document.getElementById('app');
-        const current = app?.getAttribute('data-theme');
+        const current = document.documentElement.getAttribute('data-theme');
         const theme = current === 'dark' ? 'light' : 'dark';
         this.setTheme(theme);
         return theme;
@@ -1157,7 +1153,7 @@ class ClientApp {
 
     /** Get current theme */
     getTheme(): ThemeVariant {
-        return (document.getElementById('app')?.getAttribute('data-theme') as ThemeVariant) || 'light';
+        return (document.documentElement.getAttribute('data-theme') as ThemeVariant) || 'light';
     }
 
     // ========================================
