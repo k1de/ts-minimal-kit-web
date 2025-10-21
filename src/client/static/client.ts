@@ -75,7 +75,7 @@ interface ListItem extends BaseOptions {
 }
 
 /** List options */
-interface ListOptions extends BaseOptions {
+interface ListOptions extends Omit<BaseOptions, 'onclick'> {
     items: ListItem[];
 }
 
@@ -86,7 +86,7 @@ interface SelectOption {
 }
 
 /** Select options */
-interface SelectOptions extends BaseOptions {
+interface SelectOptions extends Omit<BaseOptions, 'onclick'> {
     options: SelectOption[];
     selected?: string;
 }
@@ -157,14 +157,14 @@ interface ProgressOptions extends BaseOptions {
 }
 
 /** Form input options */
-interface InputOptions extends BaseOptions {
+interface InputOptions extends Omit<BaseOptions, 'onclick'> {
     type?: string;
     placeholder?: string;
     value?: string;
 }
 
 /** Textarea options */
-interface TextareaOptions extends BaseOptions {
+interface TextareaOptions extends Omit<BaseOptions, 'onclick'> {
     placeholder?: string;
     value?: string;
     rows?: number;
@@ -326,15 +326,10 @@ class ClientApp {
         return processedOptions;
     }
 
-    /** Add event listener with timeout (supports IDs and CSS selectors) */
-    private addDelayedEventListener(idOrSelector: string, handler: () => void, event: string = 'click'): void {
+    /** Add event listener with timeout */
+    private addDelayedEventListener(id: string, handler: () => void, event: string = 'click'): void {
         setTimeout(() => {
-            // Check if it's a CSS selector (starts with . # [ or contains space/special chars)
-            const isSelector = /^[.#[]|[\s>+~]/.test(idOrSelector);
-            const element = isSelector
-                ? document.querySelector<HTMLElement>(idOrSelector)
-                : document.getElementById(idOrSelector);
-
+            const element = document.getElementById(id);
             this.addEventListener(element, handler, event);
         }, 0);
     }
@@ -589,14 +584,18 @@ class ClientApp {
     /** Create an interactive list */
     list(options: ListOptions): string {
         const { items, ...baseOptions } = options;
-        const processedOptions = this.processOnclick(baseOptions, 'list');
-        const listId = processedOptions?.id || this.generateId('list');
+        const listId = baseOptions.id || this.generateId('list');
 
         // Bind click handlers for items with onclick
         items.forEach((item, index) => {
             const itemId = item.id || `${listId}-item-${index}`;
             if (item.onclick) {
-                this.addDelayedEventListener(itemId, item.onclick);
+                setTimeout(() => {
+                    const el = document.getElementById(itemId);
+                    if (el) {
+                        el.onclick = () => item.onclick!();
+                    }
+                }, 0);
             }
         });
 
@@ -621,8 +620,8 @@ class ClientApp {
             .join('');
 
         const attrs = this.buildAttrs({
-            ...processedOptions,
-            class: processedOptions?.className ? `list ${processedOptions.className}` : 'list',
+            ...baseOptions,
+            class: baseOptions?.className ? `list ${baseOptions.className}` : 'list',
             id: listId,
         });
         return `<ul${attrs}>${listItems}</ul>`;
@@ -650,13 +649,12 @@ class ClientApp {
     /** Create an input field */
     input(id: string, options?: InputOptions): string {
         const { type = 'text', placeholder, value, ...baseOptions } = options || {};
-        const processedOptions = this.processOnclick({ ...baseOptions, id }, 'input');
 
         const attrs = this.buildAttrs({
-            ...processedOptions,
+            ...baseOptions,
             type,
             id,
-            class: processedOptions?.className || 'input',
+            class: baseOptions?.className || 'input',
             placeholder,
             value,
         });
@@ -667,12 +665,11 @@ class ClientApp {
     /** Create a textarea */
     textarea(id: string, options?: TextareaOptions): string {
         const { placeholder, value, rows, ...baseOptions } = options || {};
-        const processedOptions = this.processOnclick({ ...baseOptions, id }, 'textarea');
 
         const attrs = this.buildAttrs({
-            ...processedOptions,
+            ...baseOptions,
             id,
-            class: processedOptions?.className || 'textarea',
+            class: baseOptions?.className || 'textarea',
             placeholder,
             rows,
         });
@@ -683,12 +680,11 @@ class ClientApp {
     /** Create a select dropdown */
     select(id: string, options: SelectOptions): string {
         const { options: selectOptions, selected, ...baseOptions } = options;
-        const processedOptions = this.processOnclick({ ...baseOptions, id }, 'select', 'change');
 
         const attrs = this.buildAttrs({
-            ...processedOptions,
+            ...baseOptions,
             id,
-            class: processedOptions?.className || 'select',
+            class: baseOptions?.className || 'select',
         });
 
         const optionElements = selectOptions
