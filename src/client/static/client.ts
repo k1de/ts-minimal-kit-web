@@ -85,7 +85,7 @@ type UtilityClass =
 // The (string & {}) trick prevents TypeScript from collapsing the union
 type ClassNameValue = UtilityClass | (string & {});
 // Allow false/undefined/null in arrays for conditional expressions like: isActive && 'active'
-type ClassName = ClassNameValue | (ClassNameValue | false | undefined | null)[] | undefined;
+type ClassNameOptions = ClassNameValue | (ClassNameValue | false | undefined | null)[] | undefined;
 
 type Layout = 'default' | 'nav' | 'sidebar' | 'nav-sidebar';
 type ButtonVariant = 'default' | 'primary' | 'success' | 'warning' | 'danger';
@@ -99,9 +99,11 @@ type Spacing = 'none' | 's' | 'm' | 'l';
 type FlexDirection = 'row' | 'col';
 
 /** CSS style properties - using native CSSStyleDeclaration without methods */
-type StyleOptions = Partial<{
+type StyleObject = Partial<{
     [K in keyof CSSStyleDeclaration as CSSStyleDeclaration[K] extends Function ? never : K]: CSSStyleDeclaration[K];
 }>;
+
+type StyleOptions = string | StyleObject | undefined;
 
 // ========================================
 // INTERFACES
@@ -110,9 +112,10 @@ type StyleOptions = Partial<{
 /** Base options for all UI components */
 interface BaseOptions {
     id?: string;
-    className?: ClassName;
-    style?: string | StyleOptions;
+    className?: ClassNameOptions;
+    style?: StyleOptions;
     onclick?: () => void;
+    [key: string]: any;
 }
 
 /** Navigation item options */
@@ -127,7 +130,8 @@ interface NavItem extends NavItemOptions {
 
 /** Navigation options */
 interface NavOptions extends BaseOptions {
-    items: NavItem[];
+    brand?: string;
+    items?: NavItem[];
 }
 
 /** Sidebar section configuration */
@@ -208,12 +212,6 @@ interface AlertOptions extends BaseOptions {
 interface TableOptions extends Omit<BaseOptions, 'onclick'> {
     headers?: string[];
     rows: string[] | string[][];
-}
-
-/** Progress options */
-interface ProgressOptions extends BaseOptions {
-    max?: number;
-    showText?: boolean;
 }
 
 /** Form input options */
@@ -378,7 +376,7 @@ class ClientApp {
     }
 
     /** Generate unique element ID */
-    private generateId(prefix: string): string {
+    private generateId(prefix: string = 'id'): string {
         return `${prefix}-${++this.elementIdCounter}`;
     }
 
@@ -388,24 +386,17 @@ class ClientApp {
         return ` id="${baseId}-${suffix}"`;
     }
 
-    /** Process onclick handler and generate ID if needed */
-    private processOnclick<T extends BaseOptions>(
-        options: T | undefined,
-        defaultPrefix: string,
-        event: string = 'click'
-    ): T | undefined {
-        if (!options?.onclick) return options;
+    /** Process onclick handler and mutate, generate ID if needed */
+    private processOnclick<T extends BaseOptions>(options: T, defaultPrefix?: string, event: string = 'click'): void {
+        if (!options.onclick) return;
 
-        const processedOptions = options.id
-            ? options
-            : ({
-                ...options,
-                id: this.generateId(defaultPrefix),
-            } as T);
+        if (!options.id) {
+            options.id = this.generateId(defaultPrefix);
+        }
 
-        this.addDelayedEventListener(processedOptions.id!, options.onclick, event);
+        this.addDelayedEventListener(options.id, options.onclick, event);
 
-        return processedOptions;
+        delete options.onclick;
     }
 
     /** Add event listener with timeout */
@@ -435,45 +426,66 @@ class ClientApp {
         }
     }
 
+    /** Normalize options className and style to string */
+    private normalizeOptions<T extends BaseOptions>(options?: T): T {
+        const normalizedOptions = { ...options };
+
+        if (normalizedOptions.className) {
+            normalizedOptions.className = this.normalizeClassName(normalizedOptions.className);
+        }
+        if (normalizedOptions.style) {
+            normalizedOptions.style = this.normalizeStyle(normalizedOptions.style);
+        }
+
+        return normalizedOptions! as T;
+    }
+
     /** Normalize className to string */
-    private normalizeClassName(className: ClassName): string | undefined {
+    private normalizeClassName(className: ClassNameOptions): string | undefined {
         if (!className) return undefined;
         if (typeof className === 'string') return className;
+
         if (Array.isArray(className)) {
-            return className.filter(Boolean).join(' ') || undefined;
+            return className.flat().filter(Boolean).join(' ') || undefined;
         }
+
         return className;
     }
 
-    /** Build HTML attributes from object (converts className to class, style object to string) */
-    private buildAttrs(attrs?: Record<string, any> | BaseOptions): string {
-        if (!attrs) return '';
+    /** Normalize style to string */
+    private normalizeStyle(style: StyleOptions): string | undefined {
+        if (!style) return undefined;
 
+        if (typeof style === 'string') return style;
+
+        // Конвертируем объект в CSS строку
+        const cssString = Object.entries(style)
+            .filter(([_, value]) => value !== undefined && value !== null)
+            .map(([key, value]) => {
+                // camelCase -> kebab-case
+                const cssKey = key.replace(/[A-Z]/g, (match) => `-${match.toLowerCase()}`);
+                return `${cssKey}: ${value}`;
+            })
+            .join('; ');
+
+        return cssString || undefined;
+    }
+
+    /** Build HTML attributes from normalized options (converts className to class) */
+    private buildAttrs<T extends BaseOptions>(options: T, mainClass?: string): string {
         // Handle BaseOptions case (convert className to class, exclude onclick)
-        const processedAttrs: Record<string, any> = { ...attrs };
-        if ('className' in processedAttrs && !('class' in processedAttrs)) {
-            const normalizedClassName = this.normalizeClassName(processedAttrs.className);
-            if (normalizedClassName) {
-                processedAttrs.class = normalizedClassName;
-            }
+        const processedAttrs: Record<string, any> = { ...options };
+
+        // mainClass join with className
+        if ('className' in processedAttrs) {
+            processedAttrs.class = mainClass ? `${mainClass} ${processedAttrs.className}` : processedAttrs.className;
             delete processedAttrs.className;
+        } else if (mainClass) {
+            processedAttrs.class = mainClass;
         }
         // Remove onclick from attributes if present
         if ('onclick' in processedAttrs) {
             delete processedAttrs.onclick;
-        }
-
-        // Handle style object
-        if (processedAttrs.style && typeof processedAttrs.style === 'object') {
-            const styleObj = processedAttrs.style as StyleOptions;
-            processedAttrs.style = Object.entries(styleObj)
-                .filter(([_, value]) => value !== undefined && value !== null)
-                .map(([key, value]) => {
-                    // Convert camelCase to kebab-case (native CSSStyleDeclaration uses camelCase)
-                    const cssKey = key.replace(/[A-Z]/g, (match) => `-${match.toLowerCase()}`);
-                    return `${cssKey}: ${value}`;
-                })
-                .join('; ');
         }
 
         const result = Object.entries(processedAttrs)
@@ -509,44 +521,38 @@ class ClientApp {
     }
 
     /** Create navigation item HTML */
-    private createNavItem(text: string, options?: NavItemOptions): string {
-        const processedOptions = this.processOnclick(options, 'nav-item');
-        const attrs = this.buildAttrs({
-            ...processedOptions,
-            href: options?.href || '#',
-        });
+    private createNavItem(text: string, options?: NavItemOptions, mainClass?: string): string {
+        const normalizedOptions = this.normalizeOptions(options);
+        this.processOnclick(normalizedOptions, 'nav-item');
+        if (!normalizedOptions.href) normalizedOptions.href = '#';
+        const attrs = this.buildAttrs(normalizedOptions, mainClass);
         return `<li><a${attrs}>${text}</a></li>`;
     }
 
     /** Show navigation bar */
-    showNav(brand: string, options?: NavOptions): void {
+    showNav(options?: NavOptions): void {
         const nav = document.getElementById('nav');
         if (!nav) return;
 
-        const { items = [], ...baseOptions } = options || { items: [] };
+        const { brand, items = [], ...baseOptions } = options || ({} as NavOptions);
+        const normalizedOptions = this.normalizeOptions(baseOptions);
+        if (!normalizedOptions.id) normalizedOptions.id = 'nav';
 
         const navItems: string = items
             .map((item, i) => {
-                const id = baseOptions.id ? `${baseOptions.id}-item-${i}` : `nav-item-${i}`;
                 const { text, ...itemOptions } = item;
-                return this.createNavItem(text, {
-                    ...itemOptions,
-                    id: item.id || id,
-                    className: item.className ? `nav-item ${item.className}` : 'nav-item',
-                });
+                const normalizedItemOptions = this.normalizeOptions(itemOptions);
+                if (!normalizedItemOptions.id) normalizedItemOptions.id = `${normalizedOptions.id}-item-${i}`;
+
+                return this.createNavItem(text, normalizedItemOptions, 'nav-item');
             })
             .join('');
 
-        const baseClassName = baseOptions.className ? `nav ${baseOptions.className}` : 'nav';
-        const attrs = this.buildAttrs({
-            ...baseOptions,
-            id: 'nav',
-            className: baseClassName,
-        });
+        const attrs = this.buildAttrs(normalizedOptions, 'nav');
 
         nav.outerHTML = `
             <nav${attrs}>
-                <div class="nav-brand">${brand}</div>
+                <div class="nav-brand">${brand || ''}</div>
                 <ul class="nav-menu">${navItems}</ul>
             </nav>
         `;
@@ -561,18 +567,18 @@ class ClientApp {
         if (!sidebar) return;
 
         const { sections, ...baseOptions } = options;
+        const normalizedOptions = this.normalizeOptions(baseOptions);
+        if (!normalizedOptions.id) normalizedOptions.id = 'sidebar';
 
         const content = sections
-            .map((section, sectionIndex) => {
+            .map((section, i) => {
                 const items = section.items
-                    .map((item, i) => {
-                        const id = baseOptions.id ? `${baseOptions.id}-${sectionIndex}-${i}` : `sidebar-${sectionIndex}-${i}`;
+                    .map((item, j) => {
                         const { text, ...itemOptions } = item;
-                        return this.createNavItem(text, {
-                            ...itemOptions,
-                            id: item.id || id,
-                            className: item.className ? `sidebar-item ${item.className}` : 'sidebar-item',
-                        });
+                        const normalizedItemOptions = this.normalizeOptions(itemOptions);
+                        if (!normalizedItemOptions.id) normalizedItemOptions.id = `${normalizedOptions.id}-${i}-${j}`;
+
+                        return this.createNavItem(text, normalizedItemOptions, 'sidebar-item');
                     })
                     .join('');
 
@@ -585,12 +591,7 @@ class ClientApp {
             })
             .join('');
 
-        const baseClassName = baseOptions.className ? `sidebar ${baseOptions.className}` : 'sidebar';
-        const attrs = this.buildAttrs({
-            ...baseOptions,
-            id: 'sidebar',
-            className: baseClassName,
-        });
+        const attrs = this.buildAttrs(normalizedOptions, 'sidebar');
 
         sidebar.outerHTML = `<aside${attrs}>${content}</aside>`;
 
@@ -623,35 +624,35 @@ class ClientApp {
 
     /** Create a div element */
     div(content: string, options?: BaseOptions): string {
-        const processedOptions = this.processOnclick(options, 'div');
-        const attrs = this.buildAttrs(processedOptions);
+        const normalizedOptions = this.normalizeOptions(options);
+        this.processOnclick(normalizedOptions, 'div');
+        const attrs = this.buildAttrs(normalizedOptions);
         return `<div${attrs}>${content}</div>`;
     }
 
     /** Create a span element */
     span(content: string, options?: BaseOptions): string {
-        const processedOptions = this.processOnclick(options, 'span');
-        return `<span${this.buildAttrs(processedOptions)}>${content}</span>`;
+        const normalizedOptions = this.normalizeOptions(options);
+        this.processOnclick(normalizedOptions, 'span');
+        const attrs = this.buildAttrs(normalizedOptions);
+        return `<span${attrs}>${content}</span>`;
     }
 
     /** Create a link element */
     link(text: string, options: LinkOptions): string {
-        const { href, target, ...baseOptions } = options;
-        const processedOptions = this.processOnclick(baseOptions, 'link');
-
-        const attrs = this.buildAttrs({
-            ...processedOptions,
-            href,
-            target,
-        });
+        const normalizedOptions = this.normalizeOptions(options);
+        this.processOnclick(normalizedOptions, 'link');
+        const attrs = this.buildAttrs(normalizedOptions);
         return `<a${attrs}>${text}</a>`;
     }
 
     /** Create a list (ordered or unordered) */
     private createList(items: string[], tag: 'ul' | 'ol', options?: BaseOptions): string {
-        const processedOptions = this.processOnclick(options, tag);
+        const normalizedOptions = this.normalizeOptions(options);
+        this.processOnclick(normalizedOptions, tag);
         const listItems = items.map((item) => `<li>${item}</li>`).join('');
-        return `<${tag}${this.buildAttrs(processedOptions)}>${listItems}</${tag}>`;
+        const attrs = this.buildAttrs(normalizedOptions);
+        return `<${tag}${attrs}>${listItems}</${tag}>`;
     }
 
     /** Create an unordered list */
@@ -670,63 +671,45 @@ class ClientApp {
 
     /** Create a card container */
     card(content: string, options?: BaseOptions): string {
-        const processedOptions = this.processOnclick(options, 'card');
-        const attrs = this.buildAttrs({
-            ...processedOptions,
-            class: processedOptions?.className ? `card ${processedOptions.className}` : 'card',
-        });
+        const normalizedOptions = this.normalizeOptions(options);
+        this.processOnclick(normalizedOptions, 'card');
+        const attrs = this.buildAttrs(normalizedOptions, 'card');
         return `<div${attrs}>${content}</div>`;
     }
 
     /** Create an image element */
     image(options: ImageOptions): string {
-        const { src, alt = '', loading = 'lazy', ...baseOptions } = options;
-        const processedOptions = this.processOnclick(baseOptions, 'img');
-
-        const attrs = this.buildAttrs({
-            ...processedOptions,
-            src,
-            alt,
-            loading,
-        });
-
+        const normalizedOptions = this.normalizeOptions(options);
+        if (normalizedOptions.alt === undefined) normalizedOptions.alt = '';
+        if (normalizedOptions.loading === undefined) normalizedOptions.loading = 'lazy';
+        this.processOnclick(normalizedOptions, 'img');
+        const attrs = this.buildAttrs(normalizedOptions);
         return `<img${attrs}>`;
     }
 
     /** Create a grid layout */
     grid(items: string[], options?: GridOptions): string {
-        const { columns = 3, ...baseOptions } = options || {};
-        const processedOptions = this.processOnclick(baseOptions, 'grid');
-
-        const className = `grid grid-${columns}`;
-        const attrs = this.buildAttrs({
-            ...processedOptions,
-            class: processedOptions?.className ? `${className} ${processedOptions.className}` : className,
-        });
+        const { columns = 3, ...baseOptions } = options || ({} as GridOptions);
+        const normalizedOptions = this.normalizeOptions(baseOptions);
+        this.processOnclick(normalizedOptions, 'grid');
+        const attrs = this.buildAttrs(normalizedOptions, `grid grid-${columns}`);
         return `<div${attrs}>${items.join('')}</div>`;
     }
 
     /** Create inline or block code */
     code(content: string, options?: CodeOptions): string {
         const { language, block = false, ...baseOptions } = options || {};
+        const normalizedOptions = this.normalizeOptions(baseOptions);
 
         if (block) {
             // Block code with <pre><code>
-            const codeClass = language ? `language-${language}` : '';
-            const codeAttrs = this.buildAttrs({
-                class: codeClass || undefined,
-            });
-            const preAttrs = this.buildAttrs({
-                ...baseOptions,
-                class: baseOptions?.className ? `code-block ${baseOptions.className}` : 'code-block',
-            });
+            const codeClass = language ? `language-${language}` : undefined;
+            const codeAttrs = this.buildAttrs({ className: codeClass });
+            const preAttrs = this.buildAttrs(normalizedOptions, 'code-block');
             return `<pre${preAttrs}><code${codeAttrs}>${content}</code></pre>`;
         } else {
             // Inline code
-            const attrs = this.buildAttrs({
-                ...baseOptions,
-                class: baseOptions?.className ? `code ${baseOptions.className}` : 'code',
-            });
+            const attrs = this.buildAttrs(normalizedOptions, 'code');
             return `<code${attrs}>${content}</code>`;
         }
     }
@@ -734,18 +717,19 @@ class ClientApp {
     /** Create an accordion */
     accordion(options: AccordionOptions): string {
         const { items, ...baseOptions } = options;
-        const id = baseOptions.id || this.generateId('accordion');
+        const normalizedOptions = this.normalizeOptions(baseOptions);
+        if (!normalizedOptions.id) normalizedOptions.id = this.generateId('accordion');
 
         const accordionItems = items
             .map((item, index) => {
-                const detailsId = `${id}-item-${index}`;
-                const openAttr = item.open ? ' open' : '';
+                const detailsId = `${normalizedOptions.id}-item-${index}`;
                 const detailsAttrs = this.buildAttrs({
                     id: detailsId,
-                    class: 'accordion-item',
+                    className: 'accordion-item',
+                    open: item.open,
                 });
                 return `
-                    <details${detailsAttrs}${openAttr}>
+                    <details${detailsAttrs}>
                         <summary class="accordion-title">${item.title}</summary>
                         <div class="accordion-content">${item.content}</div>
                     </details>
@@ -753,11 +737,7 @@ class ClientApp {
             })
             .join('');
 
-        const attrs = this.buildAttrs({
-            ...baseOptions,
-            id,
-            class: baseOptions?.className ? `accordion ${baseOptions.className}` : 'accordion',
-        });
+        const attrs = this.buildAttrs(normalizedOptions, 'accordion');
 
         return `<div${attrs}>${accordionItems}</div>`;
     }
@@ -767,45 +747,26 @@ class ClientApp {
     // ========================================
 
     /** Create an input field */
-    input(id: string, options?: InputOptions): string {
-        const { type = 'text', placeholder, value, ...baseOptions } = options || {};
-
-        const attrs = this.buildAttrs({
-            ...baseOptions,
-            type,
-            id,
-            class: baseOptions?.className || 'input',
-            placeholder,
-            value,
-        });
-
+    input(options?: InputOptions): string {
+        const normalizedOptions = this.normalizeOptions(options);
+        if (!normalizedOptions.type) normalizedOptions.type = 'text';
+        const attrs = this.buildAttrs(normalizedOptions, 'input');
         return `<input${attrs}>`;
     }
 
     /** Create a textarea */
-    textarea(id: string, options?: TextareaOptions): string {
-        const { placeholder, value, rows, ...baseOptions } = options || {};
-
-        const attrs = this.buildAttrs({
-            ...baseOptions,
-            id,
-            class: baseOptions?.className || 'textarea',
-            placeholder,
-            rows,
-        });
-
+    textarea(options?: TextareaOptions): string {
+        const { value, ...baseOptions } = options || ({} as TextareaOptions);
+        const normalizedOptions = this.normalizeOptions(baseOptions);
+        const attrs = this.buildAttrs(normalizedOptions, 'textarea');
         return `<textarea${attrs}>${value || ''}</textarea>`;
     }
 
     /** Create a select dropdown */
-    select(id: string, options: SelectOptions): string {
+    select(options: SelectOptions): string {
         const { options: selectOptions, selected, ...baseOptions } = options;
-
-        const attrs = this.buildAttrs({
-            ...baseOptions,
-            id,
-            class: baseOptions?.className || 'select',
-        });
+        const normalizedOptions = this.normalizeOptions(baseOptions);
+        const attrs = this.buildAttrs(normalizedOptions, 'select');
 
         const optionElements = selectOptions
             .map((opt) => {
@@ -821,21 +782,22 @@ class ClientApp {
     }
 
     /** Create a checkbox */
-    checkbox(id: string, options: CheckboxOptions): string {
+    checkbox(options: CheckboxOptions): string {
         const { label, checked, ...baseOptions } = options;
-
-        const containerAttrs = this.buildAttrs({ ...baseOptions, id });
-
+        const normalizedOptions = this.normalizeOptions(baseOptions);
+        if (!normalizedOptions.id) normalizedOptions.id = this.generateId('checkbox');
+        const containerAttrs = this.buildAttrs(normalizedOptions);
+        const inputId = `${normalizedOptions.id}-input`;
         const inputAttrs = this.buildAttrs({
             type: 'checkbox',
-            id,
+            id: inputId,
             checked,
         });
 
         return `
             <div class="checkbox"${containerAttrs}>
                 <input${inputAttrs}>
-                <label for="${id}">${label}</label>
+                <label for="${inputId}">${label}</label>
             </div>
         `;
     }
@@ -843,8 +805,8 @@ class ClientApp {
     /** Create a radio button group */
     radioGroup(options: RadioGroupOptions): string {
         const { name, options: radioOptions, selected, ...baseOptions } = options;
-
-        const containerAttrs = this.buildAttrs(baseOptions);
+        const normalizedOptions = this.normalizeOptions(baseOptions);
+        const containerAttrs = this.buildAttrs(normalizedOptions);
 
         const radios = radioOptions
             .map((opt) => {
@@ -874,27 +836,22 @@ class ClientApp {
 
     /** Create a button */
     button(text: string, options?: ButtonOptions): string {
-        const { variant = 'default', ...baseOptions } = options || {};
-        const processedOptions = this.processOnclick(baseOptions, 'btn');
-        const id = processedOptions?.id;
-
-        const className = variant === 'default' ? 'btn' : `btn btn-${variant}`;
-        const finalClassName = processedOptions?.className ? `${className} ${processedOptions.className}` : className;
-
-        const attrs = this.buildAttrs({
-            ...processedOptions,
-            id,
-            class: finalClassName,
-        });
-
-        return `<button${attrs}><span${this.getNestedId(id, 'text')}>${text}</span></button>`;
+        const { variant = 'default', ...baseOptions } = options || ({} as ButtonOptions);
+        const normalizedOptions = this.normalizeOptions(baseOptions);
+        this.processOnclick(normalizedOptions, 'btn');
+        const mainClass = variant === 'default' ? 'btn' : `btn btn-${variant}`;
+        const attrs = this.buildAttrs(normalizedOptions, mainClass);
+        const nestedId = this.getNestedId(normalizedOptions.id, 'text');
+        return `<button${attrs}><span${nestedId}>${text}</span></button>`;
     }
 
     /** Create a dropdown menu */
     dropdown(options: DropdownOptions): string {
         this.initDropdownHandler();
         const { text, items, variant = 'default', ...baseOptions } = options;
-        const id = baseOptions.id || this.generateId('dropdown');
+        const normalizedOptions = this.normalizeOptions(baseOptions);
+
+        const id = normalizedOptions.id || this.generateId('dropdown');
         const menuId = `${id}-menu`;
 
         setTimeout(() => {
@@ -922,18 +879,15 @@ class ClientApp {
 
         const className = variant === 'default' ? 'btn' : `btn btn-${variant}`;
         const menuItems = items
-            .map((item, index) => {
-                const itemId = item.id || `${menuId}-item-${index}`;
-                const itemAttrs = this.buildAttrs({
-                    ...item,
-                    id: itemId,
-                    class: 'dropdown-item',
-                });
-                return `<div${itemAttrs}>${item.text}</div>`;
+            .map((itemOptions, index) => {
+                const normalizedItemOptions = this.normalizeOptions(itemOptions);
+                if (!normalizedItemOptions.id) normalizedItemOptions.id = `${menuId}-item-${index}`;
+                const itemAttrs = this.buildAttrs(normalizedItemOptions, 'dropdown-item');
+                return `<div${itemAttrs}>${normalizedItemOptions.text}</div>`;
             })
             .join('');
 
-        const attrs = this.buildAttrs({ ...baseOptions, class: 'dropdown' });
+        const attrs = this.buildAttrs(normalizedOptions, 'dropdown');
 
         return `
             <div${attrs}>
@@ -948,15 +902,13 @@ class ClientApp {
 
     /** Create a badge */
     badge(text: string, options?: BadgeOptions): string {
-        const { variant = 'default', ...baseOptions } = options || {};
-        const processedOptions = this.processOnclick(baseOptions, 'badge');
-
-        const baseId = processedOptions?.id;
-        const className = variant === 'default' ? 'badge' : `badge badge-${variant}`;
-        const finalClassName = processedOptions?.className ? `${className} ${processedOptions.className}` : className;
-
-        const attrs = this.buildAttrs({ ...processedOptions, className: finalClassName });
-        return `<span${attrs}><span${this.getNestedId(baseId, 'text')}>${text}</span></span>`;
+        const { variant = 'default', ...baseOptions } = options || ({} as BadgeOptions);
+        const normalizedOptions = this.normalizeOptions(baseOptions);
+        this.processOnclick(normalizedOptions, 'badge');
+        const mainClass = variant === 'default' ? 'badge' : `badge badge-${variant}`;
+        const attrs = this.buildAttrs(normalizedOptions, mainClass);
+        const nestedId = this.getNestedId(normalizedOptions.id, 'text');
+        return `<span${attrs}><span${nestedId}>${text}</span></span>`;
     }
 
     // ========================================
@@ -965,21 +917,20 @@ class ClientApp {
 
     /** Create an alert message */
     alert(message: string, options?: AlertOptions): string {
-        const { type = 'info', ...baseOptions } = options || {};
-        const processedOptions = this.processOnclick(baseOptions, 'alert');
-
-        const baseId = processedOptions?.id;
-        const className = `alert alert-${type}`;
-        const finalClassName = processedOptions?.className ? `${className} ${processedOptions.className}` : className;
-
-        const attrs = this.buildAttrs({ ...processedOptions, className: finalClassName });
-        return `<div${attrs}><span${this.getNestedId(baseId, 'message')}>${message}</span></div>`;
+        const { type = 'info', ...baseOptions } = options || ({} as AlertOptions);
+        const normalizedOptions = this.normalizeOptions(baseOptions);
+        this.processOnclick(normalizedOptions, 'alert');
+        const mainClass = `alert alert-${type}`;
+        const attrs = this.buildAttrs(normalizedOptions, mainClass);
+        const nestedId = this.getNestedId(normalizedOptions.id, 'text');
+        return `<div${attrs}><span${nestedId}>${message}</span></div>`;
     }
 
     /** Create a table */
     table(options: TableOptions): string {
         const { headers, rows, ...baseOptions } = options;
-        const tableId = baseOptions.id || this.generateId('table');
+        const normalizedOptions = this.normalizeOptions(baseOptions);
+        if (!normalizedOptions.id) normalizedOptions.id = this.generateId('table');
 
         // Normalize rows to string[][]
         const normalizedRows: string[][] = Array.isArray(rows[0])
@@ -989,16 +940,12 @@ class ClientApp {
         const headerRow = headers ? headers.map((h) => `<th>${h}</th>`).join('') : '';
         const bodyRows = normalizedRows.map((row) => `<tr>${row.map((cell) => `<td>${cell}</td>`).join('')}</tr>`).join('');
 
-        const attrs = this.buildAttrs({
-            ...baseOptions,
-            class: baseOptions?.className ? `table ${baseOptions.className}` : 'table',
-            id: tableId,
-        });
+        const attrs = this.buildAttrs(normalizedOptions, 'table');
 
         return `
             <table${attrs}>
                 ${headers ? `<thead><tr>${headerRow}</tr></thead>` : ''}
-                <tbody id="${tableId}-body">${bodyRows}</tbody>
+                <tbody id="${normalizedOptions.id}-body">${bodyRows}</tbody>
             </table>
         `;
     }
@@ -1006,10 +953,11 @@ class ClientApp {
     /** Create tabs */
     tabs(options: TabsOptions): string {
         const { items, ...baseOptions } = options;
-        const id = baseOptions.id || this.generateId('tabs');
+        const normalizedOptions = this.normalizeOptions(baseOptions);
+        if (!normalizedOptions.id) normalizedOptions.id = this.generateId('tabs');
 
         setTimeout(() => {
-            const container = document.getElementById(id);
+            const container = document.getElementById(normalizedOptions.id);
             if (!container) return;
 
             // One handler for entire container
@@ -1035,7 +983,7 @@ class ClientApp {
             .map((item, i) => {
                 const tabAttrs = this.buildAttrs({
                     href: '#',
-                    class: i === 0 ? 'tab active' : 'tab',
+                    className: i === 0 ? 'tab active' : 'tab',
                 });
                 return `<a${tabAttrs}>${item.label}</a>`;
             })
@@ -1044,13 +992,13 @@ class ClientApp {
         const panels = items
             .map((item, i) => {
                 const panelAttrs = this.buildAttrs({
-                    class: i !== 0 ? 'tab-panel hidden' : 'tab-panel',
+                    className: i !== 0 ? 'tab-panel hidden' : 'tab-panel',
                 });
                 return `<div${panelAttrs}>${item.content}</div>`;
             })
             .join('');
 
-        const attrs = this.buildAttrs({ ...baseOptions, id });
+        const attrs = this.buildAttrs(normalizedOptions);
 
         return `
             <div${attrs}>
@@ -1060,45 +1008,12 @@ class ClientApp {
         `;
     }
 
-    /** Create a progress bar */
-    progress(value: number, options?: ProgressOptions): string {
-        const { max = 100, showText = false, ...baseOptions } = options || {};
-        const processedOptions = this.processOnclick(baseOptions, 'progress');
-        const percentage = Math.min(100, Math.max(0, (value / max) * 100));
-        const progressId = processedOptions?.id || this.generateId('progress');
-        const barId = `${progressId}-bar`;
-        const valueId = `${progressId}-value`;
-
-        const textIndicator = showText ? `<span class="progress-text" id="${valueId}">${Math.round(percentage)}%</span>` : '';
-
-        const attrs = this.buildAttrs({
-            ...processedOptions,
-            class: 'progress',
-            id: progressId,
-            'data-max': max,
-            'data-show-text': showText,
-        });
-
-        const barAttrs = this.buildAttrs({
-            class: 'progress-bar',
-            id: barId,
-            style: `width: ${percentage}%`,
-        });
-
-        return `
-            <div${attrs}>
-                <div${barAttrs}>
-                    ${textIndicator}
-                </div>
-            </div>
-        `;
-    }
-
     /** Create a spinner */
     spinner(options?: BaseOptions): string {
-        const processedOptions = this.processOnclick(options, 'spinner');
-        const attrs = this.buildAttrs(processedOptions);
-        return `<div class="spinner"${attrs}></div>`;
+        const normalizedOptions = this.normalizeOptions(options);
+        this.processOnclick(normalizedOptions, 'spinner');
+        const attrs = this.buildAttrs(normalizedOptions, 'spinner');
+        return `<div${attrs}></div>`;
     }
 
     /** Show modal dialog */
@@ -1132,7 +1047,7 @@ class ClientApp {
 
     /** Show toast notification */
     toast(message: string, options?: ToastOptions): void {
-        const { type = 'info', duration = 3000 } = options || {};
+        const { type = 'info', duration = 3000 } = options || ({} as ToastOptions);
         const container = document.getElementById('toast');
         if (!container) return;
 
@@ -1142,6 +1057,52 @@ class ClientApp {
         container.appendChild(toast);
 
         setTimeout(() => toast.remove(), duration);
+    }
+
+    /** Create a heading */
+    heading(text: string, level: HeadingLevel = 2, options?: BaseOptions): string {
+        const normalizedOptions = this.normalizeOptions(options);
+        this.processOnclick(normalizedOptions, 'heading');
+        const attrs = this.buildAttrs(normalizedOptions);
+        return `<h${level}${attrs}>${text}</h${level}>`;
+    }
+
+    /** Create a separator (horizontal rule) */
+    separator(options?: Omit<BaseOptions, 'onclick'>): string {
+        const defaultStyle: StyleOptions = {
+            border: 'none',
+            borderTop: '1px solid var(--border)',
+            marginTop: 'var(--space-l)',
+            marginBottom: 'var(--space-l)',
+        };
+        const normalizedOptions = this.normalizeOptions({ ...options, style: options?.style || defaultStyle });
+        const attrs = this.buildAttrs(normalizedOptions);
+        return `<hr${attrs}>`;
+    }
+
+    /** Create a spacer */
+    spacer(size: Spacing = 'm', options?: Omit<BaseOptions, 'onclick'>): string {
+        const normalizedOptions = this.normalizeOptions({ ...options, style: options?.style || { height: `var(--space-${size})` } });
+        const attrs = this.buildAttrs(normalizedOptions);
+        return `<div${attrs}></div>`;
+    }
+
+    /** Create a flex container */
+    flex(items: string[], options?: FlexOptions): string {
+        const { gap = 'm', direction = 'row', ...baseOptions } = options || {} as FlexOptions;
+        const normalizedOptions = this.normalizeOptions(baseOptions)
+        this.processOnclick(normalizedOptions, 'flex');
+        const mainClass = `flex flex-${direction} gap-${gap}`;
+        const attrs = this.buildAttrs(normalizedOptions, mainClass);
+        return `<div${attrs}>${items.join('')}</div>`;
+    }
+
+    /** Create a text block with optional styling */
+    text(content: string, options?: BaseOptions): string {
+        const normalizedOptions = this.normalizeOptions(options)
+        this.processOnclick(normalizedOptions, 'text');
+        const attrs = this.buildAttrs(normalizedOptions);
+        return `<p${attrs}>${content}</p>`;
     }
 
     // ========================================
@@ -1291,57 +1252,6 @@ class ClientApp {
     async apiDelete(endpoint: string): Promise<any> {
         return this.api('DELETE', endpoint);
     }
-
-    /** Create a heading */
-    heading(text: string, level: HeadingLevel = 2, options?: BaseOptions): string {
-        const processedOptions = this.processOnclick(options, 'heading');
-        const attrs = this.buildAttrs(processedOptions);
-        return `<h${level}${attrs}>${text}</h${level}>`;
-    }
-
-    /** Create a separator (horizontal rule) */
-    separator(options?: Omit<BaseOptions, 'onclick'>): string {
-        const defaultStyle: StyleOptions = {
-            border: 'none',
-            borderTop: '1px solid var(--border)',
-            marginTop: 'var(--space-l)',
-            marginBottom: 'var(--space-l)',
-        };
-
-        const attrs = this.buildAttrs({
-            ...options,
-            style: options?.style || defaultStyle,
-        });
-        return `<hr${attrs}>`;
-    }
-
-    /** Create a spacer */
-    spacer(size: Spacing = 'm', options?: Omit<BaseOptions, 'onclick'>): string {
-        const attrs = this.buildAttrs({
-            ...options,
-            style: options?.style || { height: `var(--space-${size})` },
-        });
-        return `<div${attrs}></div>`;
-    }
-
-    /** Create a flex container */
-    flex(items: string[], options?: FlexOptions): string {
-        const { gap = 'm', direction = 'row', ...baseOptions } = options || {};
-        const processedOptions = this.processOnclick(baseOptions, 'flex');
-
-        const className = `flex flex-${direction} gap-${gap}`;
-        const finalClassName = processedOptions?.className ? `${className} ${processedOptions.className}` : className;
-
-        const attrs = this.buildAttrs({ ...processedOptions, className: finalClassName });
-        return `<div${attrs}>${items.join('')}</div>`;
-    }
-
-    /** Create a text block with optional styling */
-    text(content: string, options?: BaseOptions): string {
-        const processedOptions = this.processOnclick(options, 'text');
-        const attrs = this.buildAttrs(processedOptions);
-        return `<p${attrs}>${content}</p>`;
-    }
 }
 
 // ========================================
@@ -1353,7 +1263,7 @@ export type {
     // Types
     UtilityClass,
     ClassNameValue,
-    ClassName,
+    ClassNameOptions,
     ButtonVariant,
     AlertType,
     ToastType,
@@ -1387,7 +1297,6 @@ export type {
     DropdownOptions,
     AlertOptions,
     TableOptions,
-    ProgressOptions,
     InputOptions,
     TextareaOptions,
     CheckboxOptions,

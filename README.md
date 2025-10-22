@@ -114,7 +114,7 @@ Layouts: cards, sections, grids, flex, tabs.
 Forms: inputs, selects, checkboxes, tables.
 Actions: buttons, dropdowns, modals.
 Feedback: alerts, toasts, badges.
-Progress: progress bars, spinners.
+Progress: spinners.
 
 **See [EXAMPLES.md](./EXAMPLES.md) for complete component reference and usage examples.**
 

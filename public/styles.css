@@ -139,7 +139,6 @@ pre,
 .radio,
 .alert,
 .table,
-.progress,
 .btn,
 .dropdown,
 .code,
@@ -772,34 +771,6 @@ body:has([data-layout='nav-sidebar']) .toast-container {
     width: 100%;
     margin: var(--space-l);
     padding: var(--space-l);
-}
-
-/* === Progress === */
-.progress {
-    height: 20px;
-    background: var(--bg-secondary);
-    border-radius: 10px;
-    overflow: hidden;
-    position: relative;
-}
-
-.progress-bar {
-    height: 100%;
-    background: rgba(from var(--primary) r g b / 0.5);
-    transition: width 300ms ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.progress-text {
-    position: absolute;
-    transform: translate(-50%, -50%);
-    left: 50%;
-    top: 50%;
-    font-size: 0.75rem;
-    font-weight: 666;
-    color: var(--text);
 }
 
 /* === Spinner === */

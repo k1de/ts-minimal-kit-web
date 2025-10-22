@@ -182,7 +182,7 @@ this.text('Styled text', {
         color: 'var(--primary)',
         fontWeight: 'bold',
         textAlign: 'center',
-    }
+    },
 });
 
 // Basic containers
@@ -224,13 +224,13 @@ this.button('Click', { className: 'flex' });
 this.div('Content', { className: 'text-center' });
 
 // Array of utility classes
-this.div('Content', { 
-    className: ['flex', 'items-center', 'gap-m'] 
+this.div('Content', {
+    className: ['flex', 'items-center', 'gap-m'],
 });
 
 // Mix utility and custom classes
-this.card('Card', { 
-    className: ['my-card', 'p-l', 'mb-l'] 
+this.card('Card', {
+    className: ['my-card', 'p-l', 'mb-l'],
 });
 
 // Conditional classes (false/undefined/null filtered automatically)
@@ -240,47 +240,47 @@ const hasError = false;
 this.button('Toggle', {
     className: [
         'btn-primary',
-        isActive && 'opacity-50',        // Added
+        isActive && 'opacity-50', // Added
         hasError && 'cursor-not-allowed', // Filtered
-        'ml-auto'
-    ]
+        'ml-auto',
+    ],
 });
 
 // Flex layout with utilities
-this.flex([
-    this.button('Left'),
-    this.button('Right', { className: 'ml-auto' })
-], {
-    className: ['w-full', 'p-m']
+this.flex([this.button('Left'), this.button('Right', { className: 'ml-auto' })], {
+    className: ['w-full', 'p-m'],
 });
 
 // Grid with utilities
-this.grid([
-    this.card('Card 1', { className: 'text-center' }),
-    this.card('Card 2', { className: 'text-center' }),
-    this.card('Card 3', { className: 'text-center' })
-], {
-    columns: 3,
-    className: 'mb-l'
-});
+this.grid(
+    [
+        this.card('Card 1', { className: 'text-center' }),
+        this.card('Card 2', { className: 'text-center' }),
+        this.card('Card 3', { className: 'text-center' }),
+    ],
+    {
+        columns: 3,
+        className: 'mb-l',
+    }
+);
 
 // Table with utilities
 this.table({
     headers: ['Name', 'Status'],
-    rows: [['John', 'Active'], ['Jane', 'Pending']],
-    className: ['table-compact', 'table-striped', 'w-full']
+    rows: [
+        ['John', 'Active'],
+        ['Jane', 'Pending'],
+    ],
+    className: ['table-compact', 'table-striped', 'w-full'],
 });
 
 // Complex layout
 this.card(
     this.heading('User Profile') +
-    this.separator() +
-    this.flex([
-        this.div('Info', { className: 'flex-1' }),
-        this.button('Edit', { className: ['btn-primary', 'ml-auto'] })
-    ], {
-        className: ['items-center', 'gap-m']
-    }),
+        this.separator() +
+        this.flex([this.div('Info', { className: 'flex-1' }), this.button('Edit', { className: ['btn-primary', 'ml-auto'] })], {
+            className: ['items-center', 'gap-m'],
+        }),
     { className: ['p-l', 'mb-l'] }
 );
 ```
@@ -341,7 +341,7 @@ this.image({
         width: '300px',
         height: '200px',
         objectFit: 'cover',
-    }
+    },
 });
 
 // Code - inline
@@ -424,10 +424,6 @@ this.badge('Active', { variant: 'success' });
 // Alerts
 this.alert('Info message');
 this.alert('Success!', { type: 'success' });
-
-// Progress
-this.progress(75); // 75%
-this.progress(50, { showText: true, max: 100 });
 
 // Spinner
 this.spinner();
@@ -541,12 +537,6 @@ this.on('button-id', 'click', (e) => console.log('Clicked'));
 Components with IDs generate predictable nested IDs:
 
 ```typescript
-// Progress with ID
-this.progress(75, { id: 'my-progress', showText: true });
-
-// Access nested elements
-this.updateText('my-progress-value', '80%');
-
 // Button with ID
 this.button('Click me', { id: 'my-btn' });
 this.updateText('my-btn-text', 'New Label');
@@ -556,7 +546,6 @@ this.updateText('my-btn-text', 'New Label');
 
 For component with `id`, nested elements follow:
 
--   `{id}-value` - Value element (progress)
 -   `{id}-text` - Text element (button, badge)
 -   `{id}-message` - Message element (alert)
 

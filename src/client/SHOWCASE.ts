@@ -8,7 +8,8 @@ class ShowcaseApp extends ClientApp {
         this.loadTheme();
 
         // Navigation
-        this.showNav('UI Framework Showcase', {
+        this.showNav({
+            brand: 'UI Framework Showcase',
             items: [
                 { text: 'Home', onclick: () => this.navigateTo('home') },
                 { text: 'Components', onclick: () => this.navigateTo('components') },
@@ -19,7 +20,7 @@ class ShowcaseApp extends ClientApp {
 
         // Sidebar
         this.showSidebar({
-            className: "sidebar-compact",
+            className: 'sidebar-compact',
             sections: [
                 {
                     title: 'Basic Elements',
@@ -49,9 +50,7 @@ class ShowcaseApp extends ClientApp {
                 },
                 {
                     title: 'Forms',
-                    items: [
-                        { text: 'Inputs', onclick: () => this.navigateTo('forms') },
-                    ],
+                    items: [{ text: 'Inputs', onclick: () => this.navigateTo('forms') }],
                 },
                 {
                     title: 'Feedback',
@@ -140,8 +139,7 @@ class ShowcaseApp extends ClientApp {
         // Welcome section
         this.append(
             this.div(
-                this.heading('Welcome to UI Framework', 1) +
-                this.text('A minimal TypeScript framework with zero dependencies')
+                this.heading('Welcome to UI Framework', 1) + this.text('A minimal TypeScript framework with zero dependencies')
             )
         );
 
@@ -499,15 +497,9 @@ console.log(message);`,
             this.card(
                 this.heading('Direction & Gap') +
                 this.heading('Row', 5) +
-                this.flex(
-                    [this.badge('A'), this.badge('B'), this.badge('C')],
-                    { direction: 'row', gap: 'm' }
-                ) +
+                this.flex([this.badge('A'), this.badge('B'), this.badge('C')], { direction: 'row', gap: 'm' }) +
                 this.heading('Column', 5) +
-                this.flex(
-                    [this.badge('First'), this.badge('Second'), this.badge('Third')],
-                    { direction: 'col', gap: 's' }
-                )
+                this.flex([this.badge('First'), this.badge('Second'), this.badge('Third')], { direction: 'col', gap: 's' })
             )
         );
     }
@@ -525,7 +517,9 @@ console.log(message);`,
                     items: [
                         {
                             title: 'What is TypeScript?',
-                            content: this.text('TypeScript is a typed superset of JavaScript that compiles to plain JavaScript.'),
+                            content: this.text(
+                                'TypeScript is a typed superset of JavaScript that compiles to plain JavaScript.'
+                            ),
                             open: true,
                         },
                         {
@@ -554,38 +548,35 @@ console.log(message);`,
                     items: [
                         {
                             title: 'Features',
-                            content:
-                                this.ul([
-                                    'Component-based architecture',
-                                    'Dark/light themes',
-                                    'Responsive design',
-                                    'Hash navigation',
-                                ]),
+                            content: this.ul([
+                                'Component-based architecture',
+                                'Dark/light themes',
+                                'Responsive design',
+                                'Hash navigation',
+                            ]),
                         },
                         {
                             title: 'Components',
-                            content:
-                                this.flex(
-                                    [
-                                        this.badge('Buttons', { variant: 'primary' }),
-                                        this.badge('Cards', { variant: 'success' }),
-                                        this.badge('Tables', { variant: 'warning' }),
-                                        this.badge('Forms', { variant: 'danger' }),
-                                    ],
-                                    { gap: 's' }
-                                ),
+                            content: this.flex(
+                                [
+                                    this.badge('Buttons', { variant: 'primary' }),
+                                    this.badge('Cards', { variant: 'success' }),
+                                    this.badge('Tables', { variant: 'warning' }),
+                                    this.badge('Forms', { variant: 'danger' }),
+                                ],
+                                { gap: 's' }
+                            ),
                         },
                         {
                             title: 'API Example',
-                            content:
-                                this.code(
-                                    `// Fetch users
+                            content: this.code(
+                                `// Fetch users
 const users = await this.apiGet('/users');
 
 // Create user
 await this.apiPost('/users', { name: 'John' });`,
-                                    { block: true, language: 'javascript' }
-                                ),
+                                { block: true, language: 'javascript' }
+                            ),
                         },
                     ],
                 })
@@ -609,33 +600,23 @@ await this.apiPost('/users', { name: 'John' });`,
                                 this.heading('Project Overview', 4) +
                                 this.text('This section contains general project information.') +
                                 this.separator() +
-                                this.flex([
-                                    this.badge('Active', { variant: 'success' }),
-                                    this.badge('3 members', { variant: 'primary' }),
-                                    this.badge('Updated today')
-                                ], { gap: 's' }),
+                                this.flex(
+                                    [
+                                        this.badge('Active', { variant: 'success' }),
+                                        this.badge('3 members', { variant: 'primary' }),
+                                        this.badge('Updated today'),
+                                    ],
+                                    { gap: 's' }
+                                ),
                         },
                         {
                             label: 'Tasks',
                             content:
                                 this.heading('Task List', 4) +
                                 this.table({
-                                    rows: [
-                                        'Complete documentation',
-                                        'Review pull requests',
-                                        'Update dependencies'
-                                    ]
+                                    rows: ['Complete documentation', 'Review pull requests', 'Update dependencies'],
                                 }) +
                                 this.button('Add Task', { variant: 'primary' }),
-                        },
-                        {
-                            label: 'Progress',
-                            content:
-                                this.heading('Project Progress', 4) +
-                                this.text('Overall completion') +
-                                this.progress(75, { showText: true }) +
-                                this.spacer('m') +
-                                this.alert('On track for deadline', { type: 'success' }),
                         },
                     ],
                 })
@@ -680,8 +661,6 @@ await this.apiPost('/users', { name: 'John' });`,
             )
         );
     }
-
-
 
     private showAlerts(): void {
         this.clear();
@@ -777,9 +756,7 @@ await this.apiPost('/users', { name: 'John' });`,
                                 this.modal(
                                     this.alert('⚠️ Critical Action Required', { type: 'warning' }) +
                                     this.heading('System Update') +
-                                    this.text(
-                                        'This is a blocking modal. You cannot close it by clicking outside.'
-                                    ) +
+                                    this.text('This is a blocking modal. You cannot close it by clicking outside.') +
                                     this.text('You must accept or decline to proceed.') +
                                     this.spacer('m') +
                                     this.flex(
@@ -817,16 +794,6 @@ await this.apiPost('/users', { name: 'John' });`,
 
         this.append(this.div(this.heading('Progress') + this.text('Loading and progress states')));
 
-        // Progress bars
-        this.append(
-            this.card(
-                this.heading('Progress Bars') +
-                this.progress(25) +
-                this.progress(50, { showText: true }) +
-                this.progress(75, { showText: true })
-            )
-        );
-
         // Spinner
         this.append(
             this.card(
@@ -848,19 +815,19 @@ await this.apiPost('/users', { name: 'John' });`,
                 this.div(
                     this.text('Text Input', { className: 'label' }) +
                     this.text('Basic text input field', { className: 'sublabel' }) +
-                    this.input('text-input', { placeholder: 'Enter text...' }),
+                    this.input({ id: 'text-input', placeholder: 'Enter text...' })
                 ) +
                 this.div(
                     this.text('Email Input', { className: 'label' }) +
-                    this.input('email-input', { type: 'email', placeholder: 'user@example.com' }),
+                    this.input({ id: 'email-input', type: 'email', placeholder: 'user@example.com' })
                 ) +
                 this.div(
                     this.text('Password Input', { className: 'label' }) +
-                    this.input('password-input', { type: 'password', placeholder: 'Enter password' }),
+                    this.input({ id: 'password-input', type: 'password', placeholder: 'Enter password' })
                 ) +
                 this.div(
                     this.text('Textarea', { className: 'label' }) +
-                    this.textarea('textarea', { placeholder: 'Enter long text...', rows: 4 }),
+                    this.textarea({ id: 'textarea', placeholder: 'Enter long text...', rows: 4 })
                 )
             )
         );
@@ -871,14 +838,15 @@ await this.apiPost('/users', { name: 'John' });`,
                 this.heading('Select Elements') +
                 this.div(
                     this.text('Select Dropdown', { className: 'label' }) +
-                    this.select('country', {
+                    this.select({
+                        id: 'country',
                         options: [
                             { value: 'us', text: 'United States' },
                             { value: 'uk', text: 'United Kingdom' },
                             { value: 'ca', text: 'Canada' },
                         ],
                         selected: 'us',
-                    }),
+                    })
                 )
             )
         );
@@ -888,9 +856,9 @@ await this.apiPost('/users', { name: 'John' });`,
             this.card(
                 this.heading('Checkboxes & Radio Buttons') +
                 this.heading('Checkboxes', 4) +
-                this.checkbox('check1', { label: 'Option 1', checked: true }) +
-                this.checkbox('check2', { label: 'Option 2' }) +
-                this.checkbox('check3', { label: 'Option 3' }) +
+                this.checkbox({ id: 'check1', label: 'Option 1', checked: true }) +
+                this.checkbox({ id: 'check2', label: 'Option 2' }) +
+                this.checkbox({ id: 'check3', label: 'Option 3' }) +
                 this.separator() +
                 this.heading('Radio Buttons', 4) +
                 this.radioGroup({
@@ -910,18 +878,17 @@ await this.apiPost('/users', { name: 'John' });`,
             this.card(
                 this.heading('Complete Form') +
                 this.div(
-                    this.text('Full Name', { className: 'label' }) +
-                    this.input('name', { placeholder: 'John Doe' }),
+                    this.text('Full Name', { className: 'label' }) + this.input({ id: 'name', placeholder: 'John Doe' })
                 ) +
                 this.div(
                     this.text('Email', { className: 'label' }) +
-                    this.input('email', { type: 'email', placeholder: 'john@example.com' }),
+                    this.input({ id: 'email', type: 'email', placeholder: 'john@example.com' })
                 ) +
                 this.div(
                     this.text('Message', { className: 'label' }) +
-                    this.textarea('message', { placeholder: 'Your message...', rows: 3 }),
+                    this.textarea({ id: 'message', placeholder: 'Your message...', rows: 3 })
                 ) +
-                this.checkbox('agree', { label: 'I agree to terms' }) +
+                this.checkbox({ id: 'agree', label: 'I agree to terms' }) +
                 this.spacer('m') +
                 this.flex(
                     [
@@ -960,13 +927,11 @@ await this.apiPost('/users', { name: 'John' });`,
             { name: 'Data', items: ['Tables', 'Images'] },
             { name: 'Actions', items: ['Buttons', 'Dropdowns', 'Modals'] },
             { name: 'Feedback', items: ['Alerts', 'Toasts', 'Badges'] },
-            { name: 'Progress', items: ['Progress bars', 'Spinners'] },
+            { name: 'Progress', items: ['Spinners'] },
             { name: 'Code', items: ['Inline code', 'Block code'] },
         ];
 
-        const cards = categories.map((category) =>
-            this.card(this.heading(category.name) + this.ul(category.items))
-        );
+        const cards = categories.map((category) => this.card(this.heading(category.name) + this.ul(category.items)));
 
         this.append(this.grid(cards, { columns: 3 }));
 
