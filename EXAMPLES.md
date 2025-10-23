@@ -11,7 +11,8 @@ import { ClientApp } from './static/client.js';
 
 class MyApp extends ClientApp {
     override start(): void {
-        this.showNav('My App', {
+        this.showNav({
+            brand: 'My App',
             items: [{ text: 'Home', onclick: () => this.showHome() }],
         });
         this.showHome();
@@ -142,7 +143,8 @@ hooks.after.push((req, res, url) => {
 // Layout is automatic! Just show the components you need:
 
 // Navigation - automatically sets 'nav' layout
-this.showNav('App Name', {
+this.showNav({
+    brand: 'App Name',
     items: [
         { text: 'Home', onclick: () => this.showHome() },
         { text: 'About', onclick: () => this.showAbout() },
@@ -151,6 +153,7 @@ this.showNav('App Name', {
 
 // Sidebar - automatically sets 'sidebar' layout
 this.showSidebar({
+    brand: 'App Name',
     sections: [
         {
             title: 'Menu',
@@ -265,14 +268,16 @@ this.grid(
 );
 
 // Table with utilities
-this.table({
-    headers: ['Name', 'Status'],
-    rows: [
+this.table(
+    [
         ['John', 'Active'],
         ['Jane', 'Pending'],
     ],
-    className: ['table-compact', 'table-striped', 'w-full'],
-});
+    {
+        headers: ['Name', 'Status'],
+        className: ['table-compact', 'table-striped', 'w-full'],
+    }
+);
 
 // Complex layout
 this.card(
@@ -322,20 +327,17 @@ this.card(
 );
 
 // Tabs
-this.tabs({
-    items: [
-        { label: 'Tab 1', content: 'Content 1' },
-        { label: 'Tab 2', content: 'Content 2' },
-        { label: 'Tab 3', content: 'Content 3' },
-    ],
-});
+this.tabs([
+    { label: 'Tab 1', content: 'Content 1' },
+    { label: 'Tab 2', content: 'Content 2' },
+    { label: 'Tab 3', content: 'Content 3' },
+]);
 
 // Grid (2-8 columns)
 this.grid([this.card('Content 1'), this.card('Content 2'), this.card('Content 3')], { columns: 3 });
 
 // Image
-this.image({
-    src: 'photo.jpg',
+this.image('photo.jpg', {
     alt: 'Description',
     style: {
         width: '300px',
@@ -354,13 +356,11 @@ this.code('function hello() {\n    console.log("Hello");\n}', {
 });
 
 // Accordion
-this.accordion({
-    items: [
-        { title: 'Section 1', content: 'Content 1', open: true },
-        { title: 'Section 2', content: 'Content 2' },
-        { title: 'Section 3', content: 'Content 3' },
-    ],
-});
+this.accordion([
+    { title: 'Section 1', content: 'Content 1', open: true },
+    { title: 'Section 2', content: 'Content 2' },
+    { title: 'Section 3', content: 'Content 3' },
+]);
 ```
 
 ## Forms
@@ -407,15 +407,17 @@ this.button('Save', { variant: 'primary' });
 this.button('Delete', { variant: 'danger' });
 
 // Dropdown
-this.dropdown({
-    text: 'Actions',
-    items: [
+this.dropdown(
+    'Actions',
+    [
         { text: 'Edit', onclick: () => this.edit() },
         { text: 'Duplicate', onclick: () => this.duplicate() },
         { text: 'Delete', onclick: () => this.delete() },
     ],
-    variant: 'primary',
-});
+    {
+        variant: 'primary',
+    }
+);
 
 // Badges
 this.badge('New');
@@ -470,19 +472,19 @@ this.modal(
 
 ```typescript
 // Simple list (no headers)
-this.table({
-    rows: ['Item 1', 'Item 2', 'Item 3'],
-});
+this.table(['Item 1', 'Item 2', 'Item 3']);
 
 // Table with headers
-this.table({
-    headers: ['Name', 'Email', 'Status'],
-    rows: [
+this.table(
+    [
         ['John', 'john@example.com', this.badge('Active', { variant: 'success' })],
         ['Jane', 'jane@example.com', this.badge('Pending', { variant: 'warning' })],
     ],
-    id: 'users-table',
-});
+    {
+        headers: ['Name', 'Email', 'Status'],
+        id: 'users-table',
+    }
+);
 ```
 
 ## Navigation & DOM

@@ -164,11 +164,6 @@ interface TabItem {
     content: string;
 }
 
-/** Tabs options */
-interface TabsOptions extends Omit<BaseOptions, 'onclick'> {
-    items: TabItem[];
-}
-
 /** Toast options */
 interface ToastOptions {
     type?: ToastType;
@@ -177,7 +172,6 @@ interface ToastOptions {
 
 /** Image options */
 interface ImageOptions extends BaseOptions {
-    src: string;
     alt?: string;
     loading?: 'lazy' | 'eager';
 }
@@ -197,13 +191,6 @@ interface DropdownItem extends BaseOptions {
     text: string;
 }
 
-/** Dropdown options */
-interface DropdownOptions extends Omit<BaseOptions, 'onclick'> {
-    text: string;
-    items: DropdownItem[];
-    variant?: ButtonVariant;
-}
-
 /** Alert options */
 interface AlertOptions extends BaseOptions {
     type?: AlertType;
@@ -212,7 +199,6 @@ interface AlertOptions extends BaseOptions {
 /** Table options */
 interface TableOptions extends Omit<BaseOptions, 'onclick'> {
     headers?: string[];
-    rows: string[] | string[][];
 }
 
 /** Form input options */
@@ -270,11 +256,6 @@ interface AccordionItem {
     title: string;
     content: string;
     open?: boolean;
-}
-
-/** Accordion options */
-interface AccordionOptions extends Omit<BaseOptions, 'onclick'> {
-    items: AccordionItem[];
 }
 
 // ========================================
@@ -684,8 +665,8 @@ class ClientApp {
     }
 
     /** Create an image element */
-    image(options: ImageOptions): string {
-        const normalizedOptions = this.normalizeOptions(options);
+    image(src: string, options?: ImageOptions): string {
+        const normalizedOptions = this.normalizeOptions({ ...options, src });
         if (normalizedOptions.alt === undefined) normalizedOptions.alt = '';
         if (normalizedOptions.loading === undefined) normalizedOptions.loading = 'lazy';
         this.processOnclick(normalizedOptions, 'img');
@@ -704,7 +685,7 @@ class ClientApp {
 
     /** Create inline or block code */
     code(content: string, options?: CodeOptions): string {
-        const { language, block = false, ...baseOptions } = options || {};
+        const { language, block = false, ...baseOptions } = options || {} as CodeOptions;
         const normalizedOptions = this.normalizeOptions(baseOptions);
 
         if (block) {
@@ -721,9 +702,8 @@ class ClientApp {
     }
 
     /** Create an accordion */
-    accordion(options: AccordionOptions): string {
-        const { items, ...baseOptions } = options;
-        const normalizedOptions = this.normalizeOptions(baseOptions);
+    accordion(items: AccordionItem[], options?: BaseOptions): string {
+        const normalizedOptions = this.normalizeOptions(options);
         if (!normalizedOptions.id) normalizedOptions.id = this.generateId('accordion');
 
         const accordionItems = items
@@ -852,9 +832,9 @@ class ClientApp {
     }
 
     /** Create a dropdown menu */
-    dropdown(options: DropdownOptions): string {
+    dropdown(text: string, items: DropdownItem[], options?: ButtonOptions): string {
         this.initDropdownHandler();
-        const { text, items, variant = 'default', ...baseOptions } = options;
+        const { variant = 'default', ...baseOptions } = options || ({} as ButtonOptions);
         const normalizedOptions = this.normalizeOptions(baseOptions);
 
         const id = normalizedOptions.id || this.generateId('dropdown');
@@ -933,8 +913,8 @@ class ClientApp {
     }
 
     /** Create a table */
-    table(options: TableOptions): string {
-        const { headers, rows, ...baseOptions } = options;
+    table(rows: string[] | string[][], options?: TableOptions): string {
+        const { headers, ...baseOptions } = options || {} as TableOptions;
         const normalizedOptions = this.normalizeOptions(baseOptions);
         if (!normalizedOptions.id) normalizedOptions.id = this.generateId('table');
 
@@ -957,13 +937,12 @@ class ClientApp {
     }
 
     /** Create tabs */
-    tabs(options: TabsOptions): string {
-        const { items, ...baseOptions } = options;
-        const normalizedOptions = this.normalizeOptions(baseOptions);
+    tabs(items: TabItem[], options?: BaseOptions): string {
+        const normalizedOptions = this.normalizeOptions(options || {} as BaseOptions);
         if (!normalizedOptions.id) normalizedOptions.id = this.generateId('tabs');
 
         setTimeout(() => {
-            const container = document.getElementById(normalizedOptions.id);
+            const container = document.getElementById(normalizedOptions.id!);
             if (!container) return;
 
             // One handler for entire container
@@ -1297,13 +1276,11 @@ export type {
     SelectOption,
     SelectOptions,
     TabItem,
-    TabsOptions,
     ToastOptions,
     ImageOptions,
     ButtonOptions,
     BadgeOptions,
     DropdownItem,
-    DropdownOptions,
     AlertOptions,
     TableOptions,
     InputOptions,
@@ -1315,5 +1292,4 @@ export type {
     FlexOptions,
     CodeOptions,
     AccordionItem,
-    AccordionOptions,
 };

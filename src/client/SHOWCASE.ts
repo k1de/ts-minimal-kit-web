@@ -255,14 +255,16 @@ class ShowcaseApp extends ClientApp {
         this.append(
             this.card(
                 this.heading('Dropdown Menu') +
-                this.dropdown({
-                    text: 'Actions',
-                    items: [
+                this.dropdown(
+                    'Actions',
+                    [
                         { text: 'Edit', onclick: () => this.toast('Edit clicked', { type: 'info' }) },
                         { text: 'Delete', onclick: () => this.toast('Delete clicked', { type: 'danger' }) },
                     ],
-                    variant: 'primary',
-                })
+                    {
+                        variant: 'primary',
+                    }
+                )
             )
         );
     }
@@ -275,8 +277,7 @@ class ShowcaseApp extends ClientApp {
         this.append(
             this.card(
                 this.heading('Basic Image') +
-                this.image({
-                    src: 'https://picsum.photos/400/300',
+                this.image('https://picsum.photos/400/300', {
                     alt: 'Random landscape',
                 })
             )
@@ -287,16 +288,13 @@ class ShowcaseApp extends ClientApp {
                 this.heading('Image Grid') +
                 this.grid(
                     [
-                        this.image({
-                            src: 'https://picsum.photos/seed/1/300/200',
+                        this.image('https://picsum.photos/seed/1/300/200', {
                             alt: 'Image 1',
                         }),
-                        this.image({
-                            src: 'https://picsum.photos/seed/2/300/200',
+                        this.image('https://picsum.photos/seed/2/300/200', {
                             alt: 'Image 2',
                         }),
-                        this.image({
-                            src: 'https://picsum.photos/seed/3/300/200',
+                        this.image('https://picsum.photos/seed/3/300/200', {
                             alt: 'Image 3',
                         }),
                     ],
@@ -312,20 +310,17 @@ class ShowcaseApp extends ClientApp {
                 this.spacer('s') +
                 this.flex(
                     [
-                        this.image({
-                            src: 'https://picsum.photos/seed/10/150/150',
+                        this.image('https://picsum.photos/seed/10/150/150', {
                             alt: 'Click me 1',
                             onclick: () => this.toast('Image 1 clicked!', { type: 'info' }),
                             style: { cursor: 'pointer', borderRadius: 'var(--radius)' },
                         }),
-                        this.image({
-                            src: 'https://picsum.photos/seed/11/150/150',
+                        this.image('https://picsum.photos/seed/11/150/150', {
                             alt: 'Click me 2',
                             onclick: () => this.toast('Image 2 clicked!', { type: 'success' }),
                             style: { cursor: 'pointer', borderRadius: '50%' },
                         }),
-                        this.image({
-                            src: 'https://picsum.photos/seed/12/150/150',
+                        this.image('https://picsum.photos/seed/12/150/150', {
                             alt: 'Click me 3',
                             onclick: () => this.toast('Image 3 clicked!', { type: 'warning' }),
                             style: { cursor: 'pointer', borderRadius: 'var(--radius)' },
@@ -540,8 +535,8 @@ console.log(message);`,
         this.append(
             this.card(
                 this.heading('Basic Accordion') +
-                this.accordion({
-                    items: [
+                this.accordion(
+                    [
                         {
                             title: 'What is TypeScript?',
                             content: 'TypeScript is a typed superset of JavaScript that compiles to plain JavaScript.',
@@ -559,8 +554,10 @@ console.log(message);`,
                                 this.code('class MyApp extends ClientApp { }', { block: true }),
                         },
                     ],
-                    className: 'accordion-compact',
-                }) +
+                    {
+                        className: 'accordion-compact',
+                    }
+                ) +
                 this.text('Using .accordion-compact utility', { className: 'text-muted' })
             )
         );
@@ -568,39 +565,37 @@ console.log(message);`,
         this.append(
             this.card(
                 this.heading('Rich Content') +
-                this.accordion({
-                    items: [
-                        {
-                            title: 'Features',
-                            content: this.ul([
-                                'Component-based architecture',
-                                'Dark/light themes',
-                                'Responsive design',
-                                'Hash navigation',
-                            ]),
-                        },
-                        {
-                            title: 'Components',
-                            content: this.flex([
-                                this.badge('Buttons', { variant: 'primary' }),
-                                this.badge('Cards', { variant: 'success' }),
-                                this.badge('Tables', { variant: 'warning' }),
-                                this.badge('Forms', { variant: 'danger' }),
-                            ]),
-                        },
-                        {
-                            title: 'API Example',
-                            content: this.code(
-                                `// Fetch users
+                this.accordion([
+                    {
+                        title: 'Features',
+                        content: this.ul([
+                            'Component-based architecture',
+                            'Dark/light themes',
+                            'Responsive design',
+                            'Hash navigation',
+                        ]),
+                    },
+                    {
+                        title: 'Components',
+                        content: this.flex([
+                            this.badge('Buttons', { variant: 'primary' }),
+                            this.badge('Cards', { variant: 'success' }),
+                            this.badge('Tables', { variant: 'warning' }),
+                            this.badge('Forms', { variant: 'danger' }),
+                        ]),
+                    },
+                    {
+                        title: 'API Example',
+                        content: this.code(
+                            `// Fetch users
 const users = await this.apiGet('/users');
 
 // Create user
 await this.apiPost('/users', { name: 'John' });`,
-                                { block: true, language: 'javascript' }
-                            ),
-                        },
-                    ],
-                })
+                            { block: true, language: 'javascript' }
+                        ),
+                    },
+                ])
             )
         );
     }
@@ -614,68 +609,66 @@ await this.apiPost('/users', { name: 'John' });`,
         this.append(
             this.card(
                 this.heading('All Available Utilities') +
-                this.accordion({
-                    items: [
-                        {
-                            title: 'Display & Visibility',
-                            content: this.code('hidden, block, inline-block'),
-                        },
-                        {
-                            title: 'Flexbox Layout',
-                            content: this.code('flex, flex-col, flex-row, flex-wrap, flex-1'),
-                        },
-                        {
-                            title: 'Flexbox Alignment',
-                            content:
-                                this.code('items-start, items-center, items-end') +
-                                this.spacer() +
-                                this.code('justify-start, justify-center, justify-end, justify-between'),
-                        },
-                        {
-                            title: 'Gap',
-                            content: this.code('gap-none, gap-s, gap-m, gap-l'),
-                        },
-                        {
-                            title: 'Margin',
-                            content:
-                                this.code('m-0, mt-0, mb-0, mb-s, mb-m, mb-l') +
-                                this.spacer() +
-                                this.code('ml-auto, mr-auto, mx-auto'),
-                        },
-                        {
-                            title: 'Padding',
-                            content: this.code('p-0, p-s, p-m, p-l'),
-                        },
-                        {
-                            title: 'Sizing',
-                            content: this.code('w-full, w-fit, h-full'),
-                        },
-                        {
-                            title: 'Text & Typography',
-                            content:
-                                this.code('text-left, text-center, text-right') +
-                                this.spacer() +
-                                this.code('text-secondary, text-muted') +
-                                this.spacer() +
-                                this.code('font-semibold, font-bold, truncate'),
-                        },
-                        {
-                            title: 'Interactive',
-                            content: this.code('overflow-auto, cursor-pointer, cursor-not-allowed, opacity-50'),
-                        },
-                        {
-                            title: 'Component-Specific',
-                            content:
-                                this.code('table-fit, table-center, table-right') +
-                                this.spacer() +
-                                this.code('table-compact, table-striped') +
-                                this.spacer() +
-                                this.code('accordion-compact, sidebar-compact', {
-                                    className: ['btn', false && 'opacity-50'],
-                                }),
-                        },
-                    ],
-                })
+                this.accordion([
+                    {
+                        title: 'Display & Visibility',
+                        content: this.code('hidden, block, inline-block'),
+                    },
+                    {
+                        title: 'Flexbox Layout',
+                        content: this.code('flex, flex-col, flex-row, flex-wrap, flex-1'),
+                    },
+                    {
+                        title: 'Flexbox Alignment',
+                        content:
+                            this.code('items-start, items-center, items-end') +
+                            this.spacer() +
+                            this.code('justify-start, justify-center, justify-end, justify-between'),
+                    },
+                    {
+                        title: 'Gap',
+                        content: this.code('gap-none, gap-s, gap-m, gap-l'),
+                    },
+                    {
+                        title: 'Margin',
+                        content:
+                            this.code('m-0, mt-0, mb-0, mb-s, mb-m, mb-l') +
+                            this.spacer() +
+                            this.code('ml-auto, mr-auto, mx-auto'),
+                    },
+                    {
+                        title: 'Padding',
+                        content: this.code('p-0, p-s, p-m, p-l'),
+                    },
+                    {
+                        title: 'Sizing',
+                        content: this.code('w-full, w-fit, h-full'),
+                    },
+                    {
+                        title: 'Text & Typography',
+                        content:
+                            this.code('text-left, text-center, text-right') +
+                            this.spacer() +
+                            this.code('text-secondary, text-muted') +
+                            this.spacer() +
+                            this.code('font-semibold, font-bold, truncate'),
+                    },
+                    {
+                        title: 'Interactive',
+                        content: this.code('overflow-auto, cursor-pointer, cursor-not-allowed, opacity-50'),
+                    },
+                    {
+                        title: 'Component-Specific',
+                        content:
+                            this.code('table-fit, table-center, table-right') +
+                            this.spacer() +
+                            this.code('table-compact, table-striped') +
+                            this.spacer() +
+                            this.code('accordion-compact, sidebar-compact', {
+                                className: ['btn', false && 'opacity-50'],
+                            }),
+                    },
+                ])
             )
         );
 
@@ -764,15 +757,14 @@ className: ['justify-center']          // Button group`,
         this.append(
             this.card(
                 this.heading('Table with Utilities') +
-                this.table({
-                    headers: ['Name', 'Email', 'Role'],
-                    rows: [
+                this.table(
+                    [
                         ['John Doe', 'john@example.com', 'Admin'],
                         ['Jane Smith', 'jane@example.com', 'User'],
                         ['Bob Wilson', 'bob@example.com', 'User'],
                     ],
-                    className: ['table-striped', 'table-compact'],
-                }) +
+                    { headers: ['Name', 'Email', 'Role'], className: ['table-striped', 'table-compact'] }
+                ) +
                 this.spacer('s') +
                 this.code("className: ['table-striped', 'table-compact']", { block: true })
             )
@@ -825,33 +817,27 @@ className: ['justify-center']          // Button group`,
         this.append(
             this.card(
                 this.heading('Tab Navigation') +
-                this.tabs({
-                    items: [
-                        {
-                            label: 'Overview',
-                            content:
-                                this.heading('Project Overview', 4) +
-                                this.text('This section contains general project information.') +
-                                this.separator() +
-                                this.flex(
-                                    [
-                                        this.badge('Active', { variant: 'success' }),
-                                        this.badge('3 members', { variant: 'primary' }),
-                                        this.badge('Updated today'),
-                                    ],
-                                ),
-                        },
-                        {
-                            label: 'Tasks',
-                            content:
-                                this.heading('Task List', 4) +
-                                this.table({
-                                    rows: ['Complete documentation', 'Review pull requests', 'Update dependencies'],
-                                }) +
-                                this.button('Add Task', { variant: 'primary' }),
-                        },
-                    ],
-                })
+                this.tabs([
+                    {
+                        label: 'Overview',
+                        content:
+                            this.heading('Project Overview', 4) +
+                            this.text('This section contains general project information.') +
+                            this.separator() +
+                            this.flex([
+                                this.badge('Active', { variant: 'success' }),
+                                this.badge('3 members', { variant: 'primary' }),
+                                this.badge('Updated today'),
+                            ]),
+                    },
+                    {
+                        label: 'Tasks',
+                        content:
+                            this.heading('Task List', 4) +
+                            this.table(['Complete documentation', 'Review pull requests', 'Update dependencies']) +
+                            this.button('Add Task', { variant: 'primary' }),
+                    },
+                ])
             )
         );
     }
@@ -864,30 +850,29 @@ className: ['justify-center']          // Button group`,
         this.append(
             this.card(
                 this.heading('Basic Table') +
-                this.table({
-                    headers: ['ID', 'Name', 'Status'],
-                    rows: [
+                this.table(
+                    [
                         ['1', 'John Doe', this.badge('Active', { variant: 'success' })],
                         ['2', 'Jane Smith', this.badge('Pending', { variant: 'warning' })],
                         ['3', 'Bob Johnson', this.badge('Inactive', { variant: 'danger' })],
                     ],
-                })
+                    { headers: ['ID', 'Name', 'Status'] }
+                )
             )
         );
 
         this.append(
             this.card(
                 this.heading('Feature List (Compact)') +
-                this.table({
-                    headers: ['Feature', 'Status'],
-                    rows: [
+                this.table(
+                    [
                         ['Zero dependencies', '✓'],
                         ['TypeScript', '✓'],
                         ['Dark mode', '✓'],
                         ['Responsive', '✓'],
                     ],
-                    className: 'table-compact',
-                })
+                    { headers: ['Feature', 'Status'], className: 'table-compact' }
+                )
             )
         );
 
@@ -895,15 +880,13 @@ className: ['justify-center']          // Button group`,
             this.card(
                 this.heading('Simple List') +
                 this.text('Table without headers, single column') +
-                this.table({
-                    rows: [
-                        'Introduction to TypeScript',
-                        'Setting up your environment',
-                        'Basic types and interfaces',
-                        'Working with components',
-                        'Advanced patterns',
-                    ],
-                })
+                this.table([
+                    'Introduction to TypeScript',
+                    'Setting up your environment',
+                    'Basic types and interfaces',
+                    'Working with components',
+                    'Advanced patterns',
+                ])
             )
         );
     }
@@ -926,25 +909,23 @@ className: ['justify-center']          // Button group`,
         this.append(
             this.card(
                 this.heading('Toast Notifications') +
-                this.flex(
-                    [
-                        this.button('Info', {
-                            onclick: () => this.toast('Info message', { type: 'info' }),
-                        }),
-                        this.button('Success', {
-                            onclick: () => this.toast('Success!', { type: 'success' }),
-                            variant: 'success',
-                        }),
-                        this.button('Warning', {
-                            onclick: () => this.toast('Warning!', { type: 'warning' }),
-                            variant: 'warning',
-                        }),
-                        this.button('Error', {
-                            onclick: () => this.toast('Error!', { type: 'error', duration: 5000 }),
-                            variant: 'danger',
-                        }),
-                    ],
-                )
+                this.flex([
+                    this.button('Info', {
+                        onclick: () => this.toast('Info message', { type: 'info' }),
+                    }),
+                    this.button('Success', {
+                        onclick: () => this.toast('Success!', { type: 'success' }),
+                        variant: 'success',
+                    }),
+                    this.button('Warning', {
+                        onclick: () => this.toast('Warning!', { type: 'warning' }),
+                        variant: 'warning',
+                    }),
+                    this.button('Error', {
+                        onclick: () => this.toast('Error!', { type: 'error', duration: 5000 }),
+                        variant: 'danger',
+                    }),
+                ])
             )
         );
     }
@@ -957,74 +938,68 @@ className: ['justify-center']          // Button group`,
         this.append(
             this.card(
                 this.heading('Modal Examples') +
-                this.flex(
-                    [
-                        this.button('Simple Modal', {
-                            onclick: () =>
-                                this.modal(
-                                    this.heading('Simple Modal') +
-                                    this.text('This is a simple modal dialog.') +
-                                    this.spacer() +
-                                    this.button('Close', {
+                this.flex([
+                    this.button('Simple Modal', {
+                        onclick: () =>
+                            this.modal(
+                                this.heading('Simple Modal') +
+                                this.text('This is a simple modal dialog.') +
+                                this.spacer() +
+                                this.button('Close', {
+                                    onclick: () => this.closeModal(),
+                                    variant: 'primary',
+                                })
+                            ),
+                    }),
+                    this.button('Confirm Modal', {
+                        onclick: () =>
+                            this.modal(
+                                this.heading('Confirm Action') +
+                                this.text('Are you sure you want to proceed?') +
+                                this.spacer() +
+                                this.flex([
+                                    this.button('Cancel', {
                                         onclick: () => this.closeModal(),
+                                    }),
+                                    this.button('Confirm', {
+                                        onclick: () => {
+                                            this.closeModal();
+                                            this.toast('Confirmed!', { type: 'success' });
+                                        },
                                         variant: 'primary',
-                                    })
-                                ),
-                        }),
-                        this.button('Confirm Modal', {
-                            onclick: () =>
-                                this.modal(
-                                    this.heading('Confirm Action') +
-                                    this.text('Are you sure you want to proceed?') +
-                                    this.spacer() +
-                                    this.flex(
-                                        [
-                                            this.button('Cancel', {
-                                                onclick: () => this.closeModal(),
-                                            }),
-                                            this.button('Confirm', {
-                                                onclick: () => {
-                                                    this.closeModal();
-                                                    this.toast('Confirmed!', { type: 'success' });
-                                                },
-                                                variant: 'primary',
-                                            }),
-                                        ],
-                                    )
-                                ),
-                            variant: 'primary',
-                        }),
-                        this.button('Blocking Modal', {
-                            onclick: () =>
-                                this.modal(
-                                    this.alert('⚠️ Critical Action Required', { type: 'warning' }) +
-                                    this.heading('System Update') +
-                                    this.text('This is a blocking modal. You cannot close it by clicking outside.') +
-                                    this.spacer() +
-                                    this.flex(
-                                        [
-                                            this.button('Decline', {
-                                                onclick: () => {
-                                                    this.closeModal();
-                                                    this.toast('Update declined', { type: 'info' });
-                                                },
-                                                variant: 'danger',
-                                            }),
-                                            this.button('Accept', {
-                                                onclick: () => {
-                                                    this.closeModal();
-                                                    this.toast('Update accepted!', { type: 'success' });
-                                                },
-                                                variant: 'primary',
-                                            }),
-                                        ],
-                                    ),
-                                    true
-                                ),
-                            variant: 'danger',
-                        }),
-                    ],
-                )
+                                    }),
+                                ])
+                            ),
+                        variant: 'primary',
+                    }),
+                    this.button('Blocking Modal', {
+                        onclick: () =>
+                            this.modal(
+                                this.alert('⚠️ Critical Action Required', { type: 'warning' }) +
+                                this.heading('System Update') +
+                                this.text('This is a blocking modal. You cannot close it by clicking outside.') +
+                                this.spacer() +
+                                this.flex([
+                                    this.button('Decline', {
+                                        onclick: () => {
+                                            this.closeModal();
+                                            this.toast('Update declined', { type: 'info' });
+                                        },
+                                        variant: 'danger',
+                                    }),
+                                    this.button('Accept', {
+                                        onclick: () => {
+                                            this.closeModal();
+                                            this.toast('Update accepted!', { type: 'success' });
+                                        },
+                                        variant: 'primary',
+                                    }),
+                                ]),
+                                true
+                            ),
+                        variant: 'danger',
+                    }),
+                ])
             )
         );
     }
