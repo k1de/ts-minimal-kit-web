@@ -11,103 +11,113 @@
  */
 
 // ========================================
-// TYPE DEFINITIONS
+// TYPES
 // ========================================
 
-// Utility classes from styles.css
+// Utility Types
+// ----------------------------------------
+
+/** Utility classes from styles.css */
 type UtilityClass =
     // Display & Visibility
-    | 'hidden'
     | 'block'
+    | 'hidden'
     | 'inline-block'
     // Flexbox Layout
     | 'flex'
+    | 'flex-1'
     | 'flex-col'
     | 'flex-row'
     | 'flex-wrap'
-    | 'flex-1'
     // Flexbox Alignment
-    | 'items-start'
     | 'items-center'
     | 'items-end'
-    | 'justify-start'
+    | 'items-start'
+    | 'justify-between'
     | 'justify-center'
     | 'justify-end'
-    | 'justify-between'
+    | 'justify-start'
     // Gap
+    | 'gap-l'
+    | 'gap-m'
     | 'gap-none'
     | 'gap-s'
-    | 'gap-m'
-    | 'gap-l'
     // Margin
     | 'm-0'
-    | 'mt-0'
     | 'mb-0'
-    | 'mb-s'
-    | 'mb-m'
     | 'mb-l'
+    | 'mb-m'
+    | 'mb-s'
     | 'ml-auto'
     | 'mr-auto'
+    | 'mt-0'
     | 'mx-auto'
     // Padding
     | 'p-0'
-    | 'p-s'
-    | 'p-m'
     | 'p-l'
+    | 'p-m'
+    | 'p-s'
     // Sizing
-    | 'w-full'
-    | 'w-fit'
     | 'h-full'
+    | 'w-fit'
+    | 'w-full'
     // Text & Typography
-    | 'text-left'
+    | 'font-bold'
+    | 'font-semibold'
     | 'text-center'
+    | 'text-left'
+    | 'text-muted'
     | 'text-right'
     | 'text-secondary'
-    | 'text-muted'
-    | 'font-semibold'
-    | 'font-bold'
     | 'truncate'
     // Interactive
-    | 'overflow-auto'
-    | 'cursor-pointer'
     | 'cursor-not-allowed'
+    | 'cursor-pointer'
     | 'opacity-50'
+    | 'overflow-auto'
     // Component-Specific
-    | 'table-fit'
-    | 'table-center'
-    | 'table-right'
-    | 'table-compact'
-    | 'table-striped'
     | 'accordion-compact'
-    | 'sidebar-compact';
+    | 'sidebar-compact'
+    | 'table-center'
+    | 'table-compact'
+    | 'table-fit'
+    | 'table-right'
+    | 'table-striped';
 
-// ClassName types with proper autocomplete
-// The (string & {}) trick prevents TypeScript from collapsing the union
+/** ClassName value with autocomplete (string & {}) trick prevents union collapse */
 type ClassNameValue = UtilityClass | (string & {});
-// Allow false/undefined/null in arrays for conditional expressions like: isActive && 'active'
+
+/** ClassName with conditional support (allow false/undefined/null for: isActive && 'active') */
 type ClassNameOptions = ClassNameValue | (ClassNameValue | false | undefined | null)[] | undefined;
 
-type Layout = 'default' | 'nav' | 'sidebar' | 'nav-sidebar';
-type ButtonVariant = 'default' | 'primary' | 'success' | 'warning' | 'danger';
-type NotificationType = 'info' | 'success' | 'warning' | 'danger' | 'error';
-type AlertType = NotificationType;
-type ToastType = NotificationType;
-type GridColumns = 2 | 3 | 4 | 5 | 6 | 7 | 8;
-type ThemeVariant = 'dark' | 'light';
-type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
-type Spacing = 'none' | 's' | 'm' | 'l';
-type FlexDirection = 'row' | 'col';
-
-/** CSS style properties - using native CSSStyleDeclaration without methods */
+/** CSS style properties from CSSStyleDeclaration without methods */
 type StyleObject = Partial<{
     [K in keyof CSSStyleDeclaration as CSSStyleDeclaration[K] extends Function ? never : K]: CSSStyleDeclaration[K];
 }>;
 
+/** Style options as string or object */
 type StyleOptions = string | StyleObject | undefined;
+
+// Simple Types
+// ----------------------------------------
+
+type AlertType = NotificationType;
+type ButtonVariant = 'danger' | 'default' | 'primary' | 'success' | 'warning';
+type FlexDirection = 'col' | 'row';
+type GridColumns = 2 | 3 | 4 | 5 | 6 | 7 | 8;
+type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
+type Layout = 'default' | 'nav' | 'nav-sidebar' | 'sidebar';
+type NotificationType = 'danger' | 'error' | 'info' | 'success' | 'warning';
+type Spacing = 'l' | 'm' | 'none' | 's';
+type ThemeVariant = 'dark' | 'light';
+type ToastType = NotificationType;
 
 // ========================================
 // INTERFACES
 // ========================================
+
+// Base Interfaces
+// ----------------------------------------
 
 /** Base options for all UI components */
 interface BaseOptions {
@@ -123,12 +133,15 @@ interface NavItemOptions extends BaseOptions {
     href?: string;
 }
 
+// Layout Interfaces
+// ----------------------------------------
+
 /** Navigation item configuration */
 interface NavItem extends NavItemOptions {
     text: string;
 }
 
-/** Navigation options */
+/** Navigation bar options */
 interface NavOptions extends BaseOptions {
     brand?: string;
     items?: NavItem[];
@@ -146,59 +159,13 @@ interface SidebarOptions extends BaseOptions {
     sections: SidebarSection[];
 }
 
-/** Select option configuration */
-interface SelectOption {
-    value: string;
-    text: string;
-}
+// Form Interfaces
+// ----------------------------------------
 
-/** Select options */
-interface SelectOptions extends Omit<BaseOptions, 'onclick'> {
-    options: SelectOption[];
-    selected?: string;
-}
-
-/** Tab item configuration */
-interface TabItem {
+/** Checkbox options */
+interface CheckboxOptions extends Omit<BaseOptions, 'onclick'> {
     label: string;
-    content: string;
-}
-
-/** Toast options */
-interface ToastOptions {
-    type?: ToastType;
-    duration?: number;
-}
-
-/** Image options */
-interface ImageOptions extends BaseOptions {
-    alt?: string;
-    loading?: 'lazy' | 'eager';
-}
-
-/** Button options */
-interface ButtonOptions extends BaseOptions {
-    variant?: ButtonVariant;
-}
-
-/** Badge options */
-interface BadgeOptions extends BaseOptions {
-    variant?: ButtonVariant;
-}
-
-/** Dropdown item */
-interface DropdownItem extends BaseOptions {
-    text: string;
-}
-
-/** Alert options */
-interface AlertOptions extends BaseOptions {
-    type?: AlertType;
-}
-
-/** Table options */
-interface TableOptions extends Omit<BaseOptions, 'onclick'> {
-    headers?: string[];
+    checked?: boolean;
 }
 
 /** Form input options */
@@ -208,19 +175,6 @@ interface InputOptions extends Omit<BaseOptions, 'onclick'> {
     value?: string;
 }
 
-/** Textarea options */
-interface TextareaOptions extends Omit<BaseOptions, 'onclick'> {
-    placeholder?: string;
-    value?: string;
-    rows?: number;
-}
-
-/** Checkbox options */
-interface CheckboxOptions extends Omit<BaseOptions, 'onclick'> {
-    label: string;
-    checked?: boolean;
-}
-
 /** Radio group options */
 interface RadioGroupOptions extends Omit<BaseOptions, 'onclick'> {
     name: string;
@@ -228,15 +182,57 @@ interface RadioGroupOptions extends Omit<BaseOptions, 'onclick'> {
     selected?: string;
 }
 
-/** Grid options */
-interface GridOptions extends BaseOptions {
-    columns?: GridColumns;
+/** Select option configuration */
+interface SelectOption {
+    value: string;
+    text: string;
 }
 
-/** Link options */
-interface LinkOptions extends BaseOptions {
-    href: string;
-    target?: string;
+/** Select dropdown options */
+interface SelectOptions extends Omit<BaseOptions, 'onclick'> {
+    options: SelectOption[];
+    selected?: string;
+}
+
+/** Textarea options */
+interface TextareaOptions extends Omit<BaseOptions, 'onclick'> {
+    placeholder?: string;
+    value?: string;
+    rows?: number;
+}
+
+// Button & Action Interfaces
+// ----------------------------------------
+
+/** Badge options */
+interface BadgeOptions extends BaseOptions {
+    variant?: ButtonVariant;
+}
+
+/** Button options */
+interface ButtonOptions extends BaseOptions {
+    variant?: ButtonVariant;
+}
+
+/** Dropdown item configuration */
+interface DropdownItem extends BaseOptions {
+    text: string;
+}
+
+// Component Interfaces
+// ----------------------------------------
+
+/** Accordion item configuration */
+interface AccordionItem {
+    title: string;
+    content: string;
+    open?: boolean;
+}
+
+/** Code block/inline options */
+interface CodeOptions extends Omit<BaseOptions, 'onclick'> {
+    language?: string;
+    block?: boolean;
 }
 
 /** Flex container options */
@@ -245,17 +241,46 @@ interface FlexOptions extends BaseOptions {
     direction?: FlexDirection;
 }
 
-/** Code options */
-interface CodeOptions extends Omit<BaseOptions, 'onclick'> {
-    language?: string;
-    block?: boolean;
+/** Grid layout options */
+interface GridOptions extends BaseOptions {
+    columns?: GridColumns;
 }
 
-/** Accordion item configuration */
-interface AccordionItem {
-    title: string;
+/** Image options */
+interface ImageOptions extends BaseOptions {
+    alt?: string;
+    loading?: 'lazy' | 'eager';
+}
+
+/** Link options */
+interface LinkOptions extends BaseOptions {
+    href: string;
+    target?: string;
+}
+
+/** Tab item configuration */
+interface TabItem {
+    label: string;
     content: string;
-    open?: boolean;
+}
+
+/** Table options */
+interface TableOptions extends Omit<BaseOptions, 'onclick'> {
+    headers?: string[];
+}
+
+// Feedback Interfaces
+// ----------------------------------------
+
+/** Alert message options */
+interface AlertOptions extends BaseOptions {
+    type?: AlertType;
+}
+
+/** Toast notification options */
+interface ToastOptions {
+    type?: ToastType;
+    duration?: number;
 }
 
 // ========================================
@@ -269,11 +294,19 @@ interface AccordionItem {
  * Extend this class and override the start() method to build your app.
  */
 class ClientApp {
+    // ========================================
+    // PROPERTIES
+    // ========================================
+
     private container: HTMLElement;
+    private dropdownInitialized = false;
     private elementIdCounter = 0;
     private hasNav = false;
     private hasSidebar = false;
-    private dropdownInitialized = false;
+
+    // ========================================
+    // CONSTRUCTOR & LIFECYCLE
+    // ========================================
 
     constructor() {
         this.container = document.getElementById('main')!;
@@ -282,6 +315,15 @@ class ClientApp {
             this.init();
         }, 0);
     }
+
+    /** Start the app - override this in your app */
+    protected start(): void {
+        // Override this method in your app
+        console.log('Override start() method to begin.');
+    }
+
+    /** Override this to handle hash changes in your app */
+    protected onHashChange?(hash: string): void;
 
     /** Initialize the app */
     private init(): void {
@@ -293,101 +335,9 @@ class ClientApp {
         }
     }
 
-    /** Initialize global dropdown closer (once) */
-    private initDropdownHandler(): void {
-        if (this.dropdownInitialized) return;
-        this.dropdownInitialized = true;
-
-        // Close all dropdowns on outside click
-        document.addEventListener('click', () => {
-            document.querySelectorAll('.dropdown-menu').forEach((menu) => {
-                menu.classList.add('hidden');
-            });
-        });
-    }
-
-    /** Initialize hash navigation */
-    private initHashNavigation(): void {
-        // Handle hash changes
-        window.addEventListener('hashchange', () => this.handleHashChange());
-        // Handle initial hash
-        this.handleHashChange();
-    }
-
-    /** Handle hash change */
-    private handleHashChange(): void {
-        const hash = window.location.hash.slice(1); // Remove #
-        // Call override method if exists
-        if (this.onHashChange) {
-            this.onHashChange(hash);
-        }
-    }
-
-    /** Start the app - override this in your app */
-    protected start(): void {
-        // Override this method in your app
-        console.log('Override start() method to begin.');
-    }
-
-    /** Scroll to element by ID */
-    scrollToElement(elementId: string, smooth: boolean = true): boolean {
-        const element = document.getElementById(elementId);
-        if (!element) {
-            return false;
-        }
-        element.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto' });
-        return true;
-    }
-
-    /** Override this to handle hash changes in your app */
-    protected onHashChange?(hash: string): void;
-
-    /** Navigate to hash */
-    navigateTo(hash: string): void {
-        if (window.location.hash !== `#${hash}`) {
-            window.location.hash = hash;
-        } else {
-            // If hash is the same, trigger manually
-            this.handleHashChange();
-        }
-    }
-
-    /** Get current hash */
-    getCurrentHash(): string {
-        return window.location.hash.slice(1);
-    }
-
-    /** Generate unique element ID */
-    private generateId(prefix: string = 'id'): string {
-        return `${prefix}-${++this.elementIdCounter}`;
-    }
-
-    /** Generate nested element ID */
-    private getNestedId(baseId: string | undefined, suffix: string): string {
-        if (!baseId) return '';
-        return ` id="${baseId}-${suffix}"`;
-    }
-
-    /** Process onclick handler and mutate, generate ID if needed */
-    private processOnclick<T extends BaseOptions>(options: T, defaultPrefix?: string, event: string = 'click'): void {
-        if (!options.onclick) return;
-
-        if (!options.id) {
-            options.id = this.generateId(defaultPrefix);
-        }
-
-        this.addDelayedEventListener(options.id, options.onclick, event);
-
-        delete options.onclick;
-    }
-
-    /** Add event listener with timeout */
-    private addDelayedEventListener(id: string, handler: () => void, event: string = 'click'): void {
-        setTimeout(() => {
-            const element = document.getElementById(id);
-            this.addEventListener(element, handler, event);
-        }, 0);
-    }
+    // ========================================
+    // PRIVATE UTILITIES
+    // ========================================
 
     /** Add event listener to element with common setup */
     private addEventListener(element: HTMLElement | null, handler: () => void, event: string = 'click'): void {
@@ -408,49 +358,12 @@ class ClientApp {
         }
     }
 
-    /** Normalize options className and style to string */
-    private normalizeOptions<T extends BaseOptions>(options?: T): T {
-        const normalizedOptions = { ...options };
-
-        if (normalizedOptions.className) {
-            normalizedOptions.className = this.normalizeClassName(normalizedOptions.className);
-        }
-        if (normalizedOptions.style) {
-            normalizedOptions.style = this.normalizeStyle(normalizedOptions.style);
-        }
-
-        return normalizedOptions! as T;
-    }
-
-    /** Normalize className to string */
-    private normalizeClassName(className: ClassNameOptions): string | undefined {
-        if (!className) return undefined;
-        if (typeof className === 'string') return className;
-
-        if (Array.isArray(className)) {
-            return className.flat().filter(Boolean).join(' ') || undefined;
-        }
-
-        return className;
-    }
-
-    /** Normalize style to string */
-    private normalizeStyle(style: StyleOptions): string | undefined {
-        if (!style) return undefined;
-
-        if (typeof style === 'string') return style;
-
-        // Конвертируем объект в CSS строку
-        const cssString = Object.entries(style)
-            .filter(([_, value]) => value !== undefined && value !== null)
-            .map(([key, value]) => {
-                // camelCase -> kebab-case
-                const cssKey = key.replace(/[A-Z]/g, (match) => `-${match.toLowerCase()}`);
-                return `${cssKey}: ${value}`;
-            })
-            .join('; ');
-
-        return cssString || undefined;
+    /** Add event listener with timeout */
+    private addDelayedEventListener(id: string, handler: () => void, event: string = 'click'): void {
+        setTimeout(() => {
+            const element = document.getElementById(id);
+            this.addEventListener(element, handler, event);
+        }, 0);
     }
 
     /** Build HTML attributes from normalized options (converts className to class) */
@@ -483,9 +396,127 @@ class ClientApp {
         return result ? ' ' + result : '';
     }
 
-    // ========================================
-    // LAYOUT METHODS
-    // ========================================
+    /** Create navigation item HTML */
+    private createNavItem(text: string, options?: NavItemOptions, mainClass?: string): string {
+        const normalizedOptions = this.normalizeOptions(options);
+        this.processOnclick(normalizedOptions, 'nav-item');
+        if (!normalizedOptions.href) normalizedOptions.href = '#';
+        const attrs = this.buildAttrs(normalizedOptions, mainClass);
+        return `<li><a${attrs}>${text}</a></li>`;
+    }
+
+    /** Generate unique element ID */
+    private generateId(prefix: string = 'id'): string {
+        return `${prefix}-${++this.elementIdCounter}`;
+    }
+
+    /** Generate nested element ID */
+    private getNestedId(baseId: string | undefined, suffix: string): string {
+        if (!baseId) return '';
+        return ` id="${baseId}-${suffix}"`;
+    }
+
+    /** Handle hash change */
+    private handleHashChange(): void {
+        const hash = window.location.hash.slice(1); // Remove #
+        // Call override method if exists
+        if (this.onHashChange) {
+            this.onHashChange(hash);
+        }
+    }
+
+    /** Initialize global dropdown closer (once) */
+    private initDropdownHandler(): void {
+        if (this.dropdownInitialized) return;
+        this.dropdownInitialized = true;
+
+        // Close all dropdowns on outside click
+        document.addEventListener('click', () => {
+            document.querySelectorAll('.dropdown-menu').forEach((menu) => {
+                menu.classList.add('hidden');
+            });
+        });
+    }
+
+    /** Initialize hash navigation */
+    private initHashNavigation(): void {
+        // Handle hash changes
+        window.addEventListener('hashchange', () => this.handleHashChange());
+        // Handle initial hash
+        this.handleHashChange();
+    }
+
+    /** Normalize className to string */
+    private normalizeClassName(className: ClassNameOptions): string | undefined {
+        if (!className) return undefined;
+        if (typeof className === 'string') return className;
+
+        if (Array.isArray(className)) {
+            return className.flat().filter(Boolean).join(' ') || undefined;
+        }
+
+        return className;
+    }
+
+    /** Normalize options className and style to string */
+    private normalizeOptions<T extends BaseOptions>(options?: T): T {
+        const normalizedOptions = { ...options };
+
+        if (normalizedOptions.className) {
+            normalizedOptions.className = this.normalizeClassName(normalizedOptions.className);
+        }
+        if (normalizedOptions.style) {
+            normalizedOptions.style = this.normalizeStyle(normalizedOptions.style);
+        }
+
+        return normalizedOptions! as T;
+    }
+
+    /** Normalize style to string */
+    private normalizeStyle(style: StyleOptions): string | undefined {
+        if (!style) return undefined;
+
+        if (typeof style === 'string') return style;
+
+        // Convert object to CSS string
+        const cssString = Object.entries(style)
+            .filter(([_, value]) => value !== undefined && value !== null)
+            .map(([key, value]) => {
+                // camelCase -> kebab-case
+                const cssKey = key.replace(/[A-Z]/g, (match) => `-${match.toLowerCase()}`);
+                return `${cssKey}: ${value}`;
+            })
+            .join('; ');
+
+        return cssString || undefined;
+    }
+
+    /** Process onclick handler and mutate, generate ID if needed */
+    private processOnclick<T extends BaseOptions>(options: T, defaultPrefix?: string, event: string = 'click'): void {
+        if (!options.onclick) return;
+
+        if (!options.id) {
+            options.id = this.generateId(defaultPrefix);
+        }
+
+        this.addDelayedEventListener(options.id, options.onclick, event);
+
+        delete options.onclick;
+    }
+
+    /** Update element content (text or HTML) */
+    private updateContent(id: string, content: string, isHtml: boolean = false): boolean {
+        const element = this.get(id);
+        if (element) {
+            if (isHtml) {
+                element.innerHTML = content;
+            } else {
+                element.textContent = content;
+            }
+            return true;
+        }
+        return false;
+    }
 
     /** Update layout based on visible components */
     private updateLayout(): void {
@@ -502,14 +533,38 @@ class ClientApp {
         document.getElementById('app')?.setAttribute('data-layout', layout);
     }
 
-    /** Create navigation item HTML */
-    private createNavItem(text: string, options?: NavItemOptions, mainClass?: string): string {
-        const normalizedOptions = this.normalizeOptions(options);
-        this.processOnclick(normalizedOptions, 'nav-item');
-        if (!normalizedOptions.href) normalizedOptions.href = '#';
-        const attrs = this.buildAttrs(normalizedOptions, mainClass);
-        return `<li><a${attrs}>${text}</a></li>`;
+    // ========================================
+    // NAVIGATION
+    // ========================================
+
+    /** Get current hash */
+    getCurrentHash(): string {
+        return window.location.hash.slice(1);
     }
+
+    /** Navigate to hash */
+    navigateTo(hash: string): void {
+        if (window.location.hash !== `#${hash}`) {
+            window.location.hash = hash;
+        } else {
+            // If hash is the same, trigger manually
+            this.handleHashChange();
+        }
+    }
+
+    /** Scroll to element by ID */
+    scrollToElement(elementId: string, smooth: boolean = true): boolean {
+        const element = document.getElementById(elementId);
+        if (!element) {
+            return false;
+        }
+        element.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto' });
+        return true;
+    }
+
+    // ========================================
+    // LAYOUT
+    // ========================================
 
     /** Show navigation bar */
     showNav(options?: NavOptions): void {
@@ -582,12 +637,12 @@ class ClientApp {
     }
 
     // ========================================
-    // CONTENT METHODS
+    // CONTENT MANAGEMENT
     // ========================================
 
-    /** Set page title */
-    setTitle(title: string): void {
-        document.title = title;
+    /** Append HTML content */
+    append(content: string): void {
+        this.container.insertAdjacentHTML('beforeend', content);
     }
 
     /** Clear main content */
@@ -600,9 +655,9 @@ class ClientApp {
         this.container.innerHTML = content;
     }
 
-    /** Append HTML content */
-    append(content: string): void {
-        this.container.insertAdjacentHTML('beforeend', content);
+    /** Set page title */
+    setTitle(title: string): void {
+        document.title = title;
     }
 
     // ========================================
@@ -617,14 +672,6 @@ class ClientApp {
         return `<div${attrs}>${content}</div>`;
     }
 
-    /** Create a span element */
-    span(content: string, options?: BaseOptions): string {
-        const normalizedOptions = this.normalizeOptions(options);
-        this.processOnclick(normalizedOptions, 'span');
-        const attrs = this.buildAttrs(normalizedOptions);
-        return `<span${attrs}>${content}</span>`;
-    }
-
     /** Create a link element */
     link(text: string, options: LinkOptions): string {
         const normalizedOptions = this.normalizeOptions(options);
@@ -633,59 +680,39 @@ class ClientApp {
         return `<a${attrs}>${text}</a>`;
     }
 
-    /** Create a list (ordered or unordered) */
-    private createList(items: string[], tag: 'ul' | 'ol', options?: BaseOptions): string {
+    /** Create an ordered list */
+    ol(items: string[], options?: BaseOptions): string {
         const normalizedOptions = this.normalizeOptions(options);
-        this.processOnclick(normalizedOptions, tag);
+        this.processOnclick(normalizedOptions, 'ol');
         const listItems = items.map((item) => `<li>${item}</li>`).join('');
         const attrs = this.buildAttrs(normalizedOptions);
-        return `<${tag}${attrs}>${listItems}</${tag}>`;
+        return `<ol${attrs}>${listItems}</ol>`;
+    }
+
+    /** Create a span element */
+    span(content: string, options?: BaseOptions): string {
+        const normalizedOptions = this.normalizeOptions(options);
+        this.processOnclick(normalizedOptions, 'span');
+        const attrs = this.buildAttrs(normalizedOptions);
+        return `<span${attrs}>${content}</span>`;
     }
 
     /** Create an unordered list */
     ul(items: string[], options?: BaseOptions): string {
-        return this.createList(items, 'ul', options);
-    }
-
-    /** Create an ordered list */
-    ol(items: string[], options?: BaseOptions): string {
-        return this.createList(items, 'ol', options);
-    }
-
-    // ========================================
-    // COMPONENT METHODS
-    // ========================================
-
-    /** Create a card container */
-    card(content: string, options?: BaseOptions): string {
         const normalizedOptions = this.normalizeOptions(options);
-        this.processOnclick(normalizedOptions, 'card');
-        const attrs = this.buildAttrs(normalizedOptions, 'card');
-        return `<div${attrs}>${content}</div>`;
-    }
-
-    /** Create an image element */
-    image(src: string, options?: ImageOptions): string {
-        const normalizedOptions = this.normalizeOptions({ ...options, src });
-        if (normalizedOptions.alt === undefined) normalizedOptions.alt = '';
-        if (normalizedOptions.loading === undefined) normalizedOptions.loading = 'lazy';
-        this.processOnclick(normalizedOptions, 'img');
+        this.processOnclick(normalizedOptions, 'ul');
+        const listItems = items.map((item) => `<li>${item}</li>`).join('');
         const attrs = this.buildAttrs(normalizedOptions);
-        return `<img${attrs}>`;
+        return `<ul${attrs}>${listItems}</ul>`;
     }
 
-    /** Create a grid layout */
-    grid(items: string[], options?: GridOptions): string {
-        const { columns = 3, ...baseOptions } = options || ({} as GridOptions);
-        const normalizedOptions = this.normalizeOptions(baseOptions);
-        this.processOnclick(normalizedOptions, 'grid');
-        const attrs = this.buildAttrs(normalizedOptions, `grid grid-${columns}`);
-        return `<div${attrs}>${items.join('')}</div>`;
-    }
+    // ========================================
+    // TYPOGRAPHY
+    // ========================================
 
     /** Create inline or block code */
     code(content: string, options?: CodeOptions): string {
-        const { language, block = false, ...baseOptions } = options || {} as CodeOptions;
+        const { language, block = false, ...baseOptions } = options || ({} as CodeOptions);
         const normalizedOptions = this.normalizeOptions(baseOptions);
 
         if (block) {
@@ -700,6 +727,49 @@ class ClientApp {
             return `<code${attrs}>${content}</code>`;
         }
     }
+
+    /** Create a heading */
+    heading(text: string, level: HeadingLevel = 2, options?: BaseOptions): string {
+        const normalizedOptions = this.normalizeOptions(options);
+        this.processOnclick(normalizedOptions, 'heading');
+        const attrs = this.buildAttrs(normalizedOptions);
+        return `<h${level}${attrs}>${text}</h${level}>`;
+    }
+
+    /** Create a separator (horizontal rule) */
+    separator(size: Spacing = 'm', options?: Omit<BaseOptions, 'onclick'>): string {
+        const defaultStyle: StyleOptions = {
+            border: 'none',
+            borderTop: '1px solid var(--border)',
+            marginTop: `var(--space-${size})`,
+            marginBottom: `var(--space-${size})`,
+        };
+        const normalizedOptions = this.normalizeOptions({ ...options, style: options?.style || defaultStyle });
+        const attrs = this.buildAttrs(normalizedOptions);
+        return `<hr${attrs}>`;
+    }
+
+    /** Create a spacer */
+    spacer(size: Spacing = 'm', options?: Omit<BaseOptions, 'onclick'>): string {
+        const normalizedOptions = this.normalizeOptions({
+            ...options,
+            style: options?.style || { height: `var(--space-${size})` },
+        });
+        const attrs = this.buildAttrs(normalizedOptions);
+        return `<div${attrs}></div>`;
+    }
+
+    /** Create a text block with optional styling */
+    text(content: string, options?: BaseOptions): string {
+        const normalizedOptions = this.normalizeOptions(options);
+        this.processOnclick(normalizedOptions, 'text');
+        const attrs = this.buildAttrs(normalizedOptions);
+        return `<p${attrs}>${content}</p>`;
+    }
+
+    // ========================================
+    // COMPONENTS
+    // ========================================
 
     /** Create an accordion */
     accordion(items: AccordionItem[], options?: BaseOptions): string {
@@ -728,44 +798,135 @@ class ClientApp {
         return `<div${attrs}>${accordionItems}</div>`;
     }
 
-    // ========================================
-    // FORM METHODS
-    // ========================================
-
-    /** Create an input field */
-    input(options?: InputOptions): string {
+    /** Create a card container */
+    card(content: string, options?: BaseOptions): string {
         const normalizedOptions = this.normalizeOptions(options);
-        if (!normalizedOptions.type) normalizedOptions.type = 'text';
-        const attrs = this.buildAttrs(normalizedOptions, 'input');
-        return `<input${attrs}>`;
+        this.processOnclick(normalizedOptions, 'card');
+        const attrs = this.buildAttrs(normalizedOptions, 'card');
+        return `<div${attrs}>${content}</div>`;
     }
 
-    /** Create a textarea */
-    textarea(options?: TextareaOptions): string {
-        const { value, ...baseOptions } = options || ({} as TextareaOptions);
+    /** Create a flex container */
+    flex(items: string[], options?: FlexOptions): string {
+        const { gap = 'm', direction = 'row', ...baseOptions } = options || ({} as FlexOptions);
         const normalizedOptions = this.normalizeOptions(baseOptions);
-        const attrs = this.buildAttrs(normalizedOptions, 'textarea');
-        return `<textarea${attrs}>${value || ''}</textarea>`;
+        this.processOnclick(normalizedOptions, 'flex');
+        const mainClass = `flex flex-${direction} gap-${gap}`;
+        const attrs = this.buildAttrs(normalizedOptions, mainClass);
+        return `<div${attrs}>${items.join('')}</div>`;
     }
 
-    /** Create a select dropdown */
-    select(options: SelectOptions): string {
-        const { options: selectOptions, selected, ...baseOptions } = options;
+    /** Create a grid layout */
+    grid(items: string[], options?: GridOptions): string {
+        const { columns = 3, ...baseOptions } = options || ({} as GridOptions);
         const normalizedOptions = this.normalizeOptions(baseOptions);
-        const attrs = this.buildAttrs(normalizedOptions, 'select');
+        this.processOnclick(normalizedOptions, 'grid');
+        const attrs = this.buildAttrs(normalizedOptions, `grid grid-${columns}`);
+        return `<div${attrs}>${items.join('')}</div>`;
+    }
 
-        const optionElements = selectOptions
-            .map((opt) => {
-                const optAttrs = this.buildAttrs({
-                    value: opt.value,
-                    selected: selected === opt.value,
+    /** Create an image element */
+    image(src: string, options?: ImageOptions): string {
+        const normalizedOptions = this.normalizeOptions({ ...options, src });
+        if (normalizedOptions.alt === undefined) normalizedOptions.alt = '';
+        if (normalizedOptions.loading === undefined) normalizedOptions.loading = 'lazy';
+        this.processOnclick(normalizedOptions, 'img');
+        const attrs = this.buildAttrs(normalizedOptions);
+        return `<img${attrs}>`;
+    }
+
+    /** Create a spinner */
+    spinner(options?: BaseOptions): string {
+        const normalizedOptions = this.normalizeOptions(options);
+        this.processOnclick(normalizedOptions, 'spinner');
+        const attrs = this.buildAttrs(normalizedOptions, 'spinner');
+        return `<div${attrs}></div>`;
+    }
+
+    /** Create a table */
+    table(rows: string[] | string[][], options?: TableOptions): string {
+        const { headers, ...baseOptions } = options || ({} as TableOptions);
+        const normalizedOptions = this.normalizeOptions(baseOptions);
+        if (!normalizedOptions.id) normalizedOptions.id = this.generateId('table');
+
+        // Normalize rows to string[][]
+        const normalizedRows: string[][] = Array.isArray(rows[0])
+            ? (rows as string[][])
+            : (rows as string[]).map((item) => [item]);
+
+        const headerRow = headers ? headers.map((h) => `<th>${h}</th>`).join('') : '';
+        const bodyRows = normalizedRows.map((row) => `<tr>${row.map((cell) => `<td>${cell}</td>`).join('')}</tr>`).join('');
+
+        const attrs = this.buildAttrs(normalizedOptions, 'table');
+
+        return `
+            <table${attrs}>
+                ${headers ? `<thead><tr>${headerRow}</tr></thead>` : ''}
+                <tbody id="${normalizedOptions.id}-body">${bodyRows}</tbody>
+            </table>
+        `;
+    }
+
+    /** Create tabs */
+    tabs(items: TabItem[], options?: BaseOptions): string {
+        const normalizedOptions = this.normalizeOptions(options || ({} as BaseOptions));
+        if (!normalizedOptions.id) normalizedOptions.id = this.generateId('tabs');
+
+        setTimeout(() => {
+            const container = document.getElementById(normalizedOptions.id!);
+            if (!container) return;
+
+            // One handler for entire container
+            container.onclick = (e) => {
+                const tab = (e.target as HTMLElement).closest('.tab');
+                if (!tab) return;
+
+                e.preventDefault();
+                const tabs = container.querySelectorAll('.tab');
+                const panels = container.querySelectorAll('.tab-panel');
+                const index = Array.from(tabs).indexOf(tab);
+
+                // Switch active tab
+                tabs.forEach((t) => t.classList.remove('active'));
+                panels.forEach((c) => c.classList.add('hidden'));
+
+                tab.classList.add('active');
+                panels[index]?.classList.remove('hidden');
+            };
+        }, 0);
+
+        const tabElements = items
+            .map((item, i) => {
+                const tabAttrs = this.buildAttrs({
+                    href: '#',
+                    className: i === 0 ? 'tab active' : 'tab',
                 });
-                return `<option${optAttrs}>${opt.text}</option>`;
+                return `<a${tabAttrs}>${item.label}</a>`;
             })
             .join('');
 
-        return `<select${attrs}>${optionElements}</select>`;
+        const panels = items
+            .map((item, i) => {
+                const panelAttrs = this.buildAttrs({
+                    className: i !== 0 ? 'tab-panel hidden' : 'tab-panel',
+                });
+                return `<div${panelAttrs}>${item.content}</div>`;
+            })
+            .join('');
+
+        const attrs = this.buildAttrs(normalizedOptions);
+
+        return `
+            <div${attrs}>
+                <div class="tabs">${tabElements}</div>
+                <div class="tab-content">${panels}</div>
+            </div>
+        `;
     }
+
+    // ========================================
+    // FORMS
+    // ========================================
 
     /** Create a checkbox */
     checkbox(options: CheckboxOptions): string {
@@ -786,6 +947,14 @@ class ClientApp {
                 <label for="${inputId}">${label}</label>
             </div>
         `;
+    }
+
+    /** Create an input field */
+    input(options?: InputOptions): string {
+        const normalizedOptions = this.normalizeOptions(options);
+        if (!normalizedOptions.type) normalizedOptions.type = 'text';
+        const attrs = this.buildAttrs(normalizedOptions, 'input');
+        return `<input${attrs}>`;
     }
 
     /** Create a radio button group */
@@ -816,9 +985,47 @@ class ClientApp {
         return `<div${containerAttrs}>${radios}</div>`;
     }
 
+    /** Create a select dropdown */
+    select(options: SelectOptions): string {
+        const { options: selectOptions, selected, ...baseOptions } = options;
+        const normalizedOptions = this.normalizeOptions(baseOptions);
+        const attrs = this.buildAttrs(normalizedOptions, 'select');
+
+        const optionElements = selectOptions
+            .map((opt) => {
+                const optAttrs = this.buildAttrs({
+                    value: opt.value,
+                    selected: selected === opt.value,
+                });
+                return `<option${optAttrs}>${opt.text}</option>`;
+            })
+            .join('');
+
+        return `<select${attrs}>${optionElements}</select>`;
+    }
+
+    /** Create a textarea */
+    textarea(options?: TextareaOptions): string {
+        const { value, ...baseOptions } = options || ({} as TextareaOptions);
+        const normalizedOptions = this.normalizeOptions(baseOptions);
+        const attrs = this.buildAttrs(normalizedOptions, 'textarea');
+        return `<textarea${attrs}>${value || ''}</textarea>`;
+    }
+
     // ========================================
-    // BUTTON METHODS
+    // BUTTONS & ACTIONS
     // ========================================
+
+    /** Create a badge */
+    badge(text: string, options?: BadgeOptions): string {
+        const { variant = 'default', ...baseOptions } = options || ({} as BadgeOptions);
+        const normalizedOptions = this.normalizeOptions(baseOptions);
+        this.processOnclick(normalizedOptions, 'badge');
+        const mainClass = variant === 'default' ? 'badge' : `badge badge-${variant}`;
+        const attrs = this.buildAttrs(normalizedOptions, mainClass);
+        const nestedId = this.getNestedId(normalizedOptions.id, 'text');
+        return `<span${attrs}><span${nestedId}>${text}</span></span>`;
+    }
 
     /** Create a button */
     button(text: string, options?: ButtonOptions): string {
@@ -886,19 +1093,8 @@ class ClientApp {
         `;
     }
 
-    /** Create a badge */
-    badge(text: string, options?: BadgeOptions): string {
-        const { variant = 'default', ...baseOptions } = options || ({} as BadgeOptions);
-        const normalizedOptions = this.normalizeOptions(baseOptions);
-        this.processOnclick(normalizedOptions, 'badge');
-        const mainClass = variant === 'default' ? 'badge' : `badge badge-${variant}`;
-        const attrs = this.buildAttrs(normalizedOptions, mainClass);
-        const nestedId = this.getNestedId(normalizedOptions.id, 'text');
-        return `<span${attrs}><span${nestedId}>${text}</span></span>`;
-    }
-
     // ========================================
-    // FEEDBACK METHODS
+    // FEEDBACK & NOTIFICATIONS
     // ========================================
 
     /** Create an alert message */
@@ -912,93 +1108,14 @@ class ClientApp {
         return `<div${attrs}><span${nestedId}>${message}</span></div>`;
     }
 
-    /** Create a table */
-    table(rows: string[] | string[][], options?: TableOptions): string {
-        const { headers, ...baseOptions } = options || {} as TableOptions;
-        const normalizedOptions = this.normalizeOptions(baseOptions);
-        if (!normalizedOptions.id) normalizedOptions.id = this.generateId('table');
-
-        // Normalize rows to string[][]
-        const normalizedRows: string[][] = Array.isArray(rows[0])
-            ? (rows as string[][])
-            : (rows as string[]).map((item) => [item]);
-
-        const headerRow = headers ? headers.map((h) => `<th>${h}</th>`).join('') : '';
-        const bodyRows = normalizedRows.map((row) => `<tr>${row.map((cell) => `<td>${cell}</td>`).join('')}</tr>`).join('');
-
-        const attrs = this.buildAttrs(normalizedOptions, 'table');
-
-        return `
-            <table${attrs}>
-                ${headers ? `<thead><tr>${headerRow}</tr></thead>` : ''}
-                <tbody id="${normalizedOptions.id}-body">${bodyRows}</tbody>
-            </table>
-        `;
-    }
-
-    /** Create tabs */
-    tabs(items: TabItem[], options?: BaseOptions): string {
-        const normalizedOptions = this.normalizeOptions(options || {} as BaseOptions);
-        if (!normalizedOptions.id) normalizedOptions.id = this.generateId('tabs');
-
-        setTimeout(() => {
-            const container = document.getElementById(normalizedOptions.id!);
-            if (!container) return;
-
-            // One handler for entire container
-            container.onclick = (e) => {
-                const tab = (e.target as HTMLElement).closest('.tab');
-                if (!tab) return;
-
-                e.preventDefault();
-                const tabs = container.querySelectorAll('.tab');
-                const panels = container.querySelectorAll('.tab-panel');
-                const index = Array.from(tabs).indexOf(tab);
-
-                // Switch active tab
-                tabs.forEach((t) => t.classList.remove('active'));
-                panels.forEach((c) => c.classList.add('hidden'));
-
-                tab.classList.add('active');
-                panels[index]?.classList.remove('hidden');
-            };
-        }, 0);
-
-        const tabElements = items
-            .map((item, i) => {
-                const tabAttrs = this.buildAttrs({
-                    href: '#',
-                    className: i === 0 ? 'tab active' : 'tab',
-                });
-                return `<a${tabAttrs}>${item.label}</a>`;
-            })
-            .join('');
-
-        const panels = items
-            .map((item, i) => {
-                const panelAttrs = this.buildAttrs({
-                    className: i !== 0 ? 'tab-panel hidden' : 'tab-panel',
-                });
-                return `<div${panelAttrs}>${item.content}</div>`;
-            })
-            .join('');
-
-        const attrs = this.buildAttrs(normalizedOptions);
-
-        return `
-            <div${attrs}>
-                <div class="tabs">${tabElements}</div>
-                <div class="tab-content">${panels}</div>
-            </div>
-        `;
-    }
-
-    /** Create a spinner */
-    spinner(options?: BaseOptions): string {
-        const normalizedOptions = this.normalizeOptions(options);
-        this.processOnclick(normalizedOptions, 'spinner');
-        const attrs = this.buildAttrs(normalizedOptions, 'spinner');
-        return `<div${attrs}></div>`;
+    /** Close modal dialog */
+    closeModal(): void {
+        const modal = document.getElementById('modal');
+        if (modal) {
+            modal.hidden = true;
+            modal.innerHTML = '';
+            modal.onclick = null;
+        }
     }
 
     /** Show modal dialog */
@@ -1020,16 +1137,6 @@ class ClientApp {
         modal.hidden = false;
     }
 
-    /** Close modal dialog */
-    closeModal(): void {
-        const modal = document.getElementById('modal');
-        if (modal) {
-            modal.hidden = true;
-            modal.innerHTML = '';
-            modal.onclick = null;
-        }
-    }
-
     /** Show toast notification */
     toast(message: string, options?: ToastOptions): void {
         const { type = 'info', duration = 3000 } = options || ({} as ToastOptions);
@@ -1044,55 +1151,6 @@ class ClientApp {
         setTimeout(() => toast.remove(), duration);
     }
 
-    /** Create a heading */
-    heading(text: string, level: HeadingLevel = 2, options?: BaseOptions): string {
-        const normalizedOptions = this.normalizeOptions(options);
-        this.processOnclick(normalizedOptions, 'heading');
-        const attrs = this.buildAttrs(normalizedOptions);
-        return `<h${level}${attrs}>${text}</h${level}>`;
-    }
-
-    /** Create a separator (horizontal rule) */
-    separator(size: Spacing = 'm', options?: Omit<BaseOptions, 'onclick'>): string {
-        const defaultStyle: StyleOptions = {
-            border: 'none',
-            borderTop: '1px solid var(--border)',
-            marginTop: `var(--space-${size})`,
-            marginBottom: `var(--space-${size})`,
-        };
-        const normalizedOptions = this.normalizeOptions({ ...options, style: options?.style || defaultStyle });
-        const attrs = this.buildAttrs(normalizedOptions);
-        return `<hr${attrs}>`;
-    }
-
-    /** Create a spacer */
-    spacer(size: Spacing = 'm', options?: Omit<BaseOptions, 'onclick'>): string {
-        const normalizedOptions = this.normalizeOptions({
-            ...options,
-            style: options?.style || { height: `var(--space-${size})` },
-        });
-        const attrs = this.buildAttrs(normalizedOptions);
-        return `<div${attrs}></div>`;
-    }
-
-    /** Create a flex container */
-    flex(items: string[], options?: FlexOptions): string {
-        const { gap = 'm', direction = 'row', ...baseOptions } = options || ({} as FlexOptions);
-        const normalizedOptions = this.normalizeOptions(baseOptions);
-        this.processOnclick(normalizedOptions, 'flex');
-        const mainClass = `flex flex-${direction} gap-${gap}`;
-        const attrs = this.buildAttrs(normalizedOptions, mainClass);
-        return `<div${attrs}>${items.join('')}</div>`;
-    }
-
-    /** Create a text block with optional styling */
-    text(content: string, options?: BaseOptions): string {
-        const normalizedOptions = this.normalizeOptions(options);
-        this.processOnclick(normalizedOptions, 'text');
-        const attrs = this.buildAttrs(normalizedOptions);
-        return `<p${attrs}>${content}</p>`;
-    }
-
     // ========================================
     // DOM UTILITIES
     // ========================================
@@ -1102,45 +1160,14 @@ class ClientApp {
         return document.getElementById(id);
     }
 
-    /** Get input element value */
-    val(id: string): string {
-        const element = this.get(id) as HTMLInputElement;
-        return element?.value || '';
-    }
-
-    /** Set input element value */
-    setVal(id: string, value: string): void {
-        const element = this.get(id) as HTMLInputElement;
-        if (element) element.value = value;
+    /** Hide element */
+    hide(id: string): void {
+        this.setVisibility(id, false);
     }
 
     /** Add event listener to element */
     on(id: string, event: string, handler: (e: Event) => void): void {
         this.get(id)?.addEventListener(event, handler);
-    }
-
-    /** Update element content (text or HTML) */
-    private updateContent(id: string, content: string, isHtml: boolean = false): boolean {
-        const element = this.get(id);
-        if (element) {
-            if (isHtml) {
-                element.innerHTML = content;
-            } else {
-                element.textContent = content;
-            }
-            return true;
-        }
-        return false;
-    }
-
-    /** Update text content of an element */
-    updateText(id: string, text: string): boolean {
-        return this.updateContent(id, text, false);
-    }
-
-    /** Update HTML content of an element */
-    updateHtml(id: string, html: string): boolean {
-        return this.updateContent(id, html, true);
     }
 
     /** Set element visibility */
@@ -1151,14 +1178,15 @@ class ClientApp {
         }
     }
 
+    /** Set input element value */
+    setVal(id: string, value: string): void {
+        const element = this.get(id) as HTMLInputElement;
+        if (element) element.value = value;
+    }
+
     /** Show element */
     show(id: string): void {
         this.setVisibility(id, true);
-    }
-
-    /** Hide element */
-    hide(id: string): void {
-        this.setVisibility(id, false);
     }
 
     /** Toggle element visibility */
@@ -1169,9 +1197,30 @@ class ClientApp {
         }
     }
 
+    /** Update HTML content of an element */
+    updateHtml(id: string, html: string): boolean {
+        return this.updateContent(id, html, true);
+    }
+
+    /** Update text content of an element */
+    updateText(id: string, text: string): boolean {
+        return this.updateContent(id, text, false);
+    }
+
+    /** Get input element value */
+    val(id: string): string {
+        const element = this.get(id) as HTMLInputElement;
+        return element?.value || '';
+    }
+
     // ========================================
-    // THEME METHODS
+    // THEME
     // ========================================
+
+    /** Get current theme */
+    getTheme(): ThemeVariant {
+        return (document.documentElement.getAttribute('data-theme') as ThemeVariant) || 'light';
+    }
 
     /** Set specific theme */
     setTheme(theme: ThemeVariant): void {
@@ -1186,13 +1235,8 @@ class ClientApp {
         return theme;
     }
 
-    /** Get current theme */
-    getTheme(): ThemeVariant {
-        return (document.documentElement.getAttribute('data-theme') as ThemeVariant) || 'light';
-    }
-
     // ========================================
-    // REST API METHODS
+    // REST API
     // ========================================
 
     /** Make API request */
@@ -1221,6 +1265,11 @@ class ClientApp {
         }
     }
 
+    /** DELETE request */
+    async apiDelete(endpoint: string): Promise<any> {
+        return this.api('DELETE', endpoint);
+    }
+
     /** GET request */
     async apiGet(endpoint: string): Promise<any> {
         return this.api('GET', endpoint);
@@ -1235,11 +1284,6 @@ class ClientApp {
     async apiPut(endpoint: string, data: any): Promise<any> {
         return this.api('PUT', endpoint, data);
     }
-
-    /** DELETE request */
-    async apiDelete(endpoint: string): Promise<any> {
-        return this.api('DELETE', endpoint);
-    }
 }
 
 // ========================================
@@ -1247,49 +1291,50 @@ class ClientApp {
 // ========================================
 
 export { ClientApp };
+
+// Export Types
 export type {
-    // Types
-    UtilityClass,
-    ClassNameValue,
-    ClassNameOptions,
-    ButtonVariant,
     AlertType,
-    ToastType,
-    GridColumns,
-    ThemeVariant,
-    HeadingLevel,
-    Spacing,
+    ButtonVariant,
+    ClassNameOptions,
+    ClassNameValue,
     FlexDirection,
-    StyleOptions,
+    GridColumns,
+    HeadingLevel,
     Layout,
     NotificationType,
+    Spacing,
+    StyleOptions,
+    ThemeVariant,
+    ToastType,
+    UtilityClass,
+};
 
-    // Base interfaces
+// Export Interfaces
+export type {
+    AccordionItem,
+    AlertOptions,
+    BadgeOptions,
     BaseOptions,
-    NavItemOptions,
-
-    // Component interfaces
+    ButtonOptions,
+    CheckboxOptions,
+    CodeOptions,
+    DropdownItem,
+    FlexOptions,
+    GridOptions,
+    ImageOptions,
+    InputOptions,
+    LinkOptions,
     NavItem,
+    NavItemOptions,
     NavOptions,
-    SidebarSection,
-    SidebarOptions,
+    RadioGroupOptions,
     SelectOption,
     SelectOptions,
+    SidebarOptions,
+    SidebarSection,
     TabItem,
-    ToastOptions,
-    ImageOptions,
-    ButtonOptions,
-    BadgeOptions,
-    DropdownItem,
-    AlertOptions,
     TableOptions,
-    InputOptions,
     TextareaOptions,
-    CheckboxOptions,
-    RadioGroupOptions,
-    GridOptions,
-    LinkOptions,
-    FlexOptions,
-    CodeOptions,
-    AccordionItem,
+    ToastOptions,
 };
