@@ -9,7 +9,7 @@ class ShowcaseApp extends ClientApp {
 
         // Navigation
         this.showNav({
-            brand: 'UI Framework Showcase',
+            brand: 'ts-minimal-kit-web showcase',
             items: [
                 { text: 'Home', onclick: () => this.navigateTo('home') },
                 { text: 'Components', onclick: () => this.navigateTo('components') },
@@ -149,14 +149,14 @@ class ShowcaseApp extends ClientApp {
         this.append(
             this.card(
                 this.heading('Core Principles') +
-                    this.ul([
-                        'Zero external dependencies',
-                        'Full TypeScript support',
-                        'Consistent API across all components',
-                        'Built-in dark/light themes',
-                        'Automatic event handling',
-                        'Client and server integration',
-                    ])
+                this.ul([
+                    'Zero external dependencies',
+                    'Full TypeScript support',
+                    'Consistent API across all components',
+                    'Built-in dark/light themes',
+                    'Automatic event handling',
+                    'Client and server integration',
+                ])
             )
         );
 
@@ -165,19 +165,19 @@ class ShowcaseApp extends ClientApp {
                 [
                     this.card(
                         this.heading('25+', 2, { style: { textAlign: 'center', color: 'var(--primary)' } }) +
-                            this.text('Components', { className: 'text-center text-muted' })
+                        this.text('Components', { className: 'text-center text-muted' })
                     ),
                     this.card(
                         this.heading('25+', 2, { style: { textAlign: 'center', color: 'var(--success)' } }) +
-                            this.text('Helper Methods', { className: 'text-center text-muted' })
+                        this.text('Helper Methods', { className: 'text-center text-muted' })
                     ),
                     this.card(
                         this.heading('2', 2, { style: { textAlign: 'center', color: 'var(--warning)' } }) +
-                            this.text('Themes', { className: 'text-center text-muted' })
+                        this.text('Themes', { className: 'text-center text-muted' })
                     ),
                     this.card(
                         this.heading('0', 2, { style: { textAlign: 'center', color: 'var(--danger)' } }) +
-                            this.text('Dependencies', { className: 'text-center text-muted' })
+                        this.text('Dependencies', { className: 'text-center text-muted' })
                     ),
                 ],
                 { columns: 4 }
@@ -203,6 +203,15 @@ class ShowcaseApp extends ClientApp {
                 { gap: 'm' }
             )
         );
+
+        this.append(this.separator());
+
+        this.append(
+            this.text('Created by tish & Claude', {
+                className: 'text-center text-muted',
+                style: { fontSize: '0.875rem' }
+            })
+        );
     }
 
     private showTypography(): void {
@@ -213,18 +222,18 @@ class ShowcaseApp extends ClientApp {
         this.append(
             this.card(
                 this.heading('Headings') +
-                    this.separator() +
-                    this.heading('Heading 1', 1) +
-                    this.heading('Heading 2', 2) +
-                    this.heading('Heading 3', 3)
+                this.separator() +
+                this.heading('Heading 1', 1) +
+                this.heading('Heading 2', 2) +
+                this.heading('Heading 3', 3)
             )
         );
 
         this.append(
             this.card(
                 this.heading('Lists') +
-                    this.ul(['First item', 'Second item', 'Third item']) +
-                    this.ol(['Step one', 'Step two', 'Step three'])
+                this.ul(['First item', 'Second item', 'Third item']) +
+                this.ol(['Step one', 'Step two', 'Step three'])
             )
         );
     }
@@ -237,44 +246,44 @@ class ShowcaseApp extends ClientApp {
         this.append(
             this.card(
                 this.heading('Button Variants') +
-                    this.flex(
-                        [
-                            this.button('Default', {
-                                onclick: () => this.toast('Default clicked'),
-                            }),
-                            this.button('Primary', {
-                                variant: 'primary',
-                                onclick: () => this.toast('Primary clicked', { type: 'info' }),
-                            }),
-                            this.button('Success', {
-                                variant: 'success',
-                                onclick: () => this.toast('Success clicked', { type: 'success' }),
-                            }),
-                            this.button('Warning', {
-                                variant: 'warning',
-                                onclick: () => this.toast('Warning clicked', { type: 'warning' }),
-                            }),
-                            this.button('Danger', {
-                                variant: 'danger',
-                                onclick: () => this.toast('Danger clicked', { type: 'danger' }),
-                            }),
-                        ],
-                        { gap: 's' }
-                    )
+                this.flex(
+                    [
+                        this.button('Default', {
+                            onclick: () => this.toast('Default clicked'),
+                        }),
+                        this.button('Primary', {
+                            variant: 'primary',
+                            onclick: () => this.toast('Primary clicked', { type: 'info' }),
+                        }),
+                        this.button('Success', {
+                            variant: 'success',
+                            onclick: () => this.toast('Success clicked', { type: 'success' }),
+                        }),
+                        this.button('Warning', {
+                            variant: 'warning',
+                            onclick: () => this.toast('Warning clicked', { type: 'warning' }),
+                        }),
+                        this.button('Danger', {
+                            variant: 'danger',
+                            onclick: () => this.toast('Danger clicked', { type: 'danger' }),
+                        }),
+                    ],
+                    { gap: 's' }
+                )
             )
         );
 
         this.append(
             this.card(
                 this.heading('Dropdown Menu') +
-                    this.dropdown({
-                        text: 'Actions',
-                        items: [
-                            { text: 'Edit', onclick: () => this.toast('Edit clicked', { type: 'info' }) },
-                            { text: 'Delete', onclick: () => this.toast('Delete clicked', { type: 'danger' }) },
-                        ],
-                        variant: 'primary',
-                    })
+                this.dropdown({
+                    text: 'Actions',
+                    items: [
+                        { text: 'Edit', onclick: () => this.toast('Edit clicked', { type: 'info' }) },
+                        { text: 'Delete', onclick: () => this.toast('Delete clicked', { type: 'danger' }) },
+                    ],
+                    variant: 'primary',
+                })
             )
         );
     }
@@ -287,64 +296,64 @@ class ShowcaseApp extends ClientApp {
         this.append(
             this.card(
                 this.heading('Basic Image') +
-                    this.image({
-                        src: 'https://picsum.photos/400/300',
-                        alt: 'Random landscape',
-                    })
+                this.image({
+                    src: 'https://picsum.photos/400/300',
+                    alt: 'Random landscape',
+                })
             )
         );
 
         this.append(
             this.card(
                 this.heading('Image Grid') +
-                    this.grid(
-                        [
-                            this.image({
-                                src: 'https://picsum.photos/seed/1/300/200',
-                                alt: 'Image 1',
-                            }),
-                            this.image({
-                                src: 'https://picsum.photos/seed/2/300/200',
-                                alt: 'Image 2',
-                            }),
-                            this.image({
-                                src: 'https://picsum.photos/seed/3/300/200',
-                                alt: 'Image 3',
-                            }),
-                        ],
-                        { columns: 3 }
-                    )
+                this.grid(
+                    [
+                        this.image({
+                            src: 'https://picsum.photos/seed/1/300/200',
+                            alt: 'Image 1',
+                        }),
+                        this.image({
+                            src: 'https://picsum.photos/seed/2/300/200',
+                            alt: 'Image 2',
+                        }),
+                        this.image({
+                            src: 'https://picsum.photos/seed/3/300/200',
+                            alt: 'Image 3',
+                        }),
+                    ],
+                    { columns: 3 }
+                )
             )
         );
 
         this.append(
             this.card(
                 this.heading('Clickable Images') +
-                    this.text('Images can have onclick handlers') +
-                    this.spacer('s') +
-                    this.flex(
-                        [
-                            this.image({
-                                src: 'https://picsum.photos/seed/10/150/150',
-                                alt: 'Click me 1',
-                                onclick: () => this.toast('Image 1 clicked!', { type: 'info' }),
-                                style: { cursor: 'pointer', borderRadius: 'var(--radius)' },
-                            }),
-                            this.image({
-                                src: 'https://picsum.photos/seed/11/150/150',
-                                alt: 'Click me 2',
-                                onclick: () => this.toast('Image 2 clicked!', { type: 'success' }),
-                                style: { cursor: 'pointer', borderRadius: '50%' },
-                            }),
-                            this.image({
-                                src: 'https://picsum.photos/seed/12/150/150',
-                                alt: 'Click me 3',
-                                onclick: () => this.toast('Image 3 clicked!', { type: 'warning' }),
-                                style: { cursor: 'pointer', borderRadius: 'var(--radius)' },
-                            }),
-                        ],
-                        { gap: 'm' }
-                    )
+                this.text('Images can have onclick handlers') +
+                this.spacer('s') +
+                this.flex(
+                    [
+                        this.image({
+                            src: 'https://picsum.photos/seed/10/150/150',
+                            alt: 'Click me 1',
+                            onclick: () => this.toast('Image 1 clicked!', { type: 'info' }),
+                            style: { cursor: 'pointer', borderRadius: 'var(--radius)' },
+                        }),
+                        this.image({
+                            src: 'https://picsum.photos/seed/11/150/150',
+                            alt: 'Click me 2',
+                            onclick: () => this.toast('Image 2 clicked!', { type: 'success' }),
+                            style: { cursor: 'pointer', borderRadius: '50%' },
+                        }),
+                        this.image({
+                            src: 'https://picsum.photos/seed/12/150/150',
+                            alt: 'Click me 3',
+                            onclick: () => this.toast('Image 3 clicked!', { type: 'warning' }),
+                            style: { cursor: 'pointer', borderRadius: 'var(--radius)' },
+                        }),
+                    ],
+                    { gap: 'm' }
+                )
             )
         );
     }
@@ -357,24 +366,24 @@ class ShowcaseApp extends ClientApp {
         this.append(
             this.card(
                 this.heading('Inline Code') +
-                    this.text('Use inline code like ') +
-                    this.code('const x = 42') +
-                    this.text(' within text.')
+                this.text('Use inline code like ') +
+                this.code('const x = 42') +
+                this.text(' within text.')
             )
         );
 
         this.append(
             this.card(
                 this.heading('Block Code') +
-                    this.code(
-                        `function greet(name) {
+                this.code(
+                    `function greet(name) {
     return \`Hello, \${name}!\`;
 }
 
 const message = greet('World');
 console.log(message);`,
-                        { block: true, language: 'javascript' }
-                    )
+                    { block: true, language: 'javascript' }
+                )
             )
         );
     }
@@ -387,28 +396,28 @@ console.log(message);`,
         this.append(
             this.card(
                 this.heading('Badge Variants') +
-                    this.flex(
-                        [
-                            this.badge('Default'),
-                            this.badge('Primary', { variant: 'primary' }),
-                            this.badge('Success', { variant: 'success' }),
-                            this.badge('Warning', { variant: 'warning' }),
-                            this.badge('Danger', { variant: 'danger' }),
-                        ],
-                        { gap: 's' }
-                    )
+                this.flex(
+                    [
+                        this.badge('Default'),
+                        this.badge('Primary', { variant: 'primary' }),
+                        this.badge('Success', { variant: 'success' }),
+                        this.badge('Warning', { variant: 'warning' }),
+                        this.badge('Danger', { variant: 'danger' }),
+                    ],
+                    { gap: 's' }
+                )
             )
         );
 
         this.append(
             this.card(
                 this.heading('Badges in Context') +
-                    this.div(this.heading('Product Title', 4) + this.badge('New', { variant: 'success' }), {
-                        className: 'flex items-center gap-s',
-                    }) +
-                    this.text('Product description with inline badge.') +
-                    this.separator() +
-                    this.flex([this.span('Status:'), this.badge('Active', { variant: 'primary' })], { gap: 's' })
+                this.div(this.heading('Product Title', 4) + this.badge('New', { variant: 'success' }), {
+                    className: 'flex items-center gap-s',
+                }) +
+                this.text('Product description with inline badge.') +
+                this.separator() +
+                this.flex([this.span('Status:'), this.badge('Active', { variant: 'primary' })], { gap: 's' })
             )
         );
     }
@@ -436,21 +445,21 @@ console.log(message);`,
             .map((cols) =>
                 this.card(
                     this.heading(`${cols} Column Grid`) +
-                        this.grid(
-                            Array(cols)
-                                .fill(0)
-                                .map((_, i) =>
-                                    this.div(this.badge(`Item ${i + 1}`, { variant: 'primary' }), {
-                                        style: {
-                                            padding: 'var(--space-m)',
-                                            background: 'var(--bg-secondary)',
-                                            borderRadius: 'var(--radius)',
-                                            textAlign: 'center',
-                                        },
-                                    })
-                                ),
-                            { columns: cols as any }
-                        )
+                    this.grid(
+                        Array(cols)
+                            .fill(0)
+                            .map((_, i) =>
+                                this.div(this.badge(`Item ${i + 1}`, { variant: 'primary' }), {
+                                    style: {
+                                        padding: 'var(--space-m)',
+                                        background: 'var(--bg-secondary)',
+                                        borderRadius: 'var(--radius)',
+                                        textAlign: 'center',
+                                    },
+                                })
+                            ),
+                        { columns: cols as any }
+                    )
                 )
             )
             .join('');
@@ -466,10 +475,10 @@ console.log(message);`,
         this.append(
             this.card(
                 this.heading('Direction & Gap') +
-                    this.heading('Row', 5) +
-                    this.flex([this.badge('A'), this.badge('B'), this.badge('C')], { direction: 'row', gap: 'm' }) +
-                    this.heading('Column', 5) +
-                    this.flex([this.badge('First'), this.badge('Second'), this.badge('Third')], { direction: 'col', gap: 's' })
+                this.heading('Row', 5) +
+                this.flex([this.badge('A'), this.badge('B'), this.badge('C')], { direction: 'row', gap: 'm' }) +
+                this.heading('Column', 5) +
+                this.flex([this.badge('First'), this.badge('Second'), this.badge('Third')], { direction: 'col', gap: 's' })
             )
         );
     }
@@ -482,72 +491,72 @@ console.log(message);`,
         this.append(
             this.card(
                 this.heading('Basic Accordion') +
-                    this.accordion({
-                        items: [
-                            {
-                                title: 'What is TypeScript?',
-                                content: this.text(
-                                    'TypeScript is a typed superset of JavaScript that compiles to plain JavaScript.'
-                                ),
-                                open: true,
-                            },
-                            {
-                                title: 'Why use this framework?',
-                                content: this.text('Zero dependencies, full TypeScript support, and minimal footprint.'),
-                            },
-                            {
-                                title: 'How to get started?',
-                                content:
-                                    this.text('Install the kit and extend ClientApp class:') +
-                                    this.code('class MyApp extends ClientApp { }', { block: true }),
-                            },
-                        ],
-                        className: 'accordion-compact',
-                    }) +
-                    this.spacer('s') +
-                    this.text('Using .accordion-compact utility', { className: 'text-muted' })
+                this.accordion({
+                    items: [
+                        {
+                            title: 'What is TypeScript?',
+                            content: this.text(
+                                'TypeScript is a typed superset of JavaScript that compiles to plain JavaScript.'
+                            ),
+                            open: true,
+                        },
+                        {
+                            title: 'Why use this framework?',
+                            content: this.text('Zero dependencies, full TypeScript support, and minimal footprint.'),
+                        },
+                        {
+                            title: 'How to get started?',
+                            content:
+                                this.text('Install the kit and extend ClientApp class:') +
+                                this.code('class MyApp extends ClientApp { }', { block: true }),
+                        },
+                    ],
+                    className: 'accordion-compact',
+                }) +
+                this.spacer('s') +
+                this.text('Using .accordion-compact utility', { className: 'text-muted' })
             )
         );
 
         this.append(
             this.card(
                 this.heading('Rich Content') +
-                    this.accordion({
-                        items: [
-                            {
-                                title: 'Features',
-                                content: this.ul([
-                                    'Component-based architecture',
-                                    'Dark/light themes',
-                                    'Responsive design',
-                                    'Hash navigation',
-                                ]),
-                            },
-                            {
-                                title: 'Components',
-                                content: this.flex(
-                                    [
-                                        this.badge('Buttons', { variant: 'primary' }),
-                                        this.badge('Cards', { variant: 'success' }),
-                                        this.badge('Tables', { variant: 'warning' }),
-                                        this.badge('Forms', { variant: 'danger' }),
-                                    ],
-                                    { gap: 's' }
-                                ),
-                            },
-                            {
-                                title: 'API Example',
-                                content: this.code(
-                                    `// Fetch users
+                this.accordion({
+                    items: [
+                        {
+                            title: 'Features',
+                            content: this.ul([
+                                'Component-based architecture',
+                                'Dark/light themes',
+                                'Responsive design',
+                                'Hash navigation',
+                            ]),
+                        },
+                        {
+                            title: 'Components',
+                            content: this.flex(
+                                [
+                                    this.badge('Buttons', { variant: 'primary' }),
+                                    this.badge('Cards', { variant: 'success' }),
+                                    this.badge('Tables', { variant: 'warning' }),
+                                    this.badge('Forms', { variant: 'danger' }),
+                                ],
+                                { gap: 's' }
+                            ),
+                        },
+                        {
+                            title: 'API Example',
+                            content: this.code(
+                                `// Fetch users
 const users = await this.apiGet('/users');
 
 // Create user
 await this.apiPost('/users', { name: 'John' });`,
-                                    { block: true, language: 'javascript' }
-                                ),
-                            },
-                        ],
-                    })
+                                { block: true, language: 'javascript' }
+                            ),
+                        },
+                    ],
+                })
             )
         );
     }
@@ -561,56 +570,56 @@ await this.apiPost('/users', { name: 'John' });`,
         this.append(
             this.card(
                 this.heading('All Available Utilities') +
-                    this.accordion({
-                        items: [
-                            {
-                                title: 'Display & Visibility',
-                                content: this.code('hidden, block, inline-block'),
-                            },
-                            {
-                                title: 'Flexbox Layout',
-                                content: this.code('flex, flex-col, flex-row, flex-wrap, flex-1'),
-                            },
-                            {
-                                title: 'Flexbox Alignment',
-                                content: this.code(
-                                    'items-start, items-center, items-end\njustify-start, justify-center, justify-end, justify-between'
-                                ),
-                            },
-                            {
-                                title: 'Gap',
-                                content: this.code('gap-none, gap-s, gap-m, gap-l'),
-                            },
-                            {
-                                title: 'Margin',
-                                content: this.code('m-0, mt-0, mb-0, mb-s, mb-m, mb-l\nml-auto, mr-auto, mx-auto'),
-                            },
-                            {
-                                title: 'Padding',
-                                content: this.code('p-0, p-s, p-m, p-l'),
-                            },
-                            {
-                                title: 'Sizing',
-                                content: this.code('w-full, w-fit, h-full'),
-                            },
-                            {
-                                title: 'Text & Typography',
-                                content: this.code(
-                                    'text-left, text-center, text-right\ntext-secondary, text-muted\nfont-semibold, font-bold, truncate'
-                                ),
-                            },
-                            {
-                                title: 'Interactive',
-                                content: this.code('overflow-auto, cursor-pointer, cursor-not-allowed, opacity-50'),
-                            },
-                            {
-                                title: 'Component-Specific',
-                                content: this.code(
-                                    'table-fit, table-center, table-right\ntable-compact, table-striped\naccordion-compact, sidebar-compact'
-                                ),
-                            },
-                        ],
-                    })
+                this.accordion({
+                    items: [
+                        {
+                            title: 'Display & Visibility',
+                            content: this.code('hidden, block, inline-block'),
+                        },
+                        {
+                            title: 'Flexbox Layout',
+                            content: this.code('flex, flex-col, flex-row, flex-wrap, flex-1'),
+                        },
+                        {
+                            title: 'Flexbox Alignment',
+                            content: this.code(
+                                'items-start, items-center, items-end\njustify-start, justify-center, justify-end, justify-between'
+                            ),
+                        },
+                        {
+                            title: 'Gap',
+                            content: this.code('gap-none, gap-s, gap-m, gap-l'),
+                        },
+                        {
+                            title: 'Margin',
+                            content: this.code('m-0, mt-0, mb-0, mb-s, mb-m, mb-l\nml-auto, mr-auto, mx-auto'),
+                        },
+                        {
+                            title: 'Padding',
+                            content: this.code('p-0, p-s, p-m, p-l'),
+                        },
+                        {
+                            title: 'Sizing',
+                            content: this.code('w-full, w-fit, h-full'),
+                        },
+                        {
+                            title: 'Text & Typography',
+                            content: this.code(
+                                'text-left, text-center, text-right\ntext-secondary, text-muted\nfont-semibold, font-bold, truncate'
+                            ),
+                        },
+                        {
+                            title: 'Interactive',
+                            content: this.code('overflow-auto, cursor-pointer, cursor-not-allowed, opacity-50'),
+                        },
+                        {
+                            title: 'Component-Specific',
+                            content: this.code(
+                                'table-fit, table-center, table-right\ntable-compact, table-striped\naccordion-compact, sidebar-compact'
+                            ),
+                        },
+                    ],
+                })
             )
         );
 
@@ -618,14 +627,14 @@ await this.apiPost('/users', { name: 'John' });`,
         this.append(
             this.card(
                 this.heading('Usage Patterns') +
-                    this.text('Single class:') +
-                    this.code("className: 'flex'", { block: true }) +
-                    this.spacer('s') +
-                    this.text('Multiple classes:') +
-                    this.code("className: ['flex', 'items-center', 'gap-m']", { block: true }) +
-                    this.spacer('s') +
-                    this.text('Conditional classes:') +
-                    this.code("className: ['btn', isActive && 'opacity-50']", { block: true })
+                this.text('Single class:') +
+                this.code("className: 'flex'", { block: true }) +
+                this.spacer('s') +
+                this.text('Multiple classes:') +
+                this.code("className: ['flex', 'items-center', 'gap-m']", { block: true }) +
+                this.spacer('s') +
+                this.text('Conditional classes:') +
+                this.code("className: ['btn', isActive && 'opacity-50']", { block: true })
             )
         );
 
@@ -634,66 +643,66 @@ await this.apiPost('/users', { name: 'John' });`,
         this.append(
             this.card(
                 this.heading('Dashboard Example') +
-                    this.text('Combining utilities for complex layouts') +
-                    this.spacer('m') +
+                this.text('Combining utilities for complex layouts') +
+                this.spacer('m') +
+                this.div(
                     this.div(
-                        this.div(
-                            this.heading('Stats', 4) +
-                                this.grid(
-                                    [
-                                        this.div(
-                                            this.heading('0', 3, { id: 'counter', style: { color: 'var(--primary)' } }) +
-                                                this.text('Total Count', { className: 'text-muted' }),
-                                            { className: ['text-center', 'p-m'] }
-                                        ),
-                                        this.div(
-                                            this.heading('100%', 3, { style: { color: 'var(--success)' } }) +
-                                                this.text('Success Rate', { className: 'text-muted' }),
-                                            { className: ['text-center', 'p-m'] }
-                                        ),
-                                        this.div(
-                                            this.heading('24/7', 3, { style: { color: 'var(--warning)' } }) +
-                                                this.text('Uptime', { className: 'text-muted' }),
-                                            { className: ['text-center', 'p-m'] }
-                                        ),
-                                    ],
-                                    { columns: 3 }
-                                ) +
-                                this.spacer('m') +
-                                this.flex(
-                                    [
-                                        this.button('Increment', {
-                                            variant: 'primary',
-                                            onclick: () => {
-                                                count++;
-                                                this.updateText('counter', count.toString());
-                                                this.toast(`Count: ${count}`, { type: 'success' });
-                                            },
-                                        }),
-                                        this.button('Reset', {
-                                            variant: 'danger',
-                                            onclick: () => {
-                                                count = 0;
-                                                this.updateText('counter', '0');
-                                                this.toast('Reset!', { type: 'info' });
-                                            },
-                                        }),
-                                    ],
-                                    { gap: 's', className: 'justify-center' }
+                        this.heading('Stats', 4) +
+                        this.grid(
+                            [
+                                this.div(
+                                    this.heading('0', 3, { id: 'counter', style: { color: 'var(--primary)' } }) +
+                                    this.text('Total Count', { className: 'text-muted' }),
+                                    { className: ['text-center', 'p-m'] }
                                 ),
-                            { className: 'flex-1' }
+                                this.div(
+                                    this.heading('100%', 3, { style: { color: 'var(--success)' } }) +
+                                    this.text('Success Rate', { className: 'text-muted' }),
+                                    { className: ['text-center', 'p-m'] }
+                                ),
+                                this.div(
+                                    this.heading('24/7', 3, { style: { color: 'var(--warning)' } }) +
+                                    this.text('Uptime', { className: 'text-muted' }),
+                                    { className: ['text-center', 'p-m'] }
+                                ),
+                            ],
+                            { columns: 3 }
+                        ) +
+                        this.spacer('m') +
+                        this.flex(
+                            [
+                                this.button('Increment', {
+                                    variant: 'primary',
+                                    onclick: () => {
+                                        count++;
+                                        this.updateText('counter', count.toString());
+                                        this.toast(`Count: ${count}`, { type: 'success' });
+                                    },
+                                }),
+                                this.button('Reset', {
+                                    variant: 'danger',
+                                    onclick: () => {
+                                        count = 0;
+                                        this.updateText('counter', '0');
+                                        this.toast('Reset!', { type: 'info' });
+                                    },
+                                }),
+                            ],
+                            { gap: 's', className: 'justify-center' }
                         ),
-                        { className: ['flex', 'gap-m'] }
-                    ) +
-                    this.spacer('m') +
-                    this.code(
-                        `// Utilities used:
+                        { className: 'flex-1' }
+                    ),
+                    { className: ['flex', 'gap-m'] }
+                ) +
+                this.spacer('m') +
+                this.code(
+                    `// Utilities used:
 className: ['flex', 'gap-m']           // Container
 className: 'flex-1'                    // Flexible child
 className: ['text-center', 'p-m']      // Stats cards
 className: ['justify-center']          // Button group`,
-                        { block: true, language: 'javascript' }
-                    )
+                    { block: true, language: 'javascript' }
+                )
             )
         );
 
@@ -701,44 +710,44 @@ className: ['justify-center']          // Button group`,
         this.append(
             this.card(
                 this.heading('Data Table with Utilities') +
-                    this.table({
-                        headers: ['User', 'Role', 'Status', 'Actions'],
-                        rows: [
-                            [
-                                this.div(
-                                    this.text('John Doe', { className: 'font-semibold' }) +
-                                        this.text('john@example.com', { className: 'text-muted' })
-                                ),
-                                this.badge('Admin', { variant: 'danger' }),
-                                this.badge('Active', { variant: 'success' }),
-                                this.flex(
-                                    [
-                                        this.button('Edit', { onclick: () => this.toast('Edit John') }),
-                                        this.button('Delete', { variant: 'danger', onclick: () => this.toast('Delete John') }),
-                                    ],
-                                    { gap: 's' }
-                                ),
-                            ],
-                            [
-                                this.div(
-                                    this.text('Jane Smith', { className: 'font-semibold' }) +
-                                        this.text('jane@example.com', { className: 'text-muted' })
-                                ),
-                                this.badge('User', { variant: 'primary' }),
-                                this.badge('Pending', { variant: 'warning' }),
-                                this.flex(
-                                    [
-                                        this.button('Edit', { onclick: () => this.toast('Edit Jane') }),
-                                        this.button('Delete', { variant: 'danger', onclick: () => this.toast('Delete Jane') }),
-                                    ],
-                                    { gap: 's' }
-                                ),
-                            ],
+                this.table({
+                    headers: ['User', 'Role', 'Status', 'Actions'],
+                    rows: [
+                        [
+                            this.div(
+                                this.text('John Doe', { className: 'font-semibold' }) +
+                                this.text('john@example.com', { className: 'text-muted' })
+                            ),
+                            this.badge('Admin', { variant: 'danger' }),
+                            this.badge('Active', { variant: 'success' }),
+                            this.flex(
+                                [
+                                    this.button('Edit', { onclick: () => this.toast('Edit John') }),
+                                    this.button('Delete', { variant: 'danger', onclick: () => this.toast('Delete John') }),
+                                ],
+                                { gap: 's' }
+                            ),
                         ],
-                        className: ['table-striped', 'table-compact'],
-                    }) +
-                    this.spacer('m') +
-                    this.code("className: ['table-striped', 'table-compact']", { block: true })
+                        [
+                            this.div(
+                                this.text('Jane Smith', { className: 'font-semibold' }) +
+                                this.text('jane@example.com', { className: 'text-muted' })
+                            ),
+                            this.badge('User', { variant: 'primary' }),
+                            this.badge('Pending', { variant: 'warning' }),
+                            this.flex(
+                                [
+                                    this.button('Edit', { onclick: () => this.toast('Edit Jane') }),
+                                    this.button('Delete', { variant: 'danger', onclick: () => this.toast('Delete Jane') }),
+                                ],
+                                { gap: 's' }
+                            ),
+                        ],
+                    ],
+                    className: ['table-striped', 'table-compact'],
+                }) +
+                this.spacer('m') +
+                this.code("className: ['table-striped', 'table-compact']", { block: true })
             )
         );
 
@@ -749,34 +758,34 @@ className: ['justify-center']          // Button group`,
         this.append(
             this.card(
                 this.heading('Flexbox Playground') +
-                    directions
-                        .map((dir) =>
-                            gaps
-                                .map((gap) =>
-                                    this.div(
-                                        this.text(`Direction: ${dir}, Gap: ${gap}`, { className: 'text-muted' }) +
-                                            this.spacer('s') +
-                                            this.flex(
-                                                [
-                                                    this.badge('Item A', { variant: 'primary' }),
-                                                    this.badge('Item B', { variant: 'success' }),
-                                                    this.badge('Item C', { variant: 'warning' }),
-                                                ],
-                                                { direction: dir, gap }
-                                            ),
-                                        { className: 'mb-m' }
-                                    )
+                directions
+                    .map((dir) =>
+                        gaps
+                            .map((gap) =>
+                                this.div(
+                                    this.text(`Direction: ${dir}, Gap: ${gap}`, { className: 'text-muted' }) +
+                                    this.spacer('s') +
+                                    this.flex(
+                                        [
+                                            this.badge('Item A', { variant: 'primary' }),
+                                            this.badge('Item B', { variant: 'success' }),
+                                            this.badge('Item C', { variant: 'warning' }),
+                                        ],
+                                        { direction: dir, gap }
+                                    ),
+                                    { className: 'mb-m' }
                                 )
-                                .join('')
-                        )
-                        .join('') +
-                    this.code(
-                        `this.flex(items, {
+                            )
+                            .join('')
+                    )
+                    .join('') +
+                this.code(
+                    `this.flex(items, {
     direction: 'row', // or 'col'
     gap: 's'          // or 'm', 'l'
 })`,
-                        { block: true, language: 'javascript' }
-                    )
+                    { block: true, language: 'javascript' }
+                )
             )
         );
     }
@@ -789,34 +798,34 @@ className: ['justify-center']          // Button group`,
         this.append(
             this.card(
                 this.heading('Tab Navigation') +
-                    this.tabs({
-                        items: [
-                            {
-                                label: 'Overview',
-                                content:
-                                    this.heading('Project Overview', 4) +
-                                    this.text('This section contains general project information.') +
-                                    this.separator() +
-                                    this.flex(
-                                        [
-                                            this.badge('Active', { variant: 'success' }),
-                                            this.badge('3 members', { variant: 'primary' }),
-                                            this.badge('Updated today'),
-                                        ],
-                                        { gap: 's' }
-                                    ),
-                            },
-                            {
-                                label: 'Tasks',
-                                content:
-                                    this.heading('Task List', 4) +
-                                    this.table({
-                                        rows: ['Complete documentation', 'Review pull requests', 'Update dependencies'],
-                                    }) +
-                                    this.button('Add Task', { variant: 'primary' }),
-                            },
-                        ],
-                    })
+                this.tabs({
+                    items: [
+                        {
+                            label: 'Overview',
+                            content:
+                                this.heading('Project Overview', 4) +
+                                this.text('This section contains general project information.') +
+                                this.separator() +
+                                this.flex(
+                                    [
+                                        this.badge('Active', { variant: 'success' }),
+                                        this.badge('3 members', { variant: 'primary' }),
+                                        this.badge('Updated today'),
+                                    ],
+                                    { gap: 's' }
+                                ),
+                        },
+                        {
+                            label: 'Tasks',
+                            content:
+                                this.heading('Task List', 4) +
+                                this.table({
+                                    rows: ['Complete documentation', 'Review pull requests', 'Update dependencies'],
+                                }) +
+                                this.button('Add Task', { variant: 'primary' }),
+                        },
+                    ],
+                })
             )
         );
     }
@@ -829,31 +838,31 @@ className: ['justify-center']          // Button group`,
         this.append(
             this.card(
                 this.heading('Basic Table') +
-                    this.table({
-                        headers: ['ID', 'Name', 'Status'],
-                        rows: [
-                            ['1', 'John Doe', this.badge('Active', { variant: 'success' })],
-                            ['2', 'Jane Smith', this.badge('Pending', { variant: 'warning' })],
-                            ['3', 'Bob Johnson', this.badge('Inactive', { variant: 'danger' })],
-                        ],
-                    })
+                this.table({
+                    headers: ['ID', 'Name', 'Status'],
+                    rows: [
+                        ['1', 'John Doe', this.badge('Active', { variant: 'success' })],
+                        ['2', 'Jane Smith', this.badge('Pending', { variant: 'warning' })],
+                        ['3', 'Bob Johnson', this.badge('Inactive', { variant: 'danger' })],
+                    ],
+                })
             )
         );
 
         this.append(
             this.card(
                 this.heading('Compact & Striped') +
-                    this.table({
-                        headers: ['Feature', 'Status'],
-                        rows: [
-                            [this.badge('Zero dependencies', { variant: 'success' }), '✓'],
-                            [this.badge('Full TypeScript', { variant: 'primary' }), '✓'],
-                            [this.badge('Component-based', { variant: 'warning' }), '✓'],
-                        ],
-                        className: ['table-compact', 'table-striped'],
-                    }) +
-                    this.spacer('s') +
-                    this.text('Using utilities: .table-compact .table-striped', { className: 'text-muted' })
+                this.table({
+                    headers: ['Feature', 'Status'],
+                    rows: [
+                        [this.badge('Zero dependencies', { variant: 'success' }), '✓'],
+                        [this.badge('Full TypeScript', { variant: 'primary' }), '✓'],
+                        [this.badge('Component-based', { variant: 'warning' }), '✓'],
+                    ],
+                    className: ['table-compact', 'table-striped'],
+                }) +
+                this.spacer('s') +
+                this.text('Using utilities: .table-compact .table-striped', { className: 'text-muted' })
             )
         );
     }
@@ -866,36 +875,36 @@ className: ['justify-center']          // Button group`,
         this.append(
             this.card(
                 this.heading('Alert Types') +
-                    this.alert('Info alert message', { type: 'info' }) +
-                    this.alert('Success alert message', { type: 'success' }) +
-                    this.alert('Warning alert message', { type: 'warning' }) +
-                    this.alert('Danger alert message', { type: 'danger' })
+                this.alert('Info alert message', { type: 'info' }) +
+                this.alert('Success alert message', { type: 'success' }) +
+                this.alert('Warning alert message', { type: 'warning' }) +
+                this.alert('Danger alert message', { type: 'danger' })
             )
         );
 
         this.append(
             this.card(
                 this.heading('Toast Notifications') +
-                    this.flex(
-                        [
-                            this.button('Info', {
-                                onclick: () => this.toast('Info message', { type: 'info' }),
-                            }),
-                            this.button('Success', {
-                                onclick: () => this.toast('Success!', { type: 'success' }),
-                                variant: 'success',
-                            }),
-                            this.button('Warning', {
-                                onclick: () => this.toast('Warning!', { type: 'warning' }),
-                                variant: 'warning',
-                            }),
-                            this.button('Error', {
-                                onclick: () => this.toast('Error!', { type: 'error', duration: 5000 }),
-                                variant: 'danger',
-                            }),
-                        ],
-                        { gap: 's' }
-                    )
+                this.flex(
+                    [
+                        this.button('Info', {
+                            onclick: () => this.toast('Info message', { type: 'info' }),
+                        }),
+                        this.button('Success', {
+                            onclick: () => this.toast('Success!', { type: 'success' }),
+                            variant: 'success',
+                        }),
+                        this.button('Warning', {
+                            onclick: () => this.toast('Warning!', { type: 'warning' }),
+                            variant: 'warning',
+                        }),
+                        this.button('Error', {
+                            onclick: () => this.toast('Error!', { type: 'error', duration: 5000 }),
+                            variant: 'danger',
+                        }),
+                    ],
+                    { gap: 's' }
+                )
             )
         );
     }
@@ -908,77 +917,77 @@ className: ['justify-center']          // Button group`,
         this.append(
             this.card(
                 this.heading('Modal Examples') +
-                    this.flex(
-                        [
-                            this.button('Simple Modal', {
-                                onclick: () =>
-                                    this.modal(
-                                        this.heading('Simple Modal') +
-                                            this.text('This is a simple modal dialog.') +
-                                            this.spacer('m') +
-                                            this.button('Close', {
+                this.flex(
+                    [
+                        this.button('Simple Modal', {
+                            onclick: () =>
+                                this.modal(
+                                    this.heading('Simple Modal') +
+                                    this.text('This is a simple modal dialog.') +
+                                    this.spacer('m') +
+                                    this.button('Close', {
+                                        onclick: () => this.closeModal(),
+                                        variant: 'primary',
+                                    })
+                                ),
+                        }),
+                        this.button('Confirm Modal', {
+                            onclick: () =>
+                                this.modal(
+                                    this.heading('Confirm Action') +
+                                    this.text('Are you sure you want to proceed?') +
+                                    this.spacer('m') +
+                                    this.flex(
+                                        [
+                                            this.button('Cancel', {
                                                 onclick: () => this.closeModal(),
+                                            }),
+                                            this.button('Confirm', {
+                                                onclick: () => {
+                                                    this.closeModal();
+                                                    this.toast('Confirmed!', { type: 'success' });
+                                                },
                                                 variant: 'primary',
-                                            })
+                                            }),
+                                        ],
+                                        { gap: 's' }
+                                    )
+                                ),
+                            variant: 'primary',
+                        }),
+                        this.button('Blocking Modal', {
+                            onclick: () =>
+                                this.modal(
+                                    this.alert('⚠️ Critical Action Required', { type: 'warning' }) +
+                                    this.heading('System Update') +
+                                    this.text('This is a blocking modal. You cannot close it by clicking outside.') +
+                                    this.spacer('m') +
+                                    this.flex(
+                                        [
+                                            this.button('Decline', {
+                                                onclick: () => {
+                                                    this.closeModal();
+                                                    this.toast('Update declined', { type: 'info' });
+                                                },
+                                                variant: 'danger',
+                                            }),
+                                            this.button('Accept', {
+                                                onclick: () => {
+                                                    this.closeModal();
+                                                    this.toast('Update accepted!', { type: 'success' });
+                                                },
+                                                variant: 'primary',
+                                            }),
+                                        ],
+                                        { gap: 's' }
                                     ),
-                            }),
-                            this.button('Confirm Modal', {
-                                onclick: () =>
-                                    this.modal(
-                                        this.heading('Confirm Action') +
-                                            this.text('Are you sure you want to proceed?') +
-                                            this.spacer('m') +
-                                            this.flex(
-                                                [
-                                                    this.button('Cancel', {
-                                                        onclick: () => this.closeModal(),
-                                                    }),
-                                                    this.button('Confirm', {
-                                                        onclick: () => {
-                                                            this.closeModal();
-                                                            this.toast('Confirmed!', { type: 'success' });
-                                                        },
-                                                        variant: 'primary',
-                                                    }),
-                                                ],
-                                                { gap: 's' }
-                                            )
-                                    ),
-                                variant: 'primary',
-                            }),
-                            this.button('Blocking Modal', {
-                                onclick: () =>
-                                    this.modal(
-                                        this.alert('⚠️ Critical Action Required', { type: 'warning' }) +
-                                            this.heading('System Update') +
-                                            this.text('This is a blocking modal. You cannot close it by clicking outside.') +
-                                            this.spacer('m') +
-                                            this.flex(
-                                                [
-                                                    this.button('Decline', {
-                                                        onclick: () => {
-                                                            this.closeModal();
-                                                            this.toast('Update declined', { type: 'info' });
-                                                        },
-                                                        variant: 'danger',
-                                                    }),
-                                                    this.button('Accept', {
-                                                        onclick: () => {
-                                                            this.closeModal();
-                                                            this.toast('Update accepted!', { type: 'success' });
-                                                        },
-                                                        variant: 'primary',
-                                                    }),
-                                                ],
-                                                { gap: 's' }
-                                            ),
-                                        true
-                                    ),
-                                variant: 'danger',
-                            }),
-                        ],
-                        { gap: 's' }
-                    )
+                                    true
+                                ),
+                            variant: 'danger',
+                        }),
+                    ],
+                    { gap: 's' }
+                )
             )
         );
     }
@@ -991,7 +1000,7 @@ className: ['justify-center']          // Button group`,
         this.append(
             this.card(
                 this.heading('Loading Spinner') +
-                    this.div(this.spinner(), { style: { textAlign: 'center', padding: 'var(--space-l)' } })
+                this.div(this.spinner(), { style: { textAlign: 'center', padding: 'var(--space-l)' } })
             )
         );
     }
@@ -1004,101 +1013,101 @@ className: ['justify-center']          // Button group`,
         this.append(
             this.card(
                 this.heading('Text Inputs') +
-                    this.div(
-                        this.text('Text Input', { className: 'label' }) +
-                            this.text('Basic text input field', { className: 'sublabel' }) +
-                            this.input({ id: 'text-input', placeholder: 'Enter text...' })
-                    ) +
-                    this.div(
-                        this.text('Email Input', { className: 'label' }) +
-                            this.input({ id: 'email-input', type: 'email', placeholder: 'user@example.com' })
-                    ) +
-                    this.div(
-                        this.text('Password Input', { className: 'label' }) +
-                            this.input({ id: 'password-input', type: 'password', placeholder: 'Enter password' })
-                    ) +
-                    this.div(
-                        this.text('Textarea', { className: 'label' }) +
-                            this.textarea({ id: 'textarea', placeholder: 'Enter long text...', rows: 4 })
-                    )
+                this.div(
+                    this.text('Text Input', { className: 'label' }) +
+                    this.text('Basic text input field', { className: 'sublabel' }) +
+                    this.input({ id: 'text-input', placeholder: 'Enter text...' })
+                ) +
+                this.div(
+                    this.text('Email Input', { className: 'label' }) +
+                    this.input({ id: 'email-input', type: 'email', placeholder: 'user@example.com' })
+                ) +
+                this.div(
+                    this.text('Password Input', { className: 'label' }) +
+                    this.input({ id: 'password-input', type: 'password', placeholder: 'Enter password' })
+                ) +
+                this.div(
+                    this.text('Textarea', { className: 'label' }) +
+                    this.textarea({ id: 'textarea', placeholder: 'Enter long text...', rows: 4 })
+                )
             )
         );
 
         this.append(
             this.card(
                 this.heading('Select Elements') +
-                    this.div(
-                        this.text('Select Dropdown', { className: 'label' }) +
-                            this.select({
-                                id: 'country',
-                                options: [
-                                    { value: 'us', text: 'United States' },
-                                    { value: 'uk', text: 'United Kingdom' },
-                                    { value: 'ca', text: 'Canada' },
-                                ],
-                                selected: 'us',
-                            })
-                    )
+                this.div(
+                    this.text('Select Dropdown', { className: 'label' }) +
+                    this.select({
+                        id: 'country',
+                        options: [
+                            { value: 'us', text: 'United States' },
+                            { value: 'uk', text: 'United Kingdom' },
+                            { value: 'ca', text: 'Canada' },
+                        ],
+                        selected: 'us',
+                    })
+                )
             )
         );
 
         this.append(
             this.card(
                 this.heading('Checkboxes & Radio Buttons') +
-                    this.heading('Checkboxes', 4) +
-                    this.checkbox({ id: 'check1', label: 'Option 1', checked: true }) +
-                    this.checkbox({ id: 'check2', label: 'Option 2' }) +
-                    this.checkbox({ id: 'check3', label: 'Option 3' }) +
-                    this.separator() +
-                    this.heading('Radio Buttons', 4) +
-                    this.radioGroup({
-                        name: 'radio-example',
-                        options: [
-                            { value: 'opt1', text: 'Option A' },
-                            { value: 'opt2', text: 'Option B' },
-                            { value: 'opt3', text: 'Option C' },
-                        ],
-                        selected: 'opt1',
-                    })
+                this.heading('Checkboxes', 4) +
+                this.checkbox({ id: 'check1', label: 'Option 1', checked: true }) +
+                this.checkbox({ id: 'check2', label: 'Option 2' }) +
+                this.checkbox({ id: 'check3', label: 'Option 3' }) +
+                this.separator() +
+                this.heading('Radio Buttons', 4) +
+                this.radioGroup({
+                    name: 'radio-example',
+                    options: [
+                        { value: 'opt1', text: 'Option A' },
+                        { value: 'opt2', text: 'Option B' },
+                        { value: 'opt3', text: 'Option C' },
+                    ],
+                    selected: 'opt1',
+                })
             )
         );
 
         this.append(
             this.card(
                 this.heading('Complete Form') +
-                    this.div(
-                        this.text('Full Name', { className: 'label' }) + this.input({ id: 'name', placeholder: 'John Doe' })
-                    ) +
-                    this.div(
-                        this.text('Email', { className: 'label' }) +
-                            this.input({ id: 'email', type: 'email', placeholder: 'john@example.com' })
-                    ) +
-                    this.div(
-                        this.text('Message', { className: 'label' }) +
-                            this.textarea({ id: 'message', placeholder: 'Your message...', rows: 3 })
-                    ) +
-                    this.checkbox({ id: 'agree', label: 'I agree to terms' }) +
-                    this.spacer('m') +
-                    this.flex(
-                        [
-                            this.button('Cancel', {
-                                onclick: () => this.toast('Cancelled', { type: 'info' }),
-                            }),
-                            this.button('Submit', {
-                                onclick: () => {
-                                    const name = this.val('name');
-                                    const email = this.val('email');
-                                    if (name && email) {
-                                        this.toast('Form submitted!', { type: 'success' });
-                                    } else {
-                                        this.toast('Please fill required fields', { type: 'warning' });
-                                    }
-                                },
-                                variant: 'primary',
-                            }),
-                        ],
-                        { gap: 's' }
-                    )
+                this.div(
+                    this.text('Full Name', { className: 'label' }) + this.input({ id: 'name', placeholder: 'John Doe' })
+                ) +
+                this.div(
+                    this.text('Email', { className: 'label' }) +
+                    this.input({ id: 'email', type: 'email', placeholder: 'john@example.com' })
+                ) +
+                this.div(
+                    this.text('Message', { className: 'label' }) +
+                    this.textarea({ id: 'message', placeholder: 'Your message...', rows: 3 })
+                ) +
+                this.checkbox({ id: 'agree', label: 'I agree to terms' }) +
+                this.spacer('m') +
+                this.flex(
+                    [
+                        this.button('Cancel', {
+                            onclick: () => this.toast('Cancelled', { type: 'info' }),
+                        }),
+                        this.button('Submit', {
+                            onclick: () => {
+                                const name = this.val('name');
+                                const email = this.val('email');
+                                if (name && email) {
+                                    this.toast('Form submitted!', { type: 'success' });
+                                } else {
+                                    this.toast('Please fill required fields', { type: 'warning' });
+                                }
+                            },
+                            variant: 'primary',
+                        }),
+                    ],
+                    { gap: 's' }
+                )
             )
         );
     }
@@ -1123,17 +1132,17 @@ className: ['justify-center']          // Button group`,
         this.append(
             this.card(
                 this.heading('Navigation') +
-                    this.flex(
-                        [
-                            this.button('Go to Forms', {
-                                onclick: () => this.navigateTo('forms'),
-                            }),
-                            this.button('Scroll to top', {
-                                onclick: () => this.scrollToElement('app'),
-                            }),
-                        ],
-                        { gap: 's' }
-                    )
+                this.flex(
+                    [
+                        this.button('Go to Forms', {
+                            onclick: () => this.navigateTo('forms'),
+                        }),
+                        this.button('Scroll to top', {
+                            onclick: () => this.scrollToElement('app'),
+                        }),
+                    ],
+                    { gap: 's' }
+                )
             )
         );
     }
@@ -1146,25 +1155,25 @@ className: ['justify-center']          // Button group`,
         this.append(
             this.card(
                 this.heading('Layout Modes') +
-                    this.text('The framework supports 4 layout modes:') +
-                    this.ol([
-                        'default - Content only',
-                        'nav - With navigation bar',
-                        'sidebar - With sidebar',
-                        'nav-sidebar - Both navigation and sidebar',
-                    ])
+                this.text('The framework supports 4 layout modes:') +
+                this.ol([
+                    'default - Content only',
+                    'nav - With navigation bar',
+                    'sidebar - With sidebar',
+                    'nav-sidebar - Both navigation and sidebar',
+                ])
             )
         );
 
         this.append(
             this.card(
                 this.heading('Utility Classes') +
-                    this.text('See the Utilities page for live examples and complete reference.') +
-                    this.spacer('m') +
-                    this.button('View Utilities', {
-                        onclick: () => this.navigateTo('utilities'),
-                        variant: 'primary',
-                    })
+                this.text('See the Utilities page for live examples and complete reference.') +
+                this.spacer('m') +
+                this.button('View Utilities', {
+                    onclick: () => this.navigateTo('utilities'),
+                    variant: 'primary',
+                })
             )
         );
     }
