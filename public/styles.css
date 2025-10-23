@@ -288,7 +288,7 @@ div {
 .sidebar-title {
     font-size: 0.875rem;
     font-weight: 600;
-    color: var(--text-secondary);
+    color: var(--success-text);
     text-transform: uppercase;
     margin-bottom: var(--space-s);
 }
@@ -1029,14 +1029,85 @@ body:has([data-layout='nav-sidebar']) .toast-container {
         grid-template-columns: 1fr;
     }
 
-    /* Layout responsive */
-    [data-layout='sidebar'],
-    [data-layout='nav-sidebar'] {
+    /* Layout responsive - adjust grid layouts */
+    [data-layout='sidebar'] {
         grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr;
     }
 
+    [data-layout='nav-sidebar'] {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto 1fr;
+    }
+
+    /* Navigation responsive - 2 rows layout */
+    .nav {
+        flex-direction: column;
+        align-items: stretch;
+        padding: var(--space-m);
+        gap: var(--space-m);
+        height: auto;
+    }
+
+    .nav-brand {
+        text-align: center;
+        width: 100%;
+    }
+
+    .nav-menu {
+        margin-left: 0;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: var(--space-s);
+    }
+
+    .nav-item {
+        padding: var(--space-s);
+    }
+
+    /* Sidebar responsive - vertical layout with brand on top */
     .sidebar {
-        display: none;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        padding: var(--space-m);
+        overflow-x: auto;
+        overflow-y: visible;
+    }
+
+    .sidebar-brand {
+        display: block;
+        text-align: center;
+        margin-bottom: var(--space-m);
+    }
+
+    .sidebar-section {
+        margin-bottom: var(--space-m);
+    }
+
+    .sidebar-title {
+        font-size: 0.75rem;
+        margin-bottom: var(--space-s);
+        text-align: center;
+    }
+
+    .sidebar-menu {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-s);
+        justify-content: center;
+    }
+
+    .sidebar-item {
+        padding: var(--space-s) var(--space-m);
+        white-space: nowrap;
+    }
+
+    /* Main content padding adjustment */
+    .main {
+        padding: var(--space-m);
     }
 
     /* Modal responsive */
@@ -1050,9 +1121,40 @@ body:has([data-layout='nav-sidebar']) .toast-container {
         right: var(--space-m);
     }
 
-    /* Navigation responsive */
-    .nav-menu {
-        flex-wrap: wrap;
+    .toast {
+        min-width: auto;
+        width: 100%;
+    }
+
+    /* Adjust toast position for mobile nav height */
+    body:has([data-layout='nav']) .toast-container,
+    body:has([data-layout='nav-sidebar']) .toast-container {
+        top: var(--space-l);
+    }
+
+    /* Table responsive - horizontal scroll */
+    .table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    /* Dropdown menu responsive */
+    .dropdown-menu {
+        position: fixed;
+        left: var(--space-m);
+        right: var(--space-m);
+        width: auto;
+    }
+
+    /* Card responsive - reduce padding */
+    .card {
+        padding: var(--space-m);
+    }
+
+    /* Button responsive - full width option */
+    .btn {
+        padding: var(--space-s) var(--space-m);
     }
 }
 
