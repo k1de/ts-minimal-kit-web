@@ -15,7 +15,11 @@
         "build:start": "npm run build && npm start",
         "clean": "node -e \"import('fs').then(fs => { fs.rmSync('dist', {recursive: true, force: true}); fs.readdirSync('public').filter(f => !['index.html','styles.css'].includes(f)).forEach(f => fs.rmSync('public/' + f, {recursive: true, force: true})); fs.readdirSync('.').filter(f => f.endsWith('.tsbuildinfo')).forEach(f => fs.rmSync(f, {force: true})); })\"",
         "degit": "node -e \"import('fs').then(fs => fs.rmSync('.git', {recursive: true, force: true}))\"",
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "build:start:showcase": "npm run build:showcase && npm run start",
+        "build:showcase": "npm run showcase:swap && npm run build:server && npm run build:client && npm run showcase:restore",
+        "showcase:swap": "node -e \"import('fs').then(fs => { fs.renameSync('src/client/index.ts', 'src/client/index.ts.backup'); fs.copyFileSync('src/client/SHOWCASE.ts', 'src/client/index.ts'); })\"",
+        "showcase:restore": "node -e \"import('fs').then(fs => { fs.rmSync('src/client/index.ts', {force: true}); fs.renameSync('src/client/index.ts.backup', 'src/client/index.ts'); })\""
     },
     "keywords": [
         "typescript",
