@@ -2,6 +2,8 @@
 
 Minimal TypeScript web kit: zero dependencies, full-stack ready, strict typing.
 
+[![Demo](https://img.shields.io/badge/demo-live-success)](https://ts-minimal-kit-web.netlify.app)
+
 ## Project Structure
 
 ```
