@@ -149,6 +149,7 @@ pre,
 }
 
 /* Remove bottom margin from last child in containers */
+div > :last-child,
 .main > :last-child,
 .card > :last-child,
 .modal > :last-child,
@@ -270,6 +271,14 @@ div {
     border-right: 1px solid var(--border);
     padding: var(--space-l);
     overflow-y: auto;
+}
+
+.sidebar-brand {
+    font-size: 1.25rem;
+    font-weight: 600;
+    word-wrap: break-word;
+    color: var(--primary);
+    margin-bottom: var(--space-l);
 }
 
 .sidebar-section {
@@ -535,7 +544,7 @@ pre {
     font-family: ui-monospace, 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
     font-size: 0.875rem;
     background: var(--bg-secondary);
-    padding: var(--space-m);
+    padding: var(--space-s);
     border-radius: var(--radius);
     overflow-x: auto;
     border: 1px solid var(--border);
@@ -994,20 +1003,17 @@ body:has([data-layout='nav-sidebar']) .toast-container {
 .table-compact td { padding: var(--space-s); }
 
 /* Striped rows (even) */
-.table-striped tbody tr:nth-child(even) { background: rgba(from var(--bg-secondary) r g b / 0.25); }
+.table-striped tbody tr:nth-child(even) { background: rgba(from var(--bg-secondary) r g b / 0.5); }
 .table-striped tbody tr:nth-child(even):hover { background: var(--bg-secondary); } /* Striped rows hover */
 
 /* Compact accordion title & content */
 .accordion-compact .accordion-title,
 .accordion-compact .accordion-content { padding: var(--space-s); font-size: 0.75rem; }
 
-/* Compact sidebar section spacing */
+/* Compact sidebar */
 .sidebar-compact .sidebar-section { margin-bottom: var(--space-s); }
-
-/* Compact sidebar title */
+.sidebar-compact .sidebar-brand { margin-bottom: var(--space-s); }
 .sidebar-compact .sidebar-title { padding: 0.25rem 0; font-size: 0.75rem; margin-bottom: 0.25rem; }
-
-/* Compact sidebar item */
 .sidebar-compact .sidebar-item { padding: 0.25rem var(--space-m); font-size: 0.875rem; margin-bottom: 0.125rem; }
 
 /* === Responsive === */

@@ -7,9 +7,12 @@ class ShowcaseApp extends ClientApp {
     override start(): void {
         this.loadTheme();
 
+        //Title
+        this.setTitle('SHOWCASE');
+
         // Navigation
         this.showNav({
-            brand: 'ts-minimal-kit-web showcase',
+            brand: 'ts-minimal-kit-web',
             items: [
                 { text: 'Home', onclick: () => this.navigateTo('home') },
                 { text: 'Components', onclick: () => this.navigateTo('components') },
@@ -20,6 +23,7 @@ class ShowcaseApp extends ClientApp {
 
         // Sidebar
         this.showSidebar({
+            brand: 'SHOWCASE',
             className: 'sidebar-compact',
             sections: [
                 {
@@ -141,21 +145,19 @@ class ShowcaseApp extends ClientApp {
         this.clear();
 
         this.append(
-            this.div(
-                this.heading('Welcome to UI Framework', 1) + this.text('A minimal TypeScript framework with zero dependencies')
-            )
+            this.heading('ts-minimal-kit-web', 1) +
+            this.text('Zero-dependency TypeScript framework for building web interfaces')
         );
 
         this.append(
             this.card(
-                this.heading('Core Principles') +
+                this.heading('Features') +
                 this.ul([
-                    'Zero external dependencies',
-                    'Full TypeScript support',
-                    'Consistent API across all components',
+                    'Type-safe component architecture',
                     'Built-in dark/light themes',
-                    'Automatic event handling',
-                    'Client and server integration',
+                    'Hash-based routing',
+                    '50+ utility classes',
+                    'No build configuration required',
                 ])
             )
         );
@@ -184,32 +186,12 @@ class ShowcaseApp extends ClientApp {
             )
         );
 
-        this.append(
-            this.flex(
-                [
-                    this.button('View Components', {
-                        onclick: () => this.navigateTo('components'),
-                        variant: 'primary',
-                    }),
-                    this.button('Try Forms', {
-                        onclick: () => this.navigateTo('forms'),
-                        variant: 'success',
-                    }),
-                    this.button('See Utilities', {
-                        onclick: () => this.navigateTo('utilities'),
-                        variant: 'warning',
-                    }),
-                ],
-                { gap: 'm' }
-            )
-        );
-
         this.append(this.separator());
 
         this.append(
             this.text('Created by tish & Claude', {
                 className: 'text-center text-muted',
-                style: { fontSize: '0.875rem' }
+                style: { fontSize: '0.875rem' },
             })
         );
     }
@@ -217,7 +199,7 @@ class ShowcaseApp extends ClientApp {
     private showTypography(): void {
         this.clear();
 
-        this.append(this.div(this.heading('Typography') + this.text('Text elements and formatting')));
+        this.append(this.heading('Typography') + this.text('Text elements and formatting'));
 
         this.append(
             this.card(
@@ -241,35 +223,32 @@ class ShowcaseApp extends ClientApp {
     private showButtons(): void {
         this.clear();
 
-        this.append(this.div(this.heading('Buttons') + this.text('Interactive button components')));
+        this.append(this.heading('Buttons') + this.text('Interactive button components'));
 
         this.append(
             this.card(
                 this.heading('Button Variants') +
-                this.flex(
-                    [
-                        this.button('Default', {
-                            onclick: () => this.toast('Default clicked'),
-                        }),
-                        this.button('Primary', {
-                            variant: 'primary',
-                            onclick: () => this.toast('Primary clicked', { type: 'info' }),
-                        }),
-                        this.button('Success', {
-                            variant: 'success',
-                            onclick: () => this.toast('Success clicked', { type: 'success' }),
-                        }),
-                        this.button('Warning', {
-                            variant: 'warning',
-                            onclick: () => this.toast('Warning clicked', { type: 'warning' }),
-                        }),
-                        this.button('Danger', {
-                            variant: 'danger',
-                            onclick: () => this.toast('Danger clicked', { type: 'danger' }),
-                        }),
-                    ],
-                    { gap: 's' }
-                )
+                this.flex([
+                    this.button('Default', {
+                        onclick: () => this.toast('Default clicked'),
+                    }),
+                    this.button('Primary', {
+                        variant: 'primary',
+                        onclick: () => this.toast('Primary clicked', { type: 'info' }),
+                    }),
+                    this.button('Success', {
+                        variant: 'success',
+                        onclick: () => this.toast('Success clicked', { type: 'success' }),
+                    }),
+                    this.button('Warning', {
+                        variant: 'warning',
+                        onclick: () => this.toast('Warning clicked', { type: 'warning' }),
+                    }),
+                    this.button('Danger', {
+                        variant: 'danger',
+                        onclick: () => this.toast('Danger clicked', { type: 'danger' }),
+                    }),
+                ])
             )
         );
 
@@ -291,7 +270,7 @@ class ShowcaseApp extends ClientApp {
     private showImages(): void {
         this.clear();
 
-        this.append(this.div(this.heading('Images') + this.text('Image components with various options')));
+        this.append(this.heading('Images') + this.text('Image components with various options'));
 
         this.append(
             this.card(
@@ -361,14 +340,11 @@ class ShowcaseApp extends ClientApp {
     private showCode(): void {
         this.clear();
 
-        this.append(this.div(this.heading('Code') + this.text('Display inline and block code')));
+        this.append(this.heading('Code') + this.text('Display inline and block code'));
 
         this.append(
             this.card(
-                this.heading('Inline Code') +
-                this.text('Use inline code like ') +
-                this.code('const x = 42') +
-                this.text(' within text.')
+                this.heading('Inline Code') + this.text('Use inline code like ' + this.code('const x = 42') + ' within text.')
             )
         );
 
@@ -391,33 +367,29 @@ console.log(message);`,
     private showBadges(): void {
         this.clear();
 
-        this.append(this.div(this.heading('Badges') + this.text('Small status indicators')));
+        this.append(this.heading('Badges') + this.text('Small status indicators'));
 
         this.append(
             this.card(
                 this.heading('Badge Variants') +
-                this.flex(
-                    [
-                        this.badge('Default'),
-                        this.badge('Primary', { variant: 'primary' }),
-                        this.badge('Success', { variant: 'success' }),
-                        this.badge('Warning', { variant: 'warning' }),
-                        this.badge('Danger', { variant: 'danger' }),
-                    ],
-                    { gap: 's' }
-                )
+                this.flex([
+                    this.badge('Default'),
+                    this.badge('Primary', { variant: 'primary' }),
+                    this.badge('Success', { variant: 'success' }),
+                    this.badge('Warning', { variant: 'warning' }),
+                    this.badge('Danger', { variant: 'danger' }),
+                ])
             )
         );
 
         this.append(
             this.card(
                 this.heading('Badges in Context') +
-                this.div(this.heading('Product Title', 4) + this.badge('New', { variant: 'success' }), {
-                    className: 'flex items-center gap-s',
-                }) +
-                this.text('Product description with inline badge.') +
+                this.heading('Product Title', 4) +
+                this.badge('New', { variant: 'success' }) +
                 this.separator() +
-                this.flex([this.span('Status:'), this.badge('Active', { variant: 'primary' })], { gap: 's' })
+                this.heading('Product description with inline badge', 4) +
+                this.flex([this.span('Status:'), this.badge('Active', { variant: 'primary' })])
             )
         );
     }
@@ -425,13 +397,20 @@ console.log(message);`,
     private showCards(): void {
         this.clear();
 
-        this.append(this.div(this.heading('Cards') + this.text('Container components')));
+        this.append(this.heading('Cards') + this.text('Container components'));
 
         this.append(this.card('This is a basic card with simple content.'));
 
         this.append(
             this.card(
-                this.heading('Card with Title') + this.text('Card content goes here. Cards can contain any HTML content.')
+                this.heading('Card with Elements', 4) +
+                this.text('Cards can contain any HTML content.') +
+                this.flex([this.badge('New', { variant: 'success' }), this.badge('Featured', { variant: 'primary' })]) +
+                this.separator() +
+                this.button('View Details', {
+                    variant: 'primary',
+                    onclick: () => this.toast('Card button clicked!', { type: 'info' }),
+                })
             )
         );
     }
@@ -439,46 +418,116 @@ console.log(message);`,
     private showGrid(): void {
         this.clear();
 
-        this.append(this.div(this.heading('Grid Layout') + this.text('Responsive grid system')));
+        this.append(this.heading('Grid Layout') + this.text('Responsive grid system'));
 
-        const gridExamples = [3, 4]
-            .map((cols) =>
-                this.card(
-                    this.heading(`${cols} Column Grid`) +
-                    this.grid(
-                        Array(cols)
-                            .fill(0)
-                            .map((_, i) =>
-                                this.div(this.badge(`Item ${i + 1}`, { variant: 'primary' }), {
-                                    style: {
-                                        padding: 'var(--space-m)',
-                                        background: 'var(--bg-secondary)',
-                                        borderRadius: 'var(--radius)',
-                                        textAlign: 'center',
-                                    },
-                                })
-                            ),
-                        { columns: cols as any }
-                    )
+        this.append(
+            this.card(
+                this.heading('3 Column Grid') +
+                this.grid(
+                    [
+                        this.card(
+                            this.heading('Card 1', 5, { style: { color: 'var(--primary)' } }) +
+                            this.text('First item content')
+                        ),
+                        this.card(
+                            this.heading('Card 2', 5, { style: { color: 'var(--success)' } }) +
+                            this.text('Second item content')
+                        ),
+                        this.card(
+                            this.heading('Card 3', 5, { style: { color: 'var(--warning)' } }) +
+                            this.text('Third item content')
+                        ),
+                        this.card(
+                            this.heading('Card 4', 5, { style: { color: 'var(--danger)' } }) +
+                            this.text('Fourth item content')
+                        ),
+                    ],
+                    { columns: 3 }
                 )
             )
-            .join('');
+        );
 
-        this.append(gridExamples);
+        this.append(
+            this.card(
+                this.heading('8 Column Grid') +
+                this.grid(
+                    [
+                        this.div(this.badge('Item 1', { variant: 'primary' }), { className: ['text-center', 'p-m'] }),
+                        this.div(this.badge('Item 2', { variant: 'success' }), { className: ['text-center', 'p-m'] }),
+                        this.div(this.badge('Item 3', { variant: 'warning' }), { className: ['text-center', 'p-m'] }),
+                        this.div(this.badge('Item 4', { variant: 'danger' }), { className: ['text-center', 'p-m'] }),
+                    ],
+                    { columns: 8 }
+                )
+            )
+        );
     }
 
     private showFlex(): void {
         this.clear();
 
-        this.append(this.div(this.heading('Flex Layout') + this.text('Flexible box layouts')));
+        this.append(this.heading('Flex Layout') + this.text('Flexible box layouts'));
 
         this.append(
             this.card(
-                this.heading('Direction & Gap') +
-                this.heading('Row', 5) +
-                this.flex([this.badge('A'), this.badge('B'), this.badge('C')], { direction: 'row', gap: 'm' }) +
-                this.heading('Column', 5) +
-                this.flex([this.badge('First'), this.badge('Second'), this.badge('Third')], { direction: 'col', gap: 's' })
+                this.heading('Stats Row (gap-l)') +
+                this.flex(
+                    [
+                        this.card(
+                            this.heading('1,234', 3, { style: { color: 'var(--primary)', marginBottom: '0' } }) +
+                            this.text('Users', { className: 'text-muted' }),
+                            { className: ['text-center', 'flex-1'] }
+                        ),
+                        this.card(
+                            this.heading('567', 3, { style: { color: 'var(--success)', marginBottom: '0' } }) +
+                            this.text('Orders', { className: 'text-muted' }),
+                            { className: ['text-center', 'flex-1'] }
+                        ),
+                        this.card(
+                            this.heading('89%', 3, { style: { color: 'var(--warning)', marginBottom: '0' } }) +
+                            this.text('Success', { className: 'text-muted' }),
+                            { className: ['text-center', 'flex-1'] }
+                        ),
+                    ],
+                    { direction: 'row', gap: 'l' }
+                )
+            )
+        );
+
+        this.append(
+            this.card(
+                this.heading('Action Buttons (gap-m)') +
+                this.flex(
+                    [
+                        this.button('Save', { variant: 'primary' }),
+                        this.button('Cancel', { variant: 'danger' }),
+                        this.button('Preview'),
+                    ],
+                    { direction: 'row', gap: 'm' }
+                )
+            )
+        );
+
+        this.append(
+            this.card(
+                this.heading('Notification List (column, gap-s)') +
+                this.flex(
+                    [
+                        this.div(this.flex([this.badge('New', { variant: 'success' }), 'New message from Admin']), {
+                            className: ['p-s', 'text-right'],
+                            style: { background: 'var(--bg-secondary)', borderRadius: 'var(--radius)' },
+                        }),
+                        this.div(this.flex([this.badge('Alert', { variant: 'warning' }), 'System maintenance scheduled']), {
+                            className: ['p-s', 'text-right'],
+                            style: { background: 'var(--bg-secondary)', borderRadius: 'var(--radius)' },
+                        }),
+                        this.div(this.flex([this.badge('Info', { variant: 'primary' }), 'Profile updated successfully']), {
+                            className: ['p-s', 'text-right'],
+                            style: { background: 'var(--bg-secondary)', borderRadius: 'var(--radius)' },
+                        }),
+                    ],
+                    { direction: 'col', gap: 's' }
+                )
             )
         );
     }
@@ -486,7 +535,7 @@ console.log(message);`,
     private showAccordion(): void {
         this.clear();
 
-        this.append(this.div(this.heading('Accordion') + this.text('Expandable content sections')));
+        this.append(this.heading('Accordion') + this.text('Expandable content sections'));
 
         this.append(
             this.card(
@@ -495,25 +544,23 @@ console.log(message);`,
                     items: [
                         {
                             title: 'What is TypeScript?',
-                            content: this.text(
-                                'TypeScript is a typed superset of JavaScript that compiles to plain JavaScript.'
-                            ),
+                            content: 'TypeScript is a typed superset of JavaScript that compiles to plain JavaScript.',
                             open: true,
                         },
                         {
                             title: 'Why use this framework?',
-                            content: this.text('Zero dependencies, full TypeScript support, and minimal footprint.'),
+                            content: 'Zero dependencies, full TypeScript support, and minimal footprint.',
                         },
                         {
                             title: 'How to get started?',
                             content:
-                                this.text('Install the kit and extend ClientApp class:') +
+                                'Install the kit and extend ClientApp class:' +
+                                this.spacer() +
                                 this.code('class MyApp extends ClientApp { }', { block: true }),
                         },
                     ],
                     className: 'accordion-compact',
                 }) +
-                this.spacer('s') +
                 this.text('Using .accordion-compact utility', { className: 'text-muted' })
             )
         );
@@ -534,15 +581,12 @@ console.log(message);`,
                         },
                         {
                             title: 'Components',
-                            content: this.flex(
-                                [
-                                    this.badge('Buttons', { variant: 'primary' }),
-                                    this.badge('Cards', { variant: 'success' }),
-                                    this.badge('Tables', { variant: 'warning' }),
-                                    this.badge('Forms', { variant: 'danger' }),
-                                ],
-                                { gap: 's' }
-                            ),
+                            content: this.flex([
+                                this.badge('Buttons', { variant: 'primary' }),
+                                this.badge('Cards', { variant: 'success' }),
+                                this.badge('Tables', { variant: 'warning' }),
+                                this.badge('Forms', { variant: 'danger' }),
+                            ]),
                         },
                         {
                             title: 'API Example',
@@ -564,7 +608,7 @@ await this.apiPost('/users', { name: 'John' });`,
     private showUtilities(): void {
         this.clear();
 
-        this.append(this.div(this.heading('Utility Classes') + this.text('Pre-built CSS utility classes with autocomplete')));
+        this.append(this.heading('Utility Classes') + this.text('Pre-built CSS utility classes with autocomplete'));
 
         // All utilities first
         this.append(
@@ -582,9 +626,10 @@ await this.apiPost('/users', { name: 'John' });`,
                         },
                         {
                             title: 'Flexbox Alignment',
-                            content: this.code(
-                                'items-start, items-center, items-end\njustify-start, justify-center, justify-end, justify-between'
-                            ),
+                            content:
+                                this.code('items-start, items-center, items-end') +
+                                this.spacer() +
+                                this.code('justify-start, justify-center, justify-end, justify-between'),
                         },
                         {
                             title: 'Gap',
@@ -592,7 +637,10 @@ await this.apiPost('/users', { name: 'John' });`,
                         },
                         {
                             title: 'Margin',
-                            content: this.code('m-0, mt-0, mb-0, mb-s, mb-m, mb-l\nml-auto, mr-auto, mx-auto'),
+                            content:
+                                this.code('m-0, mt-0, mb-0, mb-s, mb-m, mb-l') +
+                                this.spacer() +
+                                this.code('ml-auto, mr-auto, mx-auto'),
                         },
                         {
                             title: 'Padding',
@@ -604,9 +652,12 @@ await this.apiPost('/users', { name: 'John' });`,
                         },
                         {
                             title: 'Text & Typography',
-                            content: this.code(
-                                'text-left, text-center, text-right\ntext-secondary, text-muted\nfont-semibold, font-bold, truncate'
-                            ),
+                            content:
+                                this.code('text-left, text-center, text-right') +
+                                this.spacer() +
+                                this.code('text-secondary, text-muted') +
+                                this.spacer() +
+                                this.code('font-semibold, font-bold, truncate'),
                         },
                         {
                             title: 'Interactive',
@@ -614,9 +665,14 @@ await this.apiPost('/users', { name: 'John' });`,
                         },
                         {
                             title: 'Component-Specific',
-                            content: this.code(
-                                'table-fit, table-center, table-right\ntable-compact, table-striped\naccordion-compact, sidebar-compact'
-                            ),
+                            content:
+                                this.code('table-fit, table-center, table-right') +
+                                this.spacer() +
+                                this.code('table-compact, table-striped') +
+                                this.spacer() +
+                                this.code('accordion-compact, sidebar-compact', {
+                                    className: ['btn', false && 'opacity-50'],
+                                }),
                         },
                     ],
                 })
@@ -629,10 +685,10 @@ await this.apiPost('/users', { name: 'John' });`,
                 this.heading('Usage Patterns') +
                 this.text('Single class:') +
                 this.code("className: 'flex'", { block: true }) +
-                this.spacer('s') +
+                this.spacer() +
                 this.text('Multiple classes:') +
                 this.code("className: ['flex', 'items-center', 'gap-m']", { block: true }) +
-                this.spacer('s') +
+                this.spacer() +
                 this.text('Conditional classes:') +
                 this.code("className: ['btn', isActive && 'opacity-50']", { block: true })
             )
@@ -644,57 +700,55 @@ await this.apiPost('/users', { name: 'John' });`,
             this.card(
                 this.heading('Dashboard Example') +
                 this.text('Combining utilities for complex layouts') +
-                this.spacer('m') +
+                this.spacer() +
                 this.div(
-                    this.div(
-                        this.heading('Stats', 4) +
+                    this.heading('Stats', 4) +
+                    this.card(
                         this.grid(
                             [
                                 this.div(
                                     this.heading('0', 3, { id: 'counter', style: { color: 'var(--primary)' } }) +
                                     this.text('Total Count', { className: 'text-muted' }),
-                                    { className: ['text-center', 'p-m'] }
+                                    { className: 'text-center' }
                                 ),
                                 this.div(
                                     this.heading('100%', 3, { style: { color: 'var(--success)' } }) +
                                     this.text('Success Rate', { className: 'text-muted' }),
-                                    { className: ['text-center', 'p-m'] }
+                                    { className: 'text-center' }
                                 ),
                                 this.div(
                                     this.heading('24/7', 3, { style: { color: 'var(--warning)' } }) +
                                     this.text('Uptime', { className: 'text-muted' }),
-                                    { className: ['text-center', 'p-m'] }
+                                    { className: 'text-center' }
                                 ),
                             ],
                             { columns: 3 }
-                        ) +
-                        this.spacer('m') +
-                        this.flex(
-                            [
-                                this.button('Increment', {
-                                    variant: 'primary',
-                                    onclick: () => {
-                                        count++;
-                                        this.updateText('counter', count.toString());
-                                        this.toast(`Count: ${count}`, { type: 'success' });
-                                    },
-                                }),
-                                this.button('Reset', {
-                                    variant: 'danger',
-                                    onclick: () => {
-                                        count = 0;
-                                        this.updateText('counter', '0');
-                                        this.toast('Reset!', { type: 'info' });
-                                    },
-                                }),
-                            ],
-                            { gap: 's', className: 'justify-center' }
-                        ),
-                        { className: 'flex-1' }
+                        )
+                    ) +
+                    this.flex(
+                        [
+                            this.button('Increment', {
+                                variant: 'primary',
+                                onclick: () => {
+                                    count++;
+                                    this.updateText('counter', count.toString());
+                                    this.toast(`Count: ${count}`, { type: 'success' });
+                                },
+                            }),
+                            this.button('Reset', {
+                                variant: 'danger',
+                                onclick: () => {
+                                    count = 0;
+                                    this.updateText('counter', '0');
+                                    this.toast('Reset!', { type: 'info' });
+                                },
+                            }),
+                        ],
+                        { gap: 's', className: 'justify-center' }
                     ),
-                    { className: ['flex', 'gap-m'] }
+                    { className: 'flex-1' }
                 ) +
-                this.spacer('m') +
+                this.spacer() +
                 this.code(
                     `// Utilities used:
 className: ['flex', 'gap-m']           // Container
@@ -706,47 +760,20 @@ className: ['justify-center']          // Button group`,
             )
         );
 
-        // Advanced table example
+        // Simple table example
         this.append(
             this.card(
-                this.heading('Data Table with Utilities') +
+                this.heading('Table with Utilities') +
                 this.table({
-                    headers: ['User', 'Role', 'Status', 'Actions'],
+                    headers: ['Name', 'Email', 'Role'],
                     rows: [
-                        [
-                            this.div(
-                                this.text('John Doe', { className: 'font-semibold' }) +
-                                this.text('john@example.com', { className: 'text-muted' })
-                            ),
-                            this.badge('Admin', { variant: 'danger' }),
-                            this.badge('Active', { variant: 'success' }),
-                            this.flex(
-                                [
-                                    this.button('Edit', { onclick: () => this.toast('Edit John') }),
-                                    this.button('Delete', { variant: 'danger', onclick: () => this.toast('Delete John') }),
-                                ],
-                                { gap: 's' }
-                            ),
-                        ],
-                        [
-                            this.div(
-                                this.text('Jane Smith', { className: 'font-semibold' }) +
-                                this.text('jane@example.com', { className: 'text-muted' })
-                            ),
-                            this.badge('User', { variant: 'primary' }),
-                            this.badge('Pending', { variant: 'warning' }),
-                            this.flex(
-                                [
-                                    this.button('Edit', { onclick: () => this.toast('Edit Jane') }),
-                                    this.button('Delete', { variant: 'danger', onclick: () => this.toast('Delete Jane') }),
-                                ],
-                                { gap: 's' }
-                            ),
-                        ],
+                        ['John Doe', 'john@example.com', 'Admin'],
+                        ['Jane Smith', 'jane@example.com', 'User'],
+                        ['Bob Wilson', 'bob@example.com', 'User'],
                     ],
                     className: ['table-striped', 'table-compact'],
                 }) +
-                this.spacer('m') +
+                this.spacer('s') +
                 this.code("className: ['table-striped', 'table-compact']", { block: true })
             )
         );
@@ -793,7 +820,7 @@ className: ['justify-center']          // Button group`,
     private showTabs(): void {
         this.clear();
 
-        this.append(this.div(this.heading('Tabs') + this.text('Tabbed content containers')));
+        this.append(this.heading('Tabs') + this.text('Tabbed content containers'));
 
         this.append(
             this.card(
@@ -812,7 +839,6 @@ className: ['justify-center']          // Button group`,
                                         this.badge('3 members', { variant: 'primary' }),
                                         this.badge('Updated today'),
                                     ],
-                                    { gap: 's' }
                                 ),
                         },
                         {
@@ -833,7 +859,7 @@ className: ['justify-center']          // Button group`,
     private showTables(): void {
         this.clear();
 
-        this.append(this.div(this.heading('Tables') + this.text('Data display')));
+        this.append(this.heading('Tables') + this.text('Data display'));
 
         this.append(
             this.card(
@@ -851,18 +877,33 @@ className: ['justify-center']          // Button group`,
 
         this.append(
             this.card(
-                this.heading('Compact & Striped') +
+                this.heading('Feature List (Compact)') +
                 this.table({
                     headers: ['Feature', 'Status'],
                     rows: [
-                        [this.badge('Zero dependencies', { variant: 'success' }), '✓'],
-                        [this.badge('Full TypeScript', { variant: 'primary' }), '✓'],
-                        [this.badge('Component-based', { variant: 'warning' }), '✓'],
+                        ['Zero dependencies', '✓'],
+                        ['TypeScript', '✓'],
+                        ['Dark mode', '✓'],
+                        ['Responsive', '✓'],
                     ],
-                    className: ['table-compact', 'table-striped'],
-                }) +
-                this.spacer('s') +
-                this.text('Using utilities: .table-compact .table-striped', { className: 'text-muted' })
+                    className: 'table-compact',
+                })
+            )
+        );
+
+        this.append(
+            this.card(
+                this.heading('Simple List') +
+                this.text('Table without headers, single column') +
+                this.table({
+                    rows: [
+                        'Introduction to TypeScript',
+                        'Setting up your environment',
+                        'Basic types and interfaces',
+                        'Working with components',
+                        'Advanced patterns',
+                    ],
+                })
             )
         );
     }
@@ -870,7 +911,7 @@ className: ['justify-center']          // Button group`,
     private showAlerts(): void {
         this.clear();
 
-        this.append(this.div(this.heading('Alerts & Toasts') + this.text('Feedback messages')));
+        this.append(this.heading('Alerts & Toasts') + this.text('Feedback messages'));
 
         this.append(
             this.card(
@@ -903,7 +944,6 @@ className: ['justify-center']          // Button group`,
                             variant: 'danger',
                         }),
                     ],
-                    { gap: 's' }
                 )
             )
         );
@@ -912,7 +952,7 @@ className: ['justify-center']          // Button group`,
     private showModals(): void {
         this.clear();
 
-        this.append(this.div(this.heading('Modals') + this.text('Modal dialogs')));
+        this.append(this.heading('Modals') + this.text('Modal dialogs'));
 
         this.append(
             this.card(
@@ -924,7 +964,7 @@ className: ['justify-center']          // Button group`,
                                 this.modal(
                                     this.heading('Simple Modal') +
                                     this.text('This is a simple modal dialog.') +
-                                    this.spacer('m') +
+                                    this.spacer() +
                                     this.button('Close', {
                                         onclick: () => this.closeModal(),
                                         variant: 'primary',
@@ -936,7 +976,7 @@ className: ['justify-center']          // Button group`,
                                 this.modal(
                                     this.heading('Confirm Action') +
                                     this.text('Are you sure you want to proceed?') +
-                                    this.spacer('m') +
+                                    this.spacer() +
                                     this.flex(
                                         [
                                             this.button('Cancel', {
@@ -950,7 +990,6 @@ className: ['justify-center']          // Button group`,
                                                 variant: 'primary',
                                             }),
                                         ],
-                                        { gap: 's' }
                                     )
                                 ),
                             variant: 'primary',
@@ -961,7 +1000,7 @@ className: ['justify-center']          // Button group`,
                                     this.alert('⚠️ Critical Action Required', { type: 'warning' }) +
                                     this.heading('System Update') +
                                     this.text('This is a blocking modal. You cannot close it by clicking outside.') +
-                                    this.spacer('m') +
+                                    this.spacer() +
                                     this.flex(
                                         [
                                             this.button('Decline', {
@@ -979,14 +1018,12 @@ className: ['justify-center']          // Button group`,
                                                 variant: 'primary',
                                             }),
                                         ],
-                                        { gap: 's' }
                                     ),
                                     true
                                 ),
                             variant: 'danger',
                         }),
                     ],
-                    { gap: 's' }
                 )
             )
         );
@@ -995,7 +1032,7 @@ className: ['justify-center']          // Button group`,
     private showProgress(): void {
         this.clear();
 
-        this.append(this.div(this.heading('Progress') + this.text('Loading and progress states')));
+        this.append(this.heading('Progress') + this.text('Loading and progress states'));
 
         this.append(
             this.card(
@@ -1008,7 +1045,7 @@ className: ['justify-center']          // Button group`,
     private showForms(): void {
         this.clear();
 
-        this.append(this.div(this.heading('Forms') + this.text('Form elements and inputs')));
+        this.append(this.heading('Forms') + this.text('Form elements and inputs'));
 
         this.append(
             this.card(
@@ -1074,40 +1111,47 @@ className: ['justify-center']          // Button group`,
 
         this.append(
             this.card(
-                this.heading('Complete Form') +
-                this.div(
-                    this.text('Full Name', { className: 'label' }) + this.input({ id: 'name', placeholder: 'John Doe' })
-                ) +
+                this.heading('Login Form', 4) +
+                this.text('Simple authentication form') +
+                this.spacer() +
                 this.div(
                     this.text('Email', { className: 'label' }) +
-                    this.input({ id: 'email', type: 'email', placeholder: 'john@example.com' })
+                    this.input({ id: 'login-email', type: 'email', placeholder: 'user@example.com' })
                 ) +
                 this.div(
-                    this.text('Message', { className: 'label' }) +
-                    this.textarea({ id: 'message', placeholder: 'Your message...', rows: 3 })
+                    this.text('Password', { className: 'label' }) +
+                    this.input({ id: 'login-pass', type: 'password', placeholder: '••••••••' })
                 ) +
-                this.checkbox({ id: 'agree', label: 'I agree to terms' }) +
-                this.spacer('m') +
-                this.flex(
-                    [
-                        this.button('Cancel', {
-                            onclick: () => this.toast('Cancelled', { type: 'info' }),
-                        }),
-                        this.button('Submit', {
-                            onclick: () => {
-                                const name = this.val('name');
-                                const email = this.val('email');
-                                if (name && email) {
-                                    this.toast('Form submitted!', { type: 'success' });
-                                } else {
-                                    this.toast('Please fill required fields', { type: 'warning' });
-                                }
-                            },
-                            variant: 'primary',
-                        }),
+                this.checkbox({ id: 'remember', label: 'Remember me' }) +
+                this.spacer() +
+                this.button('Sign In', {
+                    variant: 'primary',
+                    onclick: () => this.toast('Signed in!', { type: 'success' }),
+                })
+            )
+        );
+
+        this.append(
+            this.card(
+                this.heading('User Settings', 4) +
+                this.text('Theme and notification preferences') +
+                this.spacer() +
+                this.heading('Theme', 5) +
+                this.radioGroup({
+                    name: 'theme',
+                    options: [
+                        { value: 'light', text: 'Light' },
+                        { value: 'dark', text: 'Dark' },
+                        { value: 'auto', text: 'Auto' },
                     ],
-                    { gap: 's' }
-                )
+                    selected: 'light',
+                }) +
+                this.separator() +
+                this.heading('Notifications', 5) +
+                this.checkbox({ id: 'email-notif', label: 'Email notifications', checked: true }) +
+                this.checkbox({ id: 'push-notif', label: 'Push notifications' }) +
+                this.spacer() +
+                this.button('Save Changes', { variant: 'success' })
             )
         );
     }
@@ -1115,7 +1159,7 @@ className: ['justify-center']          // Button group`,
     private showComponents(): void {
         this.clear();
 
-        this.append(this.div(this.heading('All Components') + this.text('Complete component showcase')));
+        this.append(this.heading('All Components') + this.text('Complete component showcase'));
 
         const categories = [
             { name: 'UI Elements', items: ['Typography', 'Buttons', 'Badges', 'Images', 'Spinners'] },
@@ -1128,29 +1172,12 @@ className: ['justify-center']          // Button group`,
         const cards = categories.map((category) => this.card(this.heading(category.name) + this.ul(category.items)));
 
         this.append(this.grid(cards, { columns: 3 }));
-
-        this.append(
-            this.card(
-                this.heading('Navigation') +
-                this.flex(
-                    [
-                        this.button('Go to Forms', {
-                            onclick: () => this.navigateTo('forms'),
-                        }),
-                        this.button('Scroll to top', {
-                            onclick: () => this.scrollToElement('app'),
-                        }),
-                    ],
-                    { gap: 's' }
-                )
-            )
-        );
     }
 
     private showLayouts(): void {
         this.clear();
 
-        this.append(this.div(this.heading('Layouts') + this.text('Layout options and combinations')));
+        this.append(this.heading('Layouts') + this.text('Layout options and combinations'));
 
         this.append(
             this.card(
@@ -1169,7 +1196,7 @@ className: ['justify-center']          // Button group`,
             this.card(
                 this.heading('Utility Classes') +
                 this.text('See the Utilities page for live examples and complete reference.') +
-                this.spacer('m') +
+                this.spacer() +
                 this.button('View Utilities', {
                     onclick: () => this.navigateTo('utilities'),
                     variant: 'primary',

@@ -142,6 +142,7 @@ interface SidebarSection {
 
 /** Sidebar options */
 interface SidebarOptions extends BaseOptions {
+    brand?: string;
     sections: SidebarSection[];
 }
 
@@ -566,7 +567,7 @@ class ClientApp {
         const sidebar = document.getElementById('sidebar');
         if (!sidebar) return;
 
-        const { sections, ...baseOptions } = options;
+        const { brand, sections, ...baseOptions } = options;
         const normalizedOptions = this.normalizeOptions(baseOptions);
         if (!normalizedOptions.id) normalizedOptions.id = 'sidebar';
 
@@ -593,7 +594,7 @@ class ClientApp {
 
         const attrs = this.buildAttrs(normalizedOptions, 'sidebar');
 
-        sidebar.outerHTML = `<aside${attrs}>${content}</aside>`;
+        sidebar.outerHTML = `<aside${attrs}>${brand ? `<div class="sidebar-brand">${brand}</div>` : ''}${content}</aside>`;
 
         this.hasSidebar = true;
         this.updateLayout();
@@ -602,6 +603,11 @@ class ClientApp {
     // ========================================
     // CONTENT METHODS
     // ========================================
+
+    /** Set page title */
+    setTitle(title: string): void {
+        document.title = title;
+    }
 
     /** Clear main content */
     clear(): void {
@@ -1068,12 +1074,12 @@ class ClientApp {
     }
 
     /** Create a separator (horizontal rule) */
-    separator(options?: Omit<BaseOptions, 'onclick'>): string {
+    separator(size: Spacing = 'm', options?: Omit<BaseOptions, 'onclick'>): string {
         const defaultStyle: StyleOptions = {
             border: 'none',
             borderTop: '1px solid var(--border)',
-            marginTop: 'var(--space-l)',
-            marginBottom: 'var(--space-l)',
+            marginTop: `var(--space-${size})`,
+            marginBottom: `var(--space-${size})`,
         };
         const normalizedOptions = this.normalizeOptions({ ...options, style: options?.style || defaultStyle });
         const attrs = this.buildAttrs(normalizedOptions);
@@ -1082,15 +1088,18 @@ class ClientApp {
 
     /** Create a spacer */
     spacer(size: Spacing = 'm', options?: Omit<BaseOptions, 'onclick'>): string {
-        const normalizedOptions = this.normalizeOptions({ ...options, style: options?.style || { height: `var(--space-${size})` } });
+        const normalizedOptions = this.normalizeOptions({
+            ...options,
+            style: options?.style || { height: `var(--space-${size})` },
+        });
         const attrs = this.buildAttrs(normalizedOptions);
         return `<div${attrs}></div>`;
     }
 
     /** Create a flex container */
     flex(items: string[], options?: FlexOptions): string {
-        const { gap = 'm', direction = 'row', ...baseOptions } = options || {} as FlexOptions;
-        const normalizedOptions = this.normalizeOptions(baseOptions)
+        const { gap = 'm', direction = 'row', ...baseOptions } = options || ({} as FlexOptions);
+        const normalizedOptions = this.normalizeOptions(baseOptions);
         this.processOnclick(normalizedOptions, 'flex');
         const mainClass = `flex flex-${direction} gap-${gap}`;
         const attrs = this.buildAttrs(normalizedOptions, mainClass);
@@ -1099,7 +1108,7 @@ class ClientApp {
 
     /** Create a text block with optional styling */
     text(content: string, options?: BaseOptions): string {
-        const normalizedOptions = this.normalizeOptions(options)
+        const normalizedOptions = this.normalizeOptions(options);
         this.processOnclick(normalizedOptions, 'text');
         const attrs = this.buildAttrs(normalizedOptions);
         return `<p${attrs}>${content}</p>`;

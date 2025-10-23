@@ -17,7 +17,7 @@
         "degit": "node -e \"import('fs').then(fs => fs.rmSync('.git', {recursive: true, force: true}))\"",
         "test": "echo \"Error: no test specified\" && exit 1",
         "build:start:showcase": "npm run build:showcase && npm run start",
-        "build:showcase": "npm run showcase:swap && npm run build:server && npm run build:client && npm run showcase:restore",
+        "build:showcase": "bash -c 'trap \"npm run showcase:restore\" EXIT; npm run showcase:swap && npm run build:server && npm run build:client'",
         "showcase:swap": "node -e \"import('fs').then(fs => { fs.renameSync('src/client/index.ts', 'src/client/index.ts.backup'); fs.copyFileSync('src/client/SHOWCASE.ts', 'src/client/index.ts'); })\"",
         "showcase:restore": "node -e \"import('fs').then(fs => { fs.rmSync('src/client/index.ts', {force: true}); fs.renameSync('src/client/index.ts.backup', 'src/client/index.ts'); })\""
     },
