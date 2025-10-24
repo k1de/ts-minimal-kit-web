@@ -424,7 +424,7 @@ ol {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: var(--space-s) var(--space-l);
+    padding: var(--space-s) var(--space-m);
     border: 1px solid var(--border);
     border-radius: var(--radius);
     background: var(--surface);
@@ -482,14 +482,13 @@ ol {
 
 .dropdown-menu {
     position: absolute;
-    top: 100%;
     left: 0;
     margin-top: var(--space-s);
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
     box-shadow: var(--shadow-l);
-    min-width: 150px;
+    min-width: 100px;
     z-index: 100;
 }
 
@@ -515,7 +514,7 @@ ol {
 /* === Badge === */
 .badge {
     display: inline-block;
-    padding: 0.25rem 0.5rem;
+    padding: calc(var(--space-s) / 2) var(--space-s);
     font-size: 0.75rem;
     font-weight: 600;
     border-radius: 1rem;
@@ -752,6 +751,25 @@ body:has([data-layout='nav-sidebar']) .toast-container {
     color: var(--text);
 }
 
+/* === Overlay Container === */
+.overlay-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 1400;
+}
+
+.overlay-container > * {
+    pointer-events: auto;
+}
+
+.overlay-container:empty {
+    display: none;
+}
+
 /* === Modal === */
 .modal-container {
     position: fixed;
@@ -760,7 +778,7 @@ body:has([data-layout='nav-sidebar']) .toast-container {
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 1000;
+    z-index: 1500;
 }
 
 [data-theme='dark'] .modal-container {
@@ -820,7 +838,10 @@ body:has([data-layout='nav-sidebar']) .toast-container {
    ────────────────────────────────────────── */
 
 /* Enable flexbox */
-.flex { display: flex; }
+.flex { 
+    display: flex; 
+    flex-wrap: wrap;
+}
 .flex > * { margin-bottom: 0; } /* Remove bottom margin from flex children */
 
 /* Vertical flex direction */
@@ -981,6 +1002,44 @@ body:has([data-layout='nav-sidebar']) .toast-container {
 .opacity-50 { opacity: 0.5; }
 
 /* ──────────────────────────────────────────
+   Position
+   ────────────────────────────────────────── */
+
+/* Fixed positioning */
+.fixed { position: fixed; }
+
+/* Positioning - corners */
+.top-0 { top: 0; }
+.top-s { top: var(--space-s); }
+.top-m { top: var(--space-m); }
+.top-l { top: var(--space-l); }
+.bottom-0 { bottom: 0; }
+.bottom-s { bottom: var(--space-s); }
+.bottom-m { bottom: var(--space-m); }
+.bottom-l { bottom: var(--space-l); }
+.left-0 { left: 0; }
+.left-s { left: var(--space-s); }
+.left-m { left: var(--space-m); }
+.left-l { left: var(--space-l); }
+.right-0 { right: 0; }
+.right-s { right: var(--space-s); }
+.right-m { right: var(--space-m); }
+.right-l { right: var(--space-l); }
+
+/* Z-index layers */
+.z-low { z-index: 10; }
+.z-mid { z-index: 500; }
+.z-high { z-index: 1000; }
+
+/* ──────────────────────────────────────────
+   Shadow
+   ────────────────────────────────────────── */
+
+.shadow-none { box-shadow: none; }
+.shadow { box-shadow: var(--shadow); }
+.shadow-l { box-shadow: var(--shadow-l); }
+
+/* ──────────────────────────────────────────
    Component-Specific Utilities
    ────────────────────────────────────────── */
 
@@ -1132,22 +1191,9 @@ body:has([data-layout='nav-sidebar']) .toast-container {
         white-space: nowrap;
     }
 
-    /* Dropdown menu responsive */
-    .dropdown-menu {
-        position: fixed;
-        left: var(--space-m);
-        right: var(--space-m);
-        width: auto;
-    }
-
     /* Card responsive - reduce padding */
     .card {
         padding: var(--space-m);
-    }
-
-    /* Button responsive - full width option */
-    .btn {
-        padding: var(--space-s) var(--space-m);
     }
 }
 

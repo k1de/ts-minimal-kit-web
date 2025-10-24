@@ -61,6 +61,27 @@ type UtilityClass =
     | 'h-full'
     | 'w-fit'
     | 'w-full'
+    // Position
+    | 'bottom-0'
+    | 'bottom-l'
+    | 'bottom-m'
+    | 'bottom-s'
+    | 'fixed'
+    | 'left-0'
+    | 'left-l'
+    | 'left-m'
+    | 'left-s'
+    | 'right-0'
+    | 'right-l'
+    | 'right-m'
+    | 'right-s'
+    | 'top-0'
+    | 'top-l'
+    | 'top-m'
+    | 'top-s'
+    | 'z-high'
+    | 'z-low'
+    | 'z-mid'
     // Text & Typography
     | 'font-bold'
     | 'font-semibold'
@@ -70,6 +91,10 @@ type UtilityClass =
     | 'text-right'
     | 'text-secondary'
     | 'truncate'
+    // Shadow
+    | 'shadow'
+    | 'shadow-lg'
+    | 'shadow-none'
     // Interactive
     | 'cursor-not-allowed'
     | 'cursor-pointer'
@@ -298,7 +323,8 @@ class ClientApp {
     // PROPERTIES
     // ========================================
 
-    private container: HTMLElement;
+    private mainContainer: HTMLElement;
+    private overlayContainer: HTMLElement;
     private dropdownInitialized = false;
     private elementIdCounter = 0;
     private hasNav = false;
@@ -309,7 +335,8 @@ class ClientApp {
     // ========================================
 
     constructor() {
-        this.container = document.getElementById('main')!;
+        this.mainContainer = document.getElementById('main')!;
+        this.overlayContainer = document.getElementById('overlay')!;
         // Ensures child classes initialize before start
         setTimeout(() => {
             this.init();
@@ -636,23 +663,48 @@ class ClientApp {
         this.updateLayout();
     }
 
+    /** Toggle navigation bar visibility */
+    toggleNav(visible?: boolean): void {
+        const nav = document.getElementById('nav');
+        if (!nav) return;
+
+        nav.hidden = visible !== undefined ? !visible : !nav.hidden;
+        this.hasNav = !nav.hidden;
+        this.updateLayout();
+    }
+
+    /** Toggle sidebar visibility */
+    toggleSidebar(visible?: boolean): void {
+        const sidebar = document.getElementById('sidebar');
+        if (!sidebar) return;
+
+        sidebar.hidden = visible !== undefined ? !visible : !sidebar.hidden;
+        this.hasSidebar = !sidebar.hidden;
+        this.updateLayout();
+    }
+
     // ========================================
     // CONTENT MANAGEMENT
     // ========================================
 
     /** Append HTML content */
     append(content: string): void {
-        this.container.insertAdjacentHTML('beforeend', content);
+        this.mainContainer.insertAdjacentHTML('beforeend', content);
     }
 
     /** Clear main content */
     clear(): void {
-        this.container.innerHTML = '';
+        this.mainContainer.innerHTML = '';
     }
 
-    /** Add HTML content (replaces existing) */
+    /** Set main HTML content (replaces existing) */
     html(content: string): void {
-        this.container.innerHTML = content;
+        this.mainContainer.innerHTML = content;
+    }
+
+    /** Set overlay HTML content (replaces existing) */
+    overlay(content: string): void {
+        this.overlayContainer.innerHTML = content;
     }
 
     /** Set page title */
@@ -1160,22 +1212,9 @@ class ClientApp {
         return document.getElementById(id);
     }
 
-    /** Hide element */
-    hide(id: string): void {
-        this.setVisibility(id, false);
-    }
-
     /** Add event listener to element */
     on(id: string, event: string, handler: (e: Event) => void): void {
         this.get(id)?.addEventListener(event, handler);
-    }
-
-    /** Set element visibility */
-    setVisibility(id: string, visible: boolean): void {
-        const element = this.get(id);
-        if (element) {
-            element.hidden = !visible;
-        }
     }
 
     /** Set input element value */
@@ -1184,16 +1223,11 @@ class ClientApp {
         if (element) element.value = value;
     }
 
-    /** Show element */
-    show(id: string): void {
-        this.setVisibility(id, true);
-    }
-
     /** Toggle element visibility */
-    toggle(id: string): void {
+    toggle(id: string, visible?: boolean): void {
         const element = this.get(id);
         if (element) {
-            element.hidden = !element.hidden;
+            element.hidden = visible !== undefined ? !visible : !element.hidden;
         }
     }
 
@@ -1222,17 +1256,11 @@ class ClientApp {
         return (document.documentElement.getAttribute('data-theme') as ThemeVariant) || 'light';
     }
 
-    /** Set specific theme */
-    setTheme(theme: ThemeVariant): void {
-        document.documentElement.setAttribute('data-theme', theme);
-    }
-
     /** Toggle between dark and light theme */
-    toggleTheme(): ThemeVariant {
-        const current = document.documentElement.getAttribute('data-theme');
-        const theme = current === 'dark' ? 'light' : 'dark';
-        this.setTheme(theme);
-        return theme;
+    toggleTheme(theme?: ThemeVariant): ThemeVariant {
+        const newTheme = theme ?? (this.getTheme() === 'dark' ? 'light' : 'dark');
+        document.documentElement.setAttribute('data-theme', newTheme);
+        return newTheme;
     }
 
     // ========================================

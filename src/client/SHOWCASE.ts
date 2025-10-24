@@ -67,6 +67,17 @@ class ShowcaseApp extends ClientApp {
                 },
             ],
         });
+
+
+        this.overlay(
+            this.button('☰', {
+                className: ['fixed', 'bottom-l', 'left-l', 'opacity-50', 'shadow'],
+                onclick: () => {
+                    // this.toggleNav();
+                    this.toggleSidebar();
+                }
+            })
+        )
     }
 
     override onHashChange(hash: string): void {
@@ -132,7 +143,7 @@ class ShowcaseApp extends ClientApp {
 
     private loadTheme(): void {
         const theme = localStorage.getItem('theme') as ThemeVariant;
-        if (theme) this.setTheme(theme);
+        if (theme) this.toggleTheme(theme);
     }
 
     private swapThemeAndSave(): void {

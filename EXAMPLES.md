@@ -165,6 +165,14 @@ this.showSidebar({
     ],
 });
 
+// Toggle visibility
+this.toggleNav();           // Toggle nav visibility
+this.toggleNav(true);       // Show nav
+this.toggleNav(false);      // Hide nav
+this.toggleSidebar();       // Toggle sidebar
+this.toggleSidebar(true);   // Show sidebar
+this.toggleSidebar(false);  // Hide sidebar
+
 // Both nav and sidebar - automatically sets 'nav-sidebar' layout
 // Just call both methods, layout adjusts automatically!
 ```
@@ -507,9 +515,13 @@ this.scrollToElement('section-id');        // Smooth scroll by default
 this.scrollToElement('section-id', false); // Instant scroll
 
 // Content manipulation
-this.clear();                     // Clear content
-this.html('<p>Replace all</p>');  // Replace content
-this.append('<p>Add text</p>');   // Append content
+this.clear();                        // Clear main content
+this.html('<p>Replace all</p>');    // Replace main content
+this.append('<p>Add text</p>');     // Append to main content
+this.overlay(this.button('X', {     // Set overlay content (fixed layer)
+    className: ['fixed', 'top-l', 'right-l'],
+    onclick: () => this.overlay('')
+}));
 
 // Element access
 this.get('element-id');           // Get element
@@ -517,18 +529,19 @@ this.updateText('span-id', 'New'); // Update text
 this.updateHtml('div-id', '<b>HTML</b>'); // Update HTML
 
 // Visibility
-this.show('element-id');          // Show element
-this.hide('element-id');          // Hide element
 this.toggle('element-id');        // Toggle visibility
+this.toggle('element-id', true);  // Show element
+this.toggle('element-id', false); // Hide element
 
 // Input values
 this.val('input-id');             // Get input value
 this.setVal('input-id', 'new');   // Set input value
 
 // Theme
-this.toggleTheme();                   // Toggle dark/light
-this.setTheme('dark');                // Set specific theme
-this.getTheme();                      // Get current theme
+this.toggleTheme();           // Toggle dark/light
+this.toggleTheme('dark');     // Set to dark
+this.toggleTheme('light');    // Set to light
+this.getTheme();              // Get current theme
 
 // Event listeners
 this.on('button-id', 'click', (e) => console.log('Clicked'));
