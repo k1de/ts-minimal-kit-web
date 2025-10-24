@@ -1049,6 +1049,8 @@ body:has([data-layout='nav-sidebar']) .toast-container {
         height: auto;
     }
 
+    .nav ul {padding: 0;}
+
     .nav-brand {
         text-align: center;
         width: 100%;
@@ -1065,44 +1067,35 @@ body:has([data-layout='nav-sidebar']) .toast-container {
         padding: var(--space-s);
     }
 
-    /* Sidebar responsive - vertical layout with brand on top */
+    /* Sidebar responsive - masonry layout */
     .sidebar {
-        display: flex;
-        flex-direction: column;
         width: 100%;
         border-right: none;
         border-bottom: 1px solid var(--border);
         padding: var(--space-m);
-        overflow-x: auto;
-        overflow-y: visible;
+        column-width: 100px;
+        column-count: 3;
+        column-gap: var(--space-m);
+        column-rule: 1px solid var(--border);
+    }
+
+    .sidebar ul {
+        padding: 0;
     }
 
     .sidebar-brand {
         display: block;
         text-align: center;
-        margin-bottom: var(--space-m);
+        column-span: all;
     }
 
     .sidebar-section {
-        margin-bottom: var(--space-m);
+        break-inside: avoid;
     }
 
     .sidebar-title {
-        font-size: 0.75rem;
-        margin-bottom: var(--space-s);
-        text-align: center;
-    }
-
-    .sidebar-menu {
-        display: flex;
-        flex-wrap: wrap;
-        gap: var(--space-s);
-        justify-content: center;
-    }
-
-    .sidebar-item {
-        padding: var(--space-s) var(--space-m);
-        white-space: nowrap;
+        text-align: left;
+        margin-left: var(--space-s);
     }
 
     /* Main content padding adjustment */
