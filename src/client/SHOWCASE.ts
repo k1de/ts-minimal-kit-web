@@ -12,6 +12,7 @@ class ShowcaseApp extends ClientApp {
 
         // Navigation
         this.showNav({
+            // className: 'nav-compact',
             brand: 'ts-minimal-kit-web',
             items: [
                 { text: 'Home', onclick: () => this.navigateTo('home') },
