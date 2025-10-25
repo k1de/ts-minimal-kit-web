@@ -712,6 +712,11 @@ class ClientApp {
         document.title = title;
     }
 
+    /** Convert line breaks to <br> tags */
+    br(text: string): string {
+        return text.replace(/\r?\n/g, '<br>');
+    }
+
     // ========================================
     // BASIC HTML ELEMENTS
     // ========================================
