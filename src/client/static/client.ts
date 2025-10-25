@@ -58,6 +58,7 @@ type UtilityClass =
     | 'p-m'
     | 'p-s'
     // Sizing
+    | 'aspect-square'
     | 'h-full'
     | 'w-fit'
     | 'w-full'
@@ -66,6 +67,9 @@ type UtilityClass =
     | 'bottom-l'
     | 'bottom-m'
     | 'bottom-s'
+    | 'center'
+    | 'center-x'
+    | 'center-y'
     | 'fixed'
     | 'left-0'
     | 'left-l'

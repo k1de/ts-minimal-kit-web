@@ -948,17 +948,17 @@ pre code {
     gap: var(--space-none);
 }
 
-/* Small gap (0.5rem) */
+/* Small gap */
 .gap-s {
     gap: var(--space-s);
 }
 
-/* Medium gap (1rem) */
+/* Medium gap */
 .gap-m {
     gap: var(--space-m);
 }
 
-/* Large gap (1.5rem) */
+/* Large gap */
 .gap-l {
     gap: var(--space-l);
 }
@@ -982,17 +982,17 @@ pre code {
     margin-bottom: 0;
 }
 
-/* Small bottom margin (0.5rem) */
+/* Small bottom margin */
 .mb-s {
     margin-bottom: var(--space-s);
 }
 
-/* Medium bottom margin (1rem) */
+/* Medium bottom margin */
 .mb-m {
     margin-bottom: var(--space-m);
 }
 
-/* Large bottom margin (1.5rem) */
+/* Large bottom margin */
 .mb-l {
     margin-bottom: var(--space-l);
 }
@@ -1022,17 +1022,17 @@ pre code {
     padding: 0;
 }
 
-/* Small padding (0.5rem) */
+/* Small padding */
 .p-s {
     padding: var(--space-s);
 }
 
-/* Medium padding (1rem) */
+/* Medium padding */
 .p-m {
     padding: var(--space-m);
 }
 
-/* Large padding (1.5rem) */
+/* Large padding */
 .p-l {
     padding: var(--space-l);
 }
@@ -1054,6 +1054,12 @@ pre code {
 /* Full height */
 .h-full {
     height: 100%;
+}
+
+/* Square aspect ratio (1:1) */
+.aspect-square {
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
 }
 
 /* ──────────────────────────────────────────
@@ -1183,6 +1189,21 @@ pre code {
 }
 .right-l {
     right: var(--space-l);
+}
+
+/* Fixed positioning - centering */
+.center-x {
+    left: 50%;
+    transform: translateX(-50%);
+}
+.center-y {
+    top: 50%;
+    transform: translateY(-50%);
+}
+.center {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 /* Z-index layers */
@@ -1320,6 +1341,8 @@ pre code {
     .nav {
         flex-direction: column;
         height: auto;
+        padding-right: 0;
+        padding-left: 0;
     }
 
     .nav-brand {
@@ -1330,7 +1353,7 @@ pre code {
     .nav-menu {
         width: 100%;
         margin-left: 0;
-        justify-content: space-around;
+        justify-content: center;
         flex-wrap: wrap;
     }
 
@@ -1339,7 +1362,8 @@ pre code {
         width: 100%;
         border-right: none;
         border-bottom: 1px solid var(--border);
-        padding: var(--space-m);
+        padding-right: 0;
+        padding-left: 0;
         column-width: 100px;
         column-count: 3;
         column-gap: var(--space-m);

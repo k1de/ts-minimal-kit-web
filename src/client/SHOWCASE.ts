@@ -18,7 +18,6 @@ class ShowcaseApp extends ClientApp {
                 { text: 'Home', onclick: () => this.navigateTo('home') },
                 { text: 'Components', onclick: () => this.navigateTo('components') },
                 { text: 'Layouts', onclick: () => this.navigateTo('layouts') },
-                { text: 'Theme', onclick: () => this.swapThemeAndSave() },
             ],
         });
 
@@ -70,13 +69,22 @@ class ShowcaseApp extends ClientApp {
         });
 
         this.overlay(
-            this.button('☰', {
-                className: ['fixed', 'bottom-l', 'left-l', 'opacity-50', 'shadow'],
-                onclick: () => {
-                    // this.toggleNav();
-                    this.toggleSidebar();
-                },
-            })
+            this.flex(
+                [
+                    this.button('🌓', {
+                        onclick: () => this.swapThemeAndSave(),
+                        className: ['aspect-square', 'w-full']
+                    }),
+                    this.button('☰', {
+                        onclick: () => {
+                            this.toggleNav();
+                            this.toggleSidebar();
+                        },
+                        className: ['aspect-square', 'w-full']
+                    }),
+                ],
+                { direction: 'col', className: ['fixed', 'bottom-l', 'right-l', 'opacity-50'] }
+            )
         );
     }
 
@@ -149,7 +157,6 @@ class ShowcaseApp extends ClientApp {
     private swapThemeAndSave(): void {
         const theme = this.toggleTheme();
         localStorage.setItem('theme', theme);
-        this.toast(`Theme: ${theme}`, { type: 'info' });
     }
 
     private showHome(): void {
@@ -652,7 +659,7 @@ await this.apiPost('/users', { name: 'John' });`,
                     },
                     {
                         title: 'Sizing',
-                        content: this.code('w-full, w-fit, h-full'),
+                        content: this.code('w-full, w-fit, h-full, aspect-square'),
                     },
                     {
                         title: 'Text & Typography',
@@ -668,15 +675,34 @@ await this.apiPost('/users', { name: 'John' });`,
                         content: this.code('overflow-auto, cursor-pointer, cursor-not-allowed, opacity-50'),
                     },
                     {
+                        title: 'Position',
+                        content:
+                            this.code('fixed') +
+                            this.spacer() +
+                            this.code('top-0, top-s, top-m, top-l') +
+                            this.spacer() +
+                            this.code('bottom-0, bottom-s, bottom-m, bottom-l') +
+                            this.spacer() +
+                            this.code('left-0, left-s, left-m, left-l') +
+                            this.spacer() +
+                            this.code('right-0, right-s, right-m, right-l') +
+                            this.spacer() +
+                            this.code('center-x, center-y, center') +
+                            this.spacer() +
+                            this.code('z-low, z-mid, z-high'),
+                    },
+                    {
+                        title: 'Shadow',
+                        content: this.code('shadow-none, shadow, shadow-l'),
+                    },
+                    {
                         title: 'Component-Specific',
                         content:
                             this.code('table-fit, table-center, table-right') +
                             this.spacer() +
                             this.code('table-compact, table-striped') +
                             this.spacer() +
-                            this.code('accordion-compact, sidebar-compact', {
-                                className: ['btn', false && 'opacity-50'],
-                            }),
+                            this.code('accordion-compact, nav-compact, sidebar-compact'),
                     },
                 ])
             )
@@ -777,6 +803,34 @@ className: ['justify-center']          // Button group`,
                 ) +
                 this.spacer('s') +
                 this.code("className: ['table-striped', 'table-compact']", { block: true })
+            )
+        );
+
+        // Position utilities example
+        this.append(
+            this.card(
+                this.heading('Position Utilities') +
+                this.text('Fixed positioning with centering') +
+                this.spacer() +
+                this.button('Show Centered Modal', {
+                    variant: 'primary',
+                    onclick: () => {
+                        this.overlay(
+                            this.card(
+                                this.heading('Centered Card') +
+                                this.text('This card uses: fixed center') +
+                                this.spacer() +
+                                this.button('Close', {
+                                    variant: 'danger',
+                                    onclick: () => this.overlay(''),
+                                }),
+                                { className: ['fixed', 'center', 'shadow-l', 'z-high'] }
+                            )
+                        );
+                    },
+                }) +
+                this.spacer() +
+                this.code("className: ['fixed', 'center', 'shadow-l', 'z-high']", { block: true })
             )
         );
 
