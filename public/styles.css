@@ -295,6 +295,7 @@ div {
 .sidebar-title {
     font-size: 0.875rem;
     font-weight: 600;
+    white-space: nowrap;
     color: var(--success-text);
     text-transform: uppercase;
     margin-bottom: var(--space-s);
@@ -1357,7 +1358,6 @@ pre code {
 
     .sidebar-section {
         break-inside: avoid;
-        padding: 0;
     }
 
     .sidebar-title {
