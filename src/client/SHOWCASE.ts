@@ -11,7 +11,7 @@ class ShowcaseApp extends ClientApp {
         this.setTitle('SHOWCASE');
 
         // Navigation
-        this.showNav({
+        this.nav({
             // className: 'nav-compact',
             brand: 'ts-minimal-kit-web',
             items: [
@@ -23,7 +23,7 @@ class ShowcaseApp extends ClientApp {
         });
 
         // Sidebar
-        this.showSidebar({
+        this.sidebar({
             brand: 'SHOWCASE',
             className: 'sidebar-compact',
             sections: [
@@ -69,16 +69,15 @@ class ShowcaseApp extends ClientApp {
             ],
         });
 
-
         this.overlay(
             this.button('☰', {
                 className: ['fixed', 'bottom-l', 'left-l', 'opacity-50', 'shadow'],
                 onclick: () => {
                     // this.toggleNav();
                     this.toggleSidebar();
-                }
+                },
             })
-        )
+        );
     }
 
     override onHashChange(hash: string): void {
@@ -157,8 +156,7 @@ class ShowcaseApp extends ClientApp {
         this.clear();
 
         this.append(
-            this.heading('ts-minimal-kit-web', 1) +
-            this.text('Zero-dependency TypeScript framework for building web interfaces')
+            this.heading('ts-minimal-kit-web') + this.text('Zero-dependency TypeScript framework for building web interfaces')
         );
 
         this.append(

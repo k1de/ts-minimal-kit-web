@@ -593,8 +593,8 @@ class ClientApp {
     // LAYOUT
     // ========================================
 
-    /** Show navigation bar */
-    showNav(options?: NavOptions): void {
+    /** Create and show navigation bar */
+    nav(options?: NavOptions): void {
         const nav = document.getElementById('nav');
         if (!nav) return;
 
@@ -625,8 +625,8 @@ class ClientApp {
         this.updateLayout();
     }
 
-    /** Show sidebar */
-    showSidebar(options: SidebarOptions): void {
+    /** Create and show sidebar */
+    sidebar(options: SidebarOptions): void {
         const sidebar = document.getElementById('sidebar');
         if (!sidebar) return;
 
