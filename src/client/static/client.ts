@@ -127,6 +127,9 @@ type StyleObject = Partial<{
 /** Style options as string or object */
 type StyleOptions = string | StyleObject | undefined;
 
+/** Event handler function with optional element reference */
+type EventHandler = (el?: HTMLElement) => void
+
 // Simple Types
 // ----------------------------------------
 
@@ -153,7 +156,7 @@ interface BaseOptions {
     id?: string;
     className?: ClassNameOptions;
     style?: StyleOptions;
-    onclick?: () => void;
+    onclick?: EventHandler;
     [key: string]: any;
 }
 
@@ -371,16 +374,17 @@ class ClientApp {
     // ========================================
 
     /** Add event listener to element with common setup */
-    private addEventListener(element: HTMLElement | null, handler: () => void, event: string = 'click'): void {
+    private addEventListener(element: HTMLElement | null, handler: EventHandler, event: string = 'click'): void {
         if (!element) return;
 
         element.addEventListener(event, (e) => {
             // Only prevent default for links and form elements
-            const tagName = (e.target as HTMLElement).tagName.toLowerCase();
+            const el = (e.target as HTMLElement)
+            const tagName = el.tagName.toLowerCase();
             if (tagName === 'a' || tagName === 'button' || tagName === 'form') {
                 e.preventDefault();
             }
-            handler();
+            handler(el);
         });
 
         // Set cursor pointer for clickable elements
@@ -390,7 +394,7 @@ class ClientApp {
     }
 
     /** Add event listener with timeout */
-    private addDelayedEventListener(id: string, handler: () => void, event: string = 'click'): void {
+    private addDelayedEventListener(id: string, handler: EventHandler, event: string = 'click'): void {
         setTimeout(() => {
             const element = document.getElementById(id);
             this.addEventListener(element, handler, event);
@@ -1335,6 +1339,7 @@ export type {
     ButtonVariant,
     ClassNameOptions,
     ClassNameValue,
+    EventHandler,
     FlexDirection,
     GridColumns,
     HeadingLevel,
