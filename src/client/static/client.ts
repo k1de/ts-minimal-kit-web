@@ -494,7 +494,7 @@ class ClientApp {
     }
 
     /** Normalize options className and style to string */
-    private normalizeOptions<T extends BaseOptions>(options?: T): T {
+    private normalizeOptions<T extends BaseOptions>(options?: T): T & { className?: string; style?: string } {
         const normalizedOptions = { ...options };
 
         if (normalizedOptions.className) {
@@ -504,7 +504,7 @@ class ClientApp {
             normalizedOptions.style = this.normalizeStyle(normalizedOptions.style);
         }
 
-        return normalizedOptions! as T;
+        return normalizedOptions! as T & { className?: string; style?: string };
     }
 
     /** Normalize style to string */
