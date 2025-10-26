@@ -607,18 +607,37 @@ class ClientApp {
     // NAVIGATION
     // ========================================
 
-    /** Get current hash */
-    getCurrentHash(): string {
+    /** Get current hash without # */
+    getHash(): string {
         return window.location.hash.slice(1);
     }
 
-    /** Navigate to hash */
-    navigateTo(hash: string): void {
-        if (window.location.hash !== `#${hash}`) {
-            window.location.hash = hash;
-        } else {
-            // If hash is the same, trigger manually
-            this.handleHashChange();
+    /** Get single query parameter value */
+    getParam(key: string): string | null {
+        return new URLSearchParams(window.location.search).get(key);
+    }
+
+    /** Get all query parameters as URLSearchParams object */
+    getParams(): URLSearchParams {
+        return new URLSearchParams(window.location.search);
+    }
+
+    /** Navigate (URL-based) */
+    go(url?: string, newTab?: boolean): void {
+        if (!url) {
+            newTab ? window.open(location.href, '_blank') : location.reload();
+            return;
+        }
+
+        try {
+            // Пробуем создать URL объект
+            const targetUrl = new URL(url, location.href);
+            const href = targetUrl.href;
+
+            newTab ? window.open(href, '_blank') : (location.href = href);
+        } catch {
+            // Если не валидный URL - игнорируем или выбрасываем ошибку
+            console.error('Invalid URL:', url);
         }
     }
 

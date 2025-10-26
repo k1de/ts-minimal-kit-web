@@ -15,9 +15,9 @@ class ShowcaseApp extends ClientApp {
             // className: 'nav-compact',
             brand: 'ts-minimal-kit-web',
             items: [
-                { text: 'Home', onclick: () => this.navigateTo('home') },
-                { text: 'Components', onclick: () => this.navigateTo('components') },
-                { text: 'Layouts', onclick: () => this.navigateTo('layouts') },
+                { text: 'Home', onclick: () => this.go('#home') },
+                { text: 'Components', onclick: () => this.go('#components') },
+                { text: 'Layouts', onclick: () => this.go('#layouts') },
             ],
         });
 
@@ -29,40 +29,40 @@ class ShowcaseApp extends ClientApp {
                 {
                     title: 'UI Elements',
                     items: [
-                        { text: 'Typography', onclick: () => this.navigateTo('typography') },
-                        { text: 'Buttons', onclick: () => this.navigateTo('buttons') },
-                        { text: 'Badges', onclick: () => this.navigateTo('badges') },
-                        { text: 'Images', onclick: () => this.navigateTo('images') },
-                        { text: 'Progress', onclick: () => this.navigateTo('progress') },
+                        { text: 'Typography', onclick: () => this.go('#typography') },
+                        { text: 'Buttons', onclick: () => this.go('#buttons') },
+                        { text: 'Badges', onclick: () => this.go('#badges') },
+                        { text: 'Images', onclick: () => this.go('#images') },
+                        { text: 'Progress', onclick: () => this.go('#progress') },
                     ],
                 },
                 {
                     title: 'Layout',
                     items: [
-                        { text: 'Cards', onclick: () => this.navigateTo('cards') },
-                        { text: 'Grid', onclick: () => this.navigateTo('grid') },
-                        { text: 'Flex', onclick: () => this.navigateTo('flex') },
-                        { text: 'Tabs', onclick: () => this.navigateTo('tabs') },
-                        { text: 'Accordion', onclick: () => this.navigateTo('accordion') },
-                        { text: 'Utilities', onclick: () => this.navigateTo('utilities') },
+                        { text: 'Cards', onclick: () => this.go('#cards') },
+                        { text: 'Grid', onclick: () => this.go('#grid') },
+                        { text: 'Flex', onclick: () => this.go('#flex') },
+                        { text: 'Tabs', onclick: () => this.go('#tabs') },
+                        { text: 'Accordion', onclick: () => this.go('#accordion') },
+                        { text: 'Utilities', onclick: () => this.go('#utilities') },
                     ],
                 },
                 {
                     title: 'Forms',
-                    items: [{ text: 'Inputs', onclick: () => this.navigateTo('forms') }],
+                    items: [{ text: 'Inputs', onclick: () => this.go('#forms') }],
                 },
                 {
                     title: 'Feedback',
                     items: [
-                        { text: 'Alerts', onclick: () => this.navigateTo('alerts') },
-                        { text: 'Modals', onclick: () => this.navigateTo('modals') },
+                        { text: 'Alerts', onclick: () => this.go('#alerts') },
+                        { text: 'Modals', onclick: () => this.go('#modals') },
                     ],
                 },
                 {
                     title: 'Other',
                     items: [
-                        { text: 'Code', onclick: () => this.navigateTo('code') },
-                        { text: 'Tables', onclick: () => this.navigateTo('tables') },
+                        { text: 'Code', onclick: () => this.go('#code') },
+                        { text: 'Tables', onclick: () => this.go('#tables') },
                     ],
                 },
             ],
@@ -1237,7 +1237,7 @@ className: ['justify-center']          // Button group`,
                 this.text('See the Utilities page for live examples and complete reference.') +
                 this.spacer() +
                 this.button('View Utilities', {
-                    onclick: () => this.navigateTo('utilities'),
+                    onclick: () => this.go('#utilities'),
                     variant: 'primary',
                 })
             )

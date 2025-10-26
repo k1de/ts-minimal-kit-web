@@ -499,8 +499,8 @@ this.table(
 
 ```typescript
 // Hash navigation
-this.navigateTo('dashboard');  // Go to #dashboard
-this.getCurrentHash();          // Get current hash
+this.go('dashboard');  // Go to #dashboard
+this.getHash();          // Get current hash
 
 // Override to handle hash changes
 protected onHashChange(hash: string): void {
