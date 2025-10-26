@@ -128,7 +128,10 @@ type StyleObject = Partial<{
 type StyleOptions = string | StyleObject | undefined;
 
 /** Event handler function with optional element reference */
-type EventHandler = (el?: HTMLElement) => void
+type EventHandler = (el?: HTMLElement) => void;
+
+/** Normalized attributes (className and style as strings) */
+type NormalizedAttrs = { className?: string; style?: string };
 
 // Simple Types
 // ----------------------------------------
@@ -174,7 +177,7 @@ interface NavItem extends NavItemOptions {
 }
 
 /** Navigation bar options */
-interface NavOptions extends BaseOptions {
+interface NavOptions extends Omit<BaseOptions, 'id'> {
     brand?: string;
     items?: NavItem[];
 }
@@ -186,7 +189,7 @@ interface SidebarSection {
 }
 
 /** Sidebar options */
-interface SidebarOptions extends BaseOptions {
+interface SidebarOptions extends Omit<BaseOptions, 'id'> {
     brand?: string;
     sections: SidebarSection[];
 }
@@ -330,8 +333,16 @@ class ClientApp {
     // PROPERTIES
     // ========================================
 
+    // DOM Containers
+    private appContainer: HTMLElement;
     private mainContainer: HTMLElement;
+    private modalContainer: HTMLElement;
+    private navContainer: HTMLElement;
     private overlayContainer: HTMLElement;
+    private sidebarContainer: HTMLElement;
+    private toastContainer: HTMLElement;
+
+    // State
     private dropdownInitialized = false;
     private elementIdCounter = 0;
     private hasNav = false;
@@ -342,8 +353,14 @@ class ClientApp {
     // ========================================
 
     constructor() {
+        this.appContainer = document.getElementById('app')!;
         this.mainContainer = document.getElementById('main')!;
+        this.modalContainer = document.getElementById('modal')!;
+        this.navContainer = document.getElementById('nav')!;
         this.overlayContainer = document.getElementById('overlay')!;
+        this.sidebarContainer = document.getElementById('sidebar')!;
+        this.toastContainer = document.getElementById('toast')!;
+
         // Ensures child classes initialize before start
         setTimeout(() => {
             this.init();
@@ -379,7 +396,7 @@ class ClientApp {
 
         element.addEventListener(event, (e) => {
             // Only prevent default for links and form elements
-            const el = (e.target as HTMLElement)
+            const el = e.target as HTMLElement;
             const tagName = el.tagName.toLowerCase();
             if (tagName === 'a' || tagName === 'button' || tagName === 'form') {
                 e.preventDefault();
@@ -399,6 +416,23 @@ class ClientApp {
             const element = document.getElementById(id);
             this.addEventListener(element, handler, event);
         }, 0);
+    }
+
+    /** Apply className and style directly to DOM element */
+    private applyStyleToElement<T extends BaseOptions>(
+        el: HTMLElement,
+        options: T & NormalizedAttrs,
+        mainClass?: string
+    ): void {
+        if (options.className) {
+            el.className = mainClass ? `${mainClass} ${options.className}` : options.className;
+        } else if (mainClass) {
+            el.className = mainClass;
+        }
+
+        if (options.style) {
+            el.setAttribute('style', options.style);
+        }
     }
 
     /** Build HTML attributes from normalized options (converts className to class) */
@@ -494,7 +528,7 @@ class ClientApp {
     }
 
     /** Normalize options className and style to string */
-    private normalizeOptions<T extends BaseOptions>(options?: T): T & { className?: string; style?: string } {
+    private normalizeOptions<T extends BaseOptions>(options?: T): T & NormalizedAttrs {
         const normalizedOptions = { ...options };
 
         if (normalizedOptions.className) {
@@ -504,7 +538,7 @@ class ClientApp {
             normalizedOptions.style = this.normalizeStyle(normalizedOptions.style);
         }
 
-        return normalizedOptions! as T & { className?: string; style?: string };
+        return normalizedOptions! as T & NormalizedAttrs;
     }
 
     /** Normalize style to string */
@@ -565,7 +599,7 @@ class ClientApp {
             layout = 'sidebar';
         }
 
-        document.getElementById('app')?.setAttribute('data-layout', layout);
+        this.appContainer.setAttribute('data-layout', layout);
     }
 
     // ========================================
@@ -603,44 +637,37 @@ class ClientApp {
 
     /** Create and show navigation bar */
     nav(options?: NavOptions): void {
-        const nav = document.getElementById('nav');
-        if (!nav) return;
-
         const { brand, items = [], ...baseOptions } = options || ({} as NavOptions);
         const normalizedOptions = this.normalizeOptions(baseOptions);
-        if (!normalizedOptions.id) normalizedOptions.id = 'nav';
 
         const navItems: string = items
             .map((item, i) => {
                 const { text, ...itemOptions } = item;
                 const normalizedItemOptions = this.normalizeOptions(itemOptions);
-                if (!normalizedItemOptions.id) normalizedItemOptions.id = `${normalizedOptions.id}-item-${i}`;
+                if (!normalizedItemOptions.id) normalizedItemOptions.id = `nav-item-${i}`;
 
                 return this.createNavItem(text, normalizedItemOptions, 'nav-item');
             })
             .join('');
 
-        const attrs = this.buildAttrs(normalizedOptions, 'nav');
+        // Apply className and style to nav element
+        this.applyStyleToElement(this.navContainer, normalizedOptions, 'nav');
 
-        nav.outerHTML = `
-            <nav${attrs}>
-                <div class="nav-brand">${brand || ''}</div>
-                <ul class="nav-menu">${navItems}</ul>
-            </nav>
+        // Set inner content
+        this.navContainer.innerHTML = `
+            <div class="nav-brand">${brand || ''}</div>
+            <ul class="nav-menu">${navItems}</ul>
         `;
 
+        this.navContainer.hidden = false;
         this.hasNav = true;
         this.updateLayout();
     }
 
     /** Create and show sidebar */
     sidebar(options: SidebarOptions): void {
-        const sidebar = document.getElementById('sidebar');
-        if (!sidebar) return;
-
         const { brand, sections, ...baseOptions } = options;
         const normalizedOptions = this.normalizeOptions(baseOptions);
-        if (!normalizedOptions.id) normalizedOptions.id = 'sidebar';
 
         const content = sections
             .map((section, i) => {
@@ -648,7 +675,7 @@ class ClientApp {
                     .map((item, j) => {
                         const { text, ...itemOptions } = item;
                         const normalizedItemOptions = this.normalizeOptions(itemOptions);
-                        if (!normalizedItemOptions.id) normalizedItemOptions.id = `${normalizedOptions.id}-${i}-${j}`;
+                        if (!normalizedItemOptions.id) normalizedItemOptions.id = `sidebar-${i}-${j}`;
 
                         return this.createNavItem(text, normalizedItemOptions, 'sidebar-item');
                     })
@@ -663,31 +690,28 @@ class ClientApp {
             })
             .join('');
 
-        const attrs = this.buildAttrs(normalizedOptions, 'sidebar');
+        // Apply className and style to sidebar element
+        this.applyStyleToElement(this.sidebarContainer, normalizedOptions, 'sidebar');
 
-        sidebar.outerHTML = `<aside${attrs}>${brand ? `<div class="sidebar-brand">${brand}</div>` : ''}${content}</aside>`;
+        // Set inner content
+        this.sidebarContainer.innerHTML = `${brand ? `<div class="sidebar-brand">${brand}</div>` : ''}${content}`;
 
+        this.sidebarContainer.hidden = false;
         this.hasSidebar = true;
         this.updateLayout();
     }
 
     /** Toggle navigation bar visibility */
     toggleNav(visible?: boolean): void {
-        const nav = document.getElementById('nav');
-        if (!nav) return;
-
-        nav.hidden = visible !== undefined ? !visible : !nav.hidden;
-        this.hasNav = !nav.hidden;
+        this.navContainer.hidden = visible !== undefined ? !visible : !this.navContainer.hidden;
+        this.hasNav = !this.navContainer.hidden;
         this.updateLayout();
     }
 
     /** Toggle sidebar visibility */
     toggleSidebar(visible?: boolean): void {
-        const sidebar = document.getElementById('sidebar');
-        if (!sidebar) return;
-
-        sidebar.hidden = visible !== undefined ? !visible : !sidebar.hidden;
-        this.hasSidebar = !sidebar.hidden;
+        this.sidebarContainer.hidden = visible !== undefined ? !visible : !this.sidebarContainer.hidden;
+        this.hasSidebar = !this.sidebarContainer.hidden;
         this.updateLayout();
     }
 
@@ -920,7 +944,9 @@ class ClientApp {
             : (rows as string[]).map((item) => [item]);
 
         const headerRow = headers ? headers.map((h) => `<th>${h}</th>`).join('') : '';
-        const bodyRows = normalizedRows.map((row) => `<tr>${row.map((cell) => `<td>${cell}</td>`).join('')}</tr>`).join('');
+        const bodyRows = normalizedRows
+            .map((row) => `<tr>${row.map((cell) => `<td>${cell}</td>`).join('')}</tr>`)
+            .join('');
 
         const attrs = this.buildAttrs(normalizedOptions, 'table');
 
@@ -1175,43 +1201,35 @@ class ClientApp {
 
     /** Close modal dialog */
     closeModal(): void {
-        const modal = document.getElementById('modal');
-        if (modal) {
-            modal.hidden = true;
-            modal.innerHTML = '';
-            modal.onclick = null;
-        }
+        this.modalContainer.hidden = true;
+        this.modalContainer.innerHTML = '';
+        this.modalContainer.onclick = null;
     }
 
     /** Show modal dialog */
     modal(content: string, block?: boolean): void {
-        const modal = document.getElementById('modal');
-        if (!modal) return;
-
         // Clear previous state
-        if (modal.onclick) {
-            modal.onclick = null;
+        if (this.modalContainer.onclick) {
+            this.modalContainer.onclick = null;
         }
 
-        modal.innerHTML = `<div class="modal">${content}</div>`;
+        this.modalContainer.innerHTML = `<div class="modal">${content}</div>`;
 
-        modal.onclick = (e) => {
-            if (!block && e.target === modal) this.closeModal();
+        this.modalContainer.onclick = (e) => {
+            if (!block && e.target === this.modalContainer) this.closeModal();
         };
 
-        modal.hidden = false;
+        this.modalContainer.hidden = false;
     }
 
     /** Show toast notification */
     toast(message: string, options?: ToastOptions): void {
         const { type = 'info', duration = 3000 } = options || ({} as ToastOptions);
-        const container = document.getElementById('toast');
-        if (!container) return;
 
         const toast = document.createElement('div');
         toast.className = `toast toast-${type}`;
         toast.textContent = message;
-        container.appendChild(toast);
+        this.toastContainer.appendChild(toast);
 
         setTimeout(() => toast.remove(), duration);
     }
@@ -1344,6 +1362,7 @@ export type {
     GridColumns,
     HeadingLevel,
     Layout,
+    NormalizedAttrs,
     NotificationType,
     Spacing,
     StyleOptions,
