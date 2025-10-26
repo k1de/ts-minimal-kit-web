@@ -4,6 +4,14 @@ Minimal TypeScript web kit: zero dependencies, full-stack ready, strict typing.
 
 [![Demo](https://img.shields.io/badge/demo-live-success)](https://ts-minimal-kit-web.netlify.app)
 
+## Philosophy
+
+1. **Minimalism** — No dependencies. No frameworks. No bloat.
+2. **Simplicity** — Functions return HTML strings. Combine them. Ship it.
+3. **Just JavaScript** — If you know JS, you can handle many tasks here.
+
+Easy to start. Zero maintenance burden. Full ownership.
+
 ## Project Structure
 
 ```
@@ -96,7 +104,7 @@ npm install
 
 ### Server
 
--   Zero dependencies HTTP server
+-   HTTP server
 -   RESTful API router
 -   Request hooks (before/after)
 -   Static file serving
