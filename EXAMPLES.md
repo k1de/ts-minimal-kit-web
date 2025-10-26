@@ -498,9 +498,23 @@ this.table(
 ## Navigation & DOM
 
 ```typescript
-// Hash navigation
-this.go('dashboard');  // Go to #dashboard
-this.getHash();          // Get current hash
+// URL navigation (follows URL standard: protocol://domain/path?query#hash)
+this.go('https://example.com');     // Navigate to URL
+this.go('/page');                   // Relative path
+this.go('#section');                // Hash navigation
+this.go('?page=2');                 // Query params
+this.go('?tab=info#section');       // Query + hash
+this.go();                          // Reload page
+this.go('https://example.com', true); // Open in new tab
+
+// Hash & Query params
+this.getHash();                     // Get hash without #
+this.getParam('page');              // Get single param
+this.getParams();                   // Get URLSearchParams
+// Example: https://example.com?page=2&sort=name#section
+// getHash() -> 'section'
+// getParam('page') -> '2'
+// getParams().get('sort') -> 'name'
 
 // Override to handle hash changes
 protected onHashChange(hash: string): void {
@@ -583,11 +597,10 @@ ts-minimal-kit-web/
 ## Development
 
 ```bash
-# Development mode (watches files)
-npm run dev
-
-# Build and start
-npm run build:start
+npm run dev          # Watch mode (server + client)
+npm run build:start  # Build and run
+npm run clean        # Clean artifacts
+npm run build:start:showcase  # Build and run showcase
 ```
 
 ## Important Notes

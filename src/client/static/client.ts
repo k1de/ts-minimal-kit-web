@@ -630,13 +630,11 @@ class ClientApp {
         }
 
         try {
-            // Пробуем создать URL объект
             const targetUrl = new URL(url, location.href);
             const href = targetUrl.href;
 
             newTab ? window.open(href, '_blank') : (location.href = href);
         } catch {
-            // Если не валидный URL - игнорируем или выбрасываем ошибку
             console.error('Invalid URL:', url);
         }
     }

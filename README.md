@@ -83,22 +83,18 @@ git init         # Initialize new repository
 ## Quick Start
 
 **Setup:**
-
 ```bash
 npm install
 ```
 
 **Development:**
-
--   **Watch and compile:** `npm run dev`
--   **Build:** `npm run build`
--   **Run server:** `npm run start`
--   **Build and run:** `npm run build:start`
-
-**Utilities:**
-
--   **Clean:** `npm run clean`
--   **Remove git history:** `npm run degit`
+```bash
+npm run dev          # Watch mode (server + client)
+npm run build:start  # Build and run
+npm run start        # Run server only
+npm run clean        # Clean artifacts
+npm run build:start:showcase  # Build and run showcase
+```
 
 ## Features
 
