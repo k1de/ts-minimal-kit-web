@@ -1062,6 +1062,11 @@ pre code {
     overflow: hidden;
 }
 
+/* Fully rounded (circle/pill) */
+.rounded-full {
+    border-radius: 50%;
+}
+
 /* ──────────────────────────────────────────
    Text & Typography
    ────────────────────────────────────────── */

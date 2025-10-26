@@ -60,6 +60,7 @@ type UtilityClass =
     // Sizing
     | 'aspect-square'
     | 'h-full'
+    | 'rounded-full'
     | 'w-fit'
     | 'w-full'
     // Position
