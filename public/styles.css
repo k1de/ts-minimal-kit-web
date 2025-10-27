@@ -44,10 +44,10 @@
     --space-l: 1.5rem;
 
     /* Sizing */
-    --radius: 0.375rem;
-    --radius-l: 0.5rem;
-    --shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
-    --shadow-l: 0 10px 25px rgba(0, 0, 0, 0.12);
+    --radius: 0.5rem;
+    --radius-l: 1rem;
+    --shadow: 1px 2px 4px rgba(0, 0, 0, 0.06);
+    --shadow-l: 2px 4px 8px rgba(0, 0, 0, 0.06);
     --transition: 150ms ease;
 }
 
@@ -91,8 +91,8 @@
     --info-text: #67e8f9;
 
     /* Adjusted shadows for dark theme */
-    --shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-    --shadow-l: 0 10px 25px rgba(0, 0, 0, 0.3);
+    --shadow: 1px 2px 4px rgba(255, 160, 255, 0.06);
+    --shadow-l: 2px 4px 8px rgba(255, 160, 255, 0.06);
 }
 
 /* === Reset === */
@@ -222,6 +222,8 @@ div {
     border-bottom: 1px solid var(--border);
     padding: var(--space-m) var(--space-l);
     align-items: center;
+    box-shadow: var(--shadow);
+    z-index: 0;
 }
 
 .nav ul {
@@ -273,6 +275,8 @@ div {
     border-right: 1px solid var(--border);
     padding: var(--space-m) var(--space-l);
     overflow-y: auto;
+    box-shadow: var(--shadow);
+    z-index: 0;
 }
 
 .sidebar ul {
@@ -338,7 +342,12 @@ div {
     border: 1px solid var(--border);
     border-radius: var(--radius-l);
     padding: var(--space-l);
-    box-shadow: var(--shadow);
+    box-shadow: var(--shadow-l);
+}
+
+/* Remove shadows from card children */
+.card * {
+    box-shadow: none;
 }
 
 /* Fix for regular ul/ol lists */
@@ -414,7 +423,6 @@ ol {
 .textarea:focus {
     outline: none;
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 .textarea {
@@ -539,7 +547,7 @@ ol {
     padding: calc(var(--space-s) / 2) var(--space-s);
     font-size: 0.75rem;
     font-weight: 600;
-    border-radius: 1rem;
+    border-radius: 100vw;
     background: var(--bg-secondary);
     color: var(--text-secondary);
 }
@@ -1062,9 +1070,14 @@ pre code {
     overflow: hidden;
 }
 
-/* Fully rounded (circle/pill) */
-.rounded-full {
+/* Ellipse rounded */
+.rounded-ellipse {
     border-radius: 50%;
+}
+
+/* Pill rounded */
+.rounded-pill {
+    border-radius: 100vw;;
 }
 
 /* ──────────────────────────────────────────
