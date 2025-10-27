@@ -124,6 +124,7 @@ hr,
 img,
 code,
 pre,
+div,
 .card,
 .grid,
 .flex,
@@ -464,6 +465,7 @@ ol {
     transition: var(--transition);
     text-decoration: none;
     gap: var(--space-s);
+    white-space: nowrap;
 }
 
 .btn:hover {
@@ -550,6 +552,7 @@ ol {
     border-radius: 100vw;
     background: var(--bg-secondary);
     color: var(--text-secondary);
+    white-space: nowrap;
 }
 
 .badge-primary {
