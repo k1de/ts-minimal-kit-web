@@ -1,11 +1,10 @@
 /* === Design System === */
 :root {
     /* Core color palette - minimal set */
-    --primary: #667eea;
-    --success: #20c060;
-    --danger: #f04040;
-    --warning: #f0a00c;
-    --info: #06c0d8;
+    --primary: #5577ff; /* #3993e1 */
+    --success: #2f9e44;
+    --danger: #e03131; 
+    --warning: #e67700;
     --shadow-color: black;
 
     /* Light theme colors */
@@ -18,25 +17,21 @@
     --text-muted: #9ca3af;
 
     /* Semantic colors for light theme */
-    --primary-bg: color-mix(in srgb, var(--primary) 20%, white);
+    --primary-bg: color-mix(in srgb, var(--primary) 33%, white);
     --primary-border: var(--primary);
-    --primary-text: color-mix(in srgb, var(--primary) 60%, black);
+    --primary-text: color-mix(in srgb, var(--primary) 66%, black);
 
-    --success-bg: color-mix(in srgb, var(--success) 20%, white);
+    --success-bg: color-mix(in srgb, var(--success) 33%, white);
     --success-border: var(--success);
-    --success-text: color-mix(in srgb, var(--success) 60%, black);
+    --success-text: color-mix(in srgb, var(--success) 66%, black);
 
-    --warning-bg: color-mix(in srgb, var(--warning) 20%, white);
+    --warning-bg: color-mix(in srgb, var(--warning) 33%, white);
     --warning-border: var(--warning);
-    --warning-text: color-mix(in srgb, var(--warning) 60%, black);
+    --warning-text: color-mix(in srgb, var(--warning) 66%, black);
 
-    --danger-bg: color-mix(in srgb, var(--danger) 20%, white);
+    --danger-bg: color-mix(in srgb, var(--danger) 33%, white);
     --danger-border: var(--danger);
-    --danger-text: color-mix(in srgb, var(--danger) 60%, black);
-
-    --info-bg: color-mix(in srgb, var(--info) 20%, white);
-    --info-border: var(--info);
-    --info-text: color-mix(in srgb, var(--info) 60%, black);
+    --danger-text: color-mix(in srgb, var(--danger) 66%, black);
 
     /* Spacing */
     --space-none: 0;
@@ -60,12 +55,11 @@
     --success: #20c060;
     --danger: #f04040;
     --warning: #f0a00c;
-    --info: #06c0d8;
     */
     --shadow-color: var(--primary);
 
     /* Dark theme base colors */
-    --bg: #131415;;
+    --bg: #131415;
     --bg-secondary: #252830;
     --surface: #1a1d24;
     --border: #2a2d35;
@@ -74,25 +68,21 @@
     --text-muted: #64748b;
 
     /* Semantic colors for dark theme */
-    --primary-bg: color-mix(in srgb, var(--primary) 20%, black);
+    --primary-bg: color-mix(in srgb, var(--primary) 33%, black);
     --primary-border: var(--primary);
-    --primary-text: color-mix(in srgb, var(--primary) 60%, white);
+    --primary-text: color-mix(in srgb, var(--primary) 66%, white);
 
-    --success-bg: color-mix(in srgb, var(--success) 20%, black);
+    --success-bg: color-mix(in srgb, var(--success) 33%, black);
     --success-border: var(--success);
-    --success-text: color-mix(in srgb, var(--success) 60%, white);
+    --success-text: color-mix(in srgb, var(--success) 66%, white);
 
-    --warning-bg: color-mix(in srgb, var(--warning) 20%, black);
+    --warning-bg: color-mix(in srgb, var(--warning) 33%, black);
     --warning-border: var(--warning);
-    --warning-text: color-mix(in srgb, var(--warning) 60%, white);
+    --warning-text: color-mix(in srgb, var(--warning) 66%, white);
 
-    --danger-bg: color-mix(in srgb, var(--danger) 20%, black);
+    --danger-bg: color-mix(in srgb, var(--danger) 33%, black);
     --danger-border: var(--danger);
-    --danger-text: color-mix(in srgb, var(--danger) 60%, white);
-
-    --info-bg: color-mix(in srgb, var(--info) 20%, black);
-    --info-border: var(--info);
-    --info-text: color-mix(in srgb, var(--info) 60%, white);
+    --danger-text: color-mix(in srgb, var(--danger) 66%, white);
 
     /* Adjusted shadows for dark theme */
     --shadow: 1px 2px 4px color-mix(in srgb, var(--shadow-color) 8%, transparent);
@@ -220,6 +210,13 @@ div {
     grid-column: 1 / -1;
 }
 
+/* Fix bottom for all*/
+[data-layout='nav'],
+[data-layout='sidebar'],
+[data-layout='nav-sidebar'] {
+    margin-bottom: 0;
+}
+
 /* === Navigation === */
 .nav {
     display: flex;
@@ -247,6 +244,7 @@ div {
     font-weight: 600;
     color: var(--primary);
     padding: var(--space-s) var(--space-m);
+    margin-bottom: 0;
 }
 
 .nav-menu {
@@ -304,7 +302,6 @@ div {
 .sidebar-title {
     font-size: 0.875rem;
     font-weight: 600;
-    white-space: nowrap;
     color: var(--success-text);
     text-transform: uppercase;
     margin-bottom: var(--space-s);
@@ -473,7 +470,8 @@ ol {
 }
 
 .btn:hover {
-    opacity: 0.75;
+    --overlay: rgba(0,0,0,0.25);
+    background-image: linear-gradient(var(--overlay), var(--overlay));
 }
 
 .btn:disabled {
@@ -663,6 +661,10 @@ pre code {
     border-radius: var(--radius);
     border: 1px solid;
     transition: var(--transition);
+    
+    background: var(--surface);
+    border-color: var(--text-secondary);
+    color: var(--text-secondary);
 }
 
 .alert {
@@ -676,13 +678,6 @@ pre code {
 }
 
 /* Notification variants using CSS variables */
-.alert-info,
-.toast-info {
-    background: var(--info-bg);
-    border-color: var(--info-border);
-    color: var(--info-text);
-}
-
 .alert-primary,
 .toast-primary {
     background: var(--primary-bg);
@@ -720,6 +715,17 @@ pre code {
     display: flex;
     flex-direction: column;
     gap: var(--space-m);
+}
+
+/* Adjust toast position for nav height - desktop only */
+@media (min-width: 769px) {
+    body:has(.nav:not([hidden])) .toast-container {
+        top: calc(var(--space-l) * 2 + var(--space-m));
+    }
+
+    body:has(.nav:not([hidden]).nav-compact) .toast-container {
+        top: calc(var(--space-m) * 2 + var(--space-s));
+    }
 }
 
 @keyframes slideIn {
@@ -806,6 +812,7 @@ pre code {
     left: 0;
     right: 0;
     bottom: 0;
+    margin-bottom: 0;
     pointer-events: none;
     z-index: 1400;
 }
@@ -1089,7 +1096,7 @@ pre code {
 
 /* Pill rounded */
 .rounded-pill {
-    border-radius: 100vw;;
+    border-radius: 100vw;
 }
 
 /* ──────────────────────────────────────────
@@ -1389,15 +1396,12 @@ pre code {
 
     /* Sidebar responsive - masonry layout */
     .sidebar {
-        width: 100%;
         border-right: none;
         border-bottom: 1px solid var(--border);
         padding-right: 0;
         padding-left: 0;
-        column-width: 100px;
-        column-count: 3;
-        column-gap: var(--space-m);
-        column-rule: 1px solid var(--border);
+        display: flex;
+        flex-wrap: wrap;
     }
 
     .sidebar ul {
@@ -1406,12 +1410,12 @@ pre code {
 
     .sidebar-brand {
         display: block;
+        width: 100%;
         text-align: center;
-        column-span: all;
     }
 
     .sidebar-section {
-        break-inside: avoid;
+        margin-bottom: 0;
     }
 
     .sidebar-title {
@@ -1438,12 +1442,6 @@ pre code {
     .toast {
         min-width: auto;
         width: 100%;
-    }
-
-    /* Adjust toast position for mobile nav height */
-    body:has([data-layout='nav']) .toast-container,
-    body:has([data-layout='nav-sidebar']) .toast-container {
-        top: var(--space-l);
     }
 
     /* Table responsive - horizontal scroll */

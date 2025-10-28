@@ -1209,7 +1209,7 @@ class ClientApp {
 
     /** Create an alert message */
     alert(message: string, options?: AlertOptions): string {
-        const { type = 'info', ...baseOptions } = options || ({} as AlertOptions);
+        const { type = 'default', ...baseOptions } = options || ({} as AlertOptions);
         const normalizedOptions = this.normalizeOptions(baseOptions);
         this.processOnclick(normalizedOptions, 'alert');
         const mainClass = `alert alert-${type}`;
@@ -1243,10 +1243,10 @@ class ClientApp {
 
     /** Show toast notification */
     toast(message: string, options?: ToastOptions): void {
-        const { type = 'default', duration = 3000 } = options || ({} as ToastOptions);
+        const { type = 'default', duration = 5000 } = options || ({} as ToastOptions);
 
         const toast = document.createElement('div');
-        toast.className = `toast toast-${type}`;
+        toast.className = type === 'default' ? 'toast' : `toast toast-${type}`;
         toast.textContent = message;
         this.toastContainer.appendChild(toast);
 
