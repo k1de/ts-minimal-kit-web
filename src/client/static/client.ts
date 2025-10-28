@@ -1329,7 +1329,7 @@ class ClientApp {
         }
 
         try {
-            const response = await fetch(`/api${endpoint}`, options);
+            const response = await fetch(endpoint, options);
             const contentType = response.headers.get('content-type');
 
             if (contentType && contentType.includes('application/json')) {

@@ -62,9 +62,10 @@ export class ApiRouter {
     /**
      * Send JSON response
      */
-    json(res: ServerResponse, data: any, status: number = 200): void {
+    json(res: ServerResponse, data: object | string, status: number = 200): void {
         res.writeHead(status, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify(data));
+        const processedData = typeof data === 'string' ? data : JSON.stringify(data)
+        res.end(processedData);
     }
 
     /**
