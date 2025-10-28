@@ -144,7 +144,7 @@ type FlexDirection = 'col' | 'row';
 type GridColumns = 2 | 3 | 4 | 5 | 6 | 7 | 8;
 type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
 type Layout = 'default' | 'nav' | 'nav-sidebar' | 'sidebar';
-type NotificationType = 'danger' | 'error' | 'info' | 'success' | 'warning';
+type NotificationType = 'danger' | 'default' | 'primary' | 'success' | 'warning';
 type Spacing = 'l' | 'm' | 'none' | 's';
 type ThemeVariant = 'dark' | 'light';
 type ToastType = NotificationType;
@@ -1243,7 +1243,7 @@ class ClientApp {
 
     /** Show toast notification */
     toast(message: string, options?: ToastOptions): void {
-        const { type = 'info', duration = 3000 } = options || ({} as ToastOptions);
+        const { type = 'default', duration = 3000 } = options || ({} as ToastOptions);
 
         const toast = document.createElement('div');
         toast.className = `toast toast-${type}`;

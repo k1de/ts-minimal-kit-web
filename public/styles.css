@@ -1,41 +1,42 @@
 /* === Design System === */
 :root {
     /* Core color palette - minimal set */
-    --primary: #3b82f6;
-    --success: #22c55e;
-    --danger: #ef4444;
-    --warning: #f59e0b;
-    --info: #06b6d4;
+    --primary: #667eea;
+    --success: #20c060;
+    --danger: #f04040;
+    --warning: #f0a00c;
+    --info: #06c0d8;
+    --shadow-color: black;
 
     /* Light theme colors */
-    --bg: #fefefe; /* Чуть более теплый белый для основного фона */
-    --bg-secondary: #f2f2f2; /* Более насыщенный светло-серый для вторичного фона */
-    --surface: #ffffff; /* Чистый белый для поверхностей, таких как карточки */
+    --bg: #fefefe;
+    --bg-secondary: #f2f2f2;
+    --surface: #ffffff;
     --border: #e5e7e9;
     --text: #1f2937;
     --text-secondary: #6b7280;
     --text-muted: #9ca3af;
 
     /* Semantic colors for light theme */
-    --primary-bg: #eff6ff;
+    --primary-bg: color-mix(in srgb, var(--primary) 20%, white);
     --primary-border: var(--primary);
-    --primary-text: #1e40af;
+    --primary-text: color-mix(in srgb, var(--primary) 60%, black);
 
-    --success-bg: #f0fdf4;
+    --success-bg: color-mix(in srgb, var(--success) 20%, white);
     --success-border: var(--success);
-    --success-text: #166534;
+    --success-text: color-mix(in srgb, var(--success) 60%, black);
 
-    --warning-bg: #fffbeb;
+    --warning-bg: color-mix(in srgb, var(--warning) 20%, white);
     --warning-border: var(--warning);
-    --warning-text: #92400e;
+    --warning-text: color-mix(in srgb, var(--warning) 60%, black);
 
-    --danger-bg: #fef2f2;
+    --danger-bg: color-mix(in srgb, var(--danger) 20%, white);
     --danger-border: var(--danger);
-    --danger-text: #991b1b;
+    --danger-text: color-mix(in srgb, var(--danger) 60%, black);
 
-    --info-bg: #ecfeff;
+    --info-bg: color-mix(in srgb, var(--info) 20%, white);
     --info-border: var(--info);
-    --info-text: #155e75;
+    --info-text: color-mix(in srgb, var(--info) 60%, black);
 
     /* Spacing */
     --space-none: 0;
@@ -46,53 +47,56 @@
     /* Sizing */
     --radius: 0.5rem;
     --radius-l: 1rem;
-    --shadow: 1px 2px 4px rgba(0, 0, 0, 0.06);
-    --shadow-l: 2px 4px 8px rgba(0, 0, 0, 0.06);
     --transition: 150ms ease;
+    --shadow: 1px 2px 4px color-mix(in srgb, var(--shadow-color) 8%, transparent);
+    --shadow-l: 2px 4px 8px color-mix(in srgb, var(--shadow-color) 8%, transparent);
 }
 
 /* Dark theme */
 [data-theme='dark'] {
     /* Core colors remain the same */
-    --primary: #3b82f6;
-    --success: #22c55e;
-    --danger: #ef4444;
-    --warning: #f59e0b;
-    --info: #06b6d4;
+    /* 
+    --primary: #4080ff;
+    --success: #20c060;
+    --danger: #f04040;
+    --warning: #f0a00c;
+    --info: #06c0d8;
+    */
+    --shadow-color: var(--primary);
 
     /* Dark theme base colors */
-    --bg: #0f1419;
-    --bg-secondary: #1f253f;
-    --surface: #1a1f2e;
-    --border: #334155;
+    --bg: #131415;;
+    --bg-secondary: #252830;
+    --surface: #1a1d24;
+    --border: #2a2d35;
     --text: #e2e8f0;
     --text-secondary: #94a3b8;
     --text-muted: #64748b;
 
     /* Semantic colors for dark theme */
-    --primary-bg: #1e293b;
+    --primary-bg: color-mix(in srgb, var(--primary) 20%, black);
     --primary-border: var(--primary);
-    --primary-text: #93bbfc;
+    --primary-text: color-mix(in srgb, var(--primary) 60%, white);
 
-    --success-bg: #14532d;
+    --success-bg: color-mix(in srgb, var(--success) 20%, black);
     --success-border: var(--success);
-    --success-text: #86efac;
+    --success-text: color-mix(in srgb, var(--success) 60%, white);
 
-    --warning-bg: #451a03;
+    --warning-bg: color-mix(in srgb, var(--warning) 20%, black);
     --warning-border: var(--warning);
-    --warning-text: #fbbf24;
+    --warning-text: color-mix(in srgb, var(--warning) 60%, white);
 
-    --danger-bg: #450a0a;
+    --danger-bg: color-mix(in srgb, var(--danger) 20%, black);
     --danger-border: var(--danger);
-    --danger-text: #fca5a5;
+    --danger-text: color-mix(in srgb, var(--danger) 60%, white);
 
-    --info-bg: #164e63;
+    --info-bg: color-mix(in srgb, var(--info) 20%, black);
     --info-border: var(--info);
-    --info-text: #67e8f9;
+    --info-text: color-mix(in srgb, var(--info) 60%, white);
 
     /* Adjusted shadows for dark theme */
-    --shadow: 1px 2px 4px rgba(255, 160, 255, 0.06);
-    --shadow-l: 2px 4px 8px rgba(255, 160, 255, 0.06);
+    --shadow: 1px 2px 4px color-mix(in srgb, var(--shadow-color) 8%, transparent);
+    --shadow-l: 2px 4px 8px color-mix(in srgb, var(--shadow-color) 8%, transparent);
 }
 
 /* === Reset === */
@@ -679,6 +683,13 @@ pre code {
     color: var(--info-text);
 }
 
+.alert-primary,
+.toast-primary {
+    background: var(--primary-bg);
+    border-color: var(--primary-border);
+    color: var(--primary-text);
+}
+
 .alert-success,
 .toast-success {
     background: var(--success-bg);
@@ -693,9 +704,7 @@ pre code {
     color: var(--warning-text);
 }
 
-.alert-error,
 .alert-danger,
-.toast-error,
 .toast-danger {
     background: var(--danger-bg);
     border-color: var(--danger-border);

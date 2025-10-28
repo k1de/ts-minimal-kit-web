@@ -251,7 +251,7 @@ class ShowcaseApp extends ClientApp {
                     }),
                     this.button('Primary', {
                         variant: 'primary',
-                        onclick: () => this.toast('Primary clicked', { type: 'info' }),
+                        onclick: () => this.toast('Primary clicked'),
                     }),
                     this.button('Success', {
                         variant: 'success',
@@ -275,7 +275,7 @@ class ShowcaseApp extends ClientApp {
                 this.dropdown(
                     'Actions',
                     [
-                        { text: 'Edit', onclick: () => this.toast('Edit clicked', { type: 'info' }) },
+                        { text: 'Edit', onclick: () => this.toast('Edit clicked') },
                         { text: 'Delete', onclick: () => this.toast('Delete clicked', { type: 'danger' }) },
                     ],
                     {
@@ -329,7 +329,7 @@ class ShowcaseApp extends ClientApp {
                     [
                         this.image('https://picsum.photos/seed/10/150/150', {
                             alt: 'Click me 1',
-                            onclick: () => this.toast('Image 1 clicked!', { type: 'info' }),
+                            onclick: () => this.toast('Image 1 clicked!'),
                             style: { cursor: 'pointer', borderRadius: 'var(--radius)' },
                         }),
                         this.image('https://picsum.photos/seed/11/150/150', {
@@ -421,7 +421,7 @@ console.log(message);`,
                 this.separator() +
                 this.button('View Details', {
                     variant: 'primary',
-                    onclick: () => this.toast('Card button clicked!', { type: 'info' }),
+                    onclick: () => this.toast('Card button clicked!'),
                 })
             )
         );
@@ -769,7 +769,7 @@ await this.apiPost('/users', { name: 'John' });`,
                                 onclick: () => {
                                     count = 0;
                                     this.updateText('counter', '0');
-                                    this.toast('Reset!', { type: 'info' });
+                                    this.toast('Reset!');
                                 },
                             }),
                         ],
@@ -963,7 +963,8 @@ className: ['justify-center']          // Button group`,
         this.append(
             this.card(
                 this.heading('Alert Types') +
-                this.alert('Info alert message', { type: 'info' }) +
+                this.alert('Default alert message') +
+                this.alert('Primary alert message', { type: 'primary' }) +
                 this.alert('Success alert message', { type: 'success' }) +
                 this.alert('Warning alert message', { type: 'warning' }) +
                 this.alert('Danger alert message', { type: 'danger' })
@@ -974,8 +975,12 @@ className: ['justify-center']          // Button group`,
             this.card(
                 this.heading('Toast Notifications') +
                 this.flex([
-                    this.button('Info', {
-                        onclick: () => this.toast('Info message', { type: 'info' }),
+                    this.button('Default', {
+                        onclick: () => this.toast('Default message'),
+                    }),
+                    this.button('Primary', {
+                        onclick: () => this.toast('Primary message', { type: 'primary' }),
+                        variant: 'primary',
                     }),
                     this.button('Success', {
                         onclick: () => this.toast('Success!', { type: 'success' }),
@@ -985,8 +990,8 @@ className: ['justify-center']          // Button group`,
                         onclick: () => this.toast('Warning!', { type: 'warning' }),
                         variant: 'warning',
                     }),
-                    this.button('Error', {
-                        onclick: () => this.toast('Error!', { type: 'error', duration: 5000 }),
+                    this.button('Danger', {
+                        onclick: () => this.toast('Error!', { type: 'danger', duration: 5000 }),
                         variant: 'danger',
                     }),
                 ])
@@ -1047,7 +1052,7 @@ className: ['justify-center']          // Button group`,
                                     this.button('Decline', {
                                         onclick: () => {
                                             this.closeModal();
-                                            this.toast('Update declined', { type: 'info' });
+                                            this.toast('Update declined');
                                         },
                                         variant: 'danger',
                                     }),
