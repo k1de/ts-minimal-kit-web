@@ -45,6 +45,9 @@
     --transition: 150ms ease;
     --shadow: 1px 2px 4px color-mix(in srgb, var(--shadow-color) 8%, transparent);
     --shadow-l: 2px 4px 8px color-mix(in srgb, var(--shadow-color) 8%, transparent);
+
+    /* Utils */
+    --hover-image: linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.1));
 }
 
 /* Dark theme */
@@ -470,8 +473,7 @@ ol {
 }
 
 .btn:hover {
-    --overlay: rgba(0,0,0,0.25);
-    background-image: linear-gradient(var(--overlay), var(--overlay));
+    background-image: var(--hover-image)
 }
 
 .btn:disabled {
@@ -672,9 +674,16 @@ pre code {
 }
 
 .toast {
-    min-width: 300px;
+    width: max-content;
+    min-width: 240px;
+    max-width: min(480px, calc(100vw - var(--space-l) * 2));
     animation: slideIn 200ms ease;
-    box-shadow: var(--shadow-l);
+    box-shadow: var(--shadow-l);    
+    /* cursor: pointer; */
+}
+
+.toast:hover {
+    background-image: var(--hover-image)
 }
 
 /* Notification variants using CSS variables */
@@ -714,7 +723,13 @@ pre code {
     z-index: 2000;
     display: flex;
     flex-direction: column;
+    align-items: flex-end;
     gap: var(--space-m);
+    pointer-events: none;
+}
+
+.toast-container > * {
+    pointer-events: auto;
 }
 
 /* Adjust toast position for nav height - desktop only */
@@ -1440,8 +1455,8 @@ pre code {
     }
 
     .toast {
-        min-width: auto;
         width: 100%;
+        max-width: 100%;
     }
 
     /* Table responsive - horizontal scroll */

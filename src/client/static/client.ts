@@ -317,7 +317,7 @@ interface AlertOptions extends BaseOptions {
 /** Toast notification options */
 interface ToastOptions {
     type?: ToastType;
-    duration?: number;
+    duration?: number; // Use 0 or Infinity for permanent toast
 }
 
 // ========================================
@@ -1247,10 +1247,16 @@ class ClientApp {
 
         const toast = document.createElement('div');
         toast.className = type === 'default' ? 'toast' : `toast toast-${type}`;
-        toast.textContent = message;
+        toast.innerHTML = message;
+
+        toast.ondblclick = () => toast.remove();
+
         this.toastContainer.appendChild(toast);
 
-        setTimeout(() => toast.remove(), duration);
+        // Auto-remove only if duration is finite and > 0
+        if (duration > 0 && duration !== Infinity) {
+            setTimeout(() => toast.remove(), duration);
+        }
     }
 
     // ========================================

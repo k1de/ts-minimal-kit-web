@@ -990,8 +990,8 @@ className: ['justify-center']          // Button group`,
                         onclick: () => this.toast('Warning!', { type: 'warning' }),
                         variant: 'warning',
                     }),
-                    this.button('Danger', {
-                        onclick: () => this.toast('Error!', { type: 'danger', duration: 5000 }),
+                    this.button('Danger + Permanent', {
+                        onclick: () => this.toast('Error! (double click to close)', { type: 'danger', duration: 0 }),
                         variant: 'danger',
                     }),
                 ])
