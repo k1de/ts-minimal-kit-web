@@ -251,7 +251,7 @@ class ShowcaseApp extends ClientApp {
                     }),
                     this.button('Primary', {
                         variant: 'primary',
-                        onclick: () => this.toast('Primary clicked'),
+                        onclick: () => this.toast('Primary clicked', { type: 'primary' }),
                     }),
                     this.button('Success', {
                         variant: 'success',
@@ -659,7 +659,7 @@ await this.apiPost('/users', { name: 'John' });`,
                     },
                     {
                         title: 'Sizing',
-                        content: this.code('w-full, w-fit, h-full, aspect-square'),
+                        content: this.code('w-full, w-fit, h-full, aspect-square, rounded-ellipse, rounded-pill'),
                     },
                     {
                         title: 'Text & Typography',
