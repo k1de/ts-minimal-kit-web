@@ -289,6 +289,10 @@ div {
     padding: 0;
 }
 
+.sidebar[hidden] {
+    display: none !important;
+}
+
 .sidebar-brand {
     font-size: 1.25rem;
     font-weight: 600;
@@ -1397,6 +1401,11 @@ pre code {
         padding-left: 0;
     }
 
+    /* Ensure hidden nav stays hidden in mobile */
+    .nav[hidden] {
+        display: none !important;
+    }
+
     .nav-brand {
         width: 100%;
         text-align: center;
@@ -1417,6 +1426,11 @@ pre code {
         padding-left: 0;
         display: flex;
         flex-wrap: wrap;
+    }
+
+    /* Ensure hidden sidebar stays hidden in mobile */
+    .sidebar[hidden] {
+        display: none !important;
     }
 
     .sidebar ul {
