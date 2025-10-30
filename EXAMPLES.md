@@ -27,26 +27,6 @@ class MyApp extends ClientApp {
 new MyApp();
 ```
 
-### Server-side API (src/server/router.ts)
-
-```typescript
-import { api } from './static/api.js';
-
-// GET endpoint with URL parameters
-api.get('/api/users', async (req, res, url) => {
-    const page = parseInt(url.searchParams.get('page')) || 1;
-    // Process...
-    api.json(res, { users, page });
-});
-
-// POST endpoint with body parsing
-api.post('/api/users', async (req, res, url) => {
-    const body = await api.parseBody(req);
-    // Process...
-    api.json(res, { id, ...body }, 201);
-});
-```
-
 ## API Calls
 
 ### Client-side API methods
@@ -62,7 +42,7 @@ await this.apiDelete('/api/users?id=1');
 await this.api('PATCH', '/api/users?id=1', { active: true });
 ```
 
-### Server-side API handlers
+### Server-side API (src/server/router.ts)
 
 All handlers receive three parameters: `(req, res, url)`
 
@@ -231,7 +211,6 @@ this.flex(
 
 ```typescript
 // Single utility class - autocomplete with Ctrl+Space
-this.button('Click', { className: 'flex' });
 this.div('Content', { className: 'text-center' });
 
 // Array of utility classes
@@ -300,25 +279,7 @@ this.card(
 
 ### Available Utilities
 
-**Display:** `hidden`, `block`, `inline-block`
-
-**Flexbox:** `flex`, `flex-col`, `flex-row`, `flex-wrap`, `flex-1`
-
-**Alignment:** `items-start`, `items-center`, `items-end`, `justify-start`, `justify-center`, `justify-end`, `justify-between`
-
-**Gap:** `gap-none`, `gap-s`, `gap-m`, `gap-l`
-
-**Margin:** `m-0`, `mt-0`, `mb-0`, `mb-s`, `mb-m`, `mb-l`, `ml-auto`, `mr-auto`, `mx-auto`
-
-**Padding:** `p-0`, `p-s`, `p-m`, `p-l`
-
-**Sizing:** `w-full`, `w-fit`, `h-full`
-
-**Text:** `text-left`, `text-center`, `text-right`, `text-secondary`, `text-muted`, `font-semibold`, `font-bold`, `truncate`
-
-**Interactive:** `overflow-auto`, `cursor-pointer`, `cursor-not-allowed`, `opacity-50`
-
-**Component-Specific:** `table-fit`, `table-center`, `table-right`, `table-compact`, `table-striped`, `accordion-compact`, `sidebar-compact`
+See complete list with definitions in **[public/utils.css](./public/utils.css)**
 
 ## Content Components
 
@@ -375,11 +336,12 @@ this.accordion([
 
 ```typescript
 // Basic inputs
-this.input('name-id', { type: 'text', placeholder: 'Enter name' });
-this.textarea('msg-id', { placeholder: 'Message...', rows: 4 });
+this.input({ id: 'name-id', type: 'text', placeholder: 'Enter name' });
+this.textarea({ id: 'msg-id', placeholder: 'Message...', rows: 4 });
 
 // Select
-this.select('country-id', {
+this.select({
+    id: 'country-id',
     options: [
         { value: 'us', text: 'United States' },
         { value: 'uk', text: 'United Kingdom' },
@@ -388,7 +350,7 @@ this.select('country-id', {
 });
 
 // Checkbox & Radio
-this.checkbox('agree-id', { label: 'I agree' });
+this.checkbox({ id: 'agree-id', label: 'I agree' });
 this.radioGroup({
     name: 'color',
     options: [
@@ -402,7 +364,7 @@ this.radioGroup({
 this.div(
     this.text('Email', { className: 'label' }) +
         this.text('We never share your email', { className: 'sublabel' }) +
-        this.input('email', { type: 'email' })
+        this.input({ id: 'email', type: 'email' })
 );
 ```
 
@@ -559,48 +521,6 @@ this.getTheme();              // Get current theme
 
 // Event listeners
 this.on('button-id', 'click', (e) => console.log('Clicked'));
-```
-
-## Nested Element IDs
-
-Components with IDs generate predictable nested IDs:
-
-```typescript
-// Button with ID
-this.button('Click me', { id: 'my-btn' });
-this.updateText('my-btn-text', 'New Label');
-```
-
-### ID Pattern
-
-For component with `id`, nested elements follow:
-
--   `{id}-text` - Text element (button, badge)
--   `{id}-message` - Message element (alert)
-
-## Project Structure
-
-```
-ts-minimal-kit-web/
-├── src/
-│   ├── server/
-│   │   ├── app.ts        # Server hooks
-│   │   ├── router.ts     # API routes
-│   │   └── static/       # Core (do not modify)
-│   └── client/
-│       ├── index.ts      # Client app
-│       └── static/       # Core (do not modify)
-├── public/               # Static files
-└── dist/                # Compiled files
-```
-
-## Development
-
-```bash
-npm run dev          # Watch mode (server + client)
-npm run build:start  # Build and run
-npm run clean        # Clean artifacts
-npm run build:start:showcase  # Build and run showcase
 ```
 
 ## Important Notes

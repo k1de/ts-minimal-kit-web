@@ -434,6 +434,15 @@ ol {
     border-color: var(--primary);
 }
 
+.select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding-right: 30px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23999' d='M6 9L1 4h10z'/%3E%3C/svg%3E") no-repeat right 10px center;
+    background-size: 12px;
+}
+
 .textarea {
     resize: vertical;
     min-height: 100px;
@@ -522,13 +531,13 @@ ol {
 
 .dropdown-menu {
     position: absolute;
-    left: 0;
-    margin-top: var(--space-s);
+    right: 0;
+    margin-top: var(--space-m);
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
     box-shadow: var(--shadow-l);
-    min-width: 100px;
+    min-width: 100%;
     z-index: 100;
 }
 
@@ -537,6 +546,7 @@ ol {
     color: var(--text);
     cursor: pointer;
     transition: var(--transition);
+    margin: 0;
 }
 
 .dropdown-item:hover {
@@ -888,403 +898,6 @@ pre code {
     to {
         transform: rotate(360deg);
     }
-}
-
-/* ============================================
-   UTILITIES
-   ============================================ */
-
-/* ──────────────────────────────────────────
-   Display & Visibility
-   ────────────────────────────────────────── */
-
-/* Force hide element */
-.hidden {
-    display: none !important;
-}
-
-/* Block-level element (takes full width) */
-.block {
-    display: block;
-}
-
-/* Inline-block element (respects width/height, stays inline) */
-.inline-block {
-    display: inline-block;
-}
-
-/* ──────────────────────────────────────────
-   Flexbox Layout
-   ────────────────────────────────────────── */
-
-/* Enable flexbox */
-.flex {
-    display: flex;
-    flex-wrap: wrap;
-}
-.flex > * {
-    margin-bottom: 0;
-} /* Remove bottom margin from flex children */
-
-/* Vertical flex direction */
-.flex-col {
-    flex-direction: column;
-}
-
-/* Horizontal flex direction (default) */
-.flex-row {
-    flex-direction: row;
-}
-
-/* Allow flex items to wrap */
-.flex-wrap {
-    flex-wrap: wrap;
-}
-
-/* Flex grow to fill available space */
-.flex-1 {
-    flex: 1 1 0%;
-}
-
-/* ──────────────────────────────────────────
-   Flexbox Alignment
-   ────────────────────────────────────────── */
-
-/* Align items to start (top in row, left in column) */
-.items-start {
-    align-items: flex-start;
-}
-
-/* Center items vertically */
-.items-center {
-    align-items: center;
-}
-
-/* Align items to end (bottom in row, right in column) */
-.items-end {
-    align-items: flex-end;
-}
-
-/* Justify content to start (left in row) */
-.justify-start {
-    justify-content: flex-start;
-}
-
-/* Center content horizontally */
-.justify-center {
-    justify-content: center;
-}
-
-/* Justify content to end (right in row) */
-.justify-end {
-    justify-content: flex-end;
-}
-
-/* Space items evenly with gaps between */
-.justify-between {
-    justify-content: space-between;
-}
-
-/* ──────────────────────────────────────────
-   Gap (spacing between flex/grid items)
-   ────────────────────────────────────────── */
-
-/* No gap (0) */
-.gap-none {
-    gap: var(--space-none);
-}
-
-/* Small gap */
-.gap-s {
-    gap: var(--space-s);
-}
-
-/* Medium gap */
-.gap-m {
-    gap: var(--space-m);
-}
-
-/* Large gap */
-.gap-l {
-    gap: var(--space-l);
-}
-
-/* ──────────────────────────────────────────
-   Margin
-   ────────────────────────────────────────── */
-
-/* Remove all margins */
-.m-0 {
-    margin: 0;
-}
-
-/* Remove top margin */
-.mt-0 {
-    margin-top: 0;
-}
-
-/* Remove bottom margin */
-.mb-0 {
-    margin-bottom: 0;
-}
-
-/* Small bottom margin */
-.mb-s {
-    margin-bottom: var(--space-s);
-}
-
-/* Medium bottom margin */
-.mb-m {
-    margin-bottom: var(--space-m);
-}
-
-/* Large bottom margin */
-.mb-l {
-    margin-bottom: var(--space-l);
-}
-
-/* Push element to the right */
-.ml-auto {
-    margin-left: auto;
-}
-
-/* Push element to the left */
-.mr-auto {
-    margin-right: auto;
-}
-
-/* Center element horizontally */
-.mx-auto {
-    margin-left: auto;
-    margin-right: auto;
-}
-
-/* ──────────────────────────────────────────
-   Padding
-   ────────────────────────────────────────── */
-
-/* Remove all padding */
-.p-0 {
-    padding: 0;
-}
-
-/* Small padding */
-.p-s {
-    padding: var(--space-s);
-}
-
-/* Medium padding */
-.p-m {
-    padding: var(--space-m);
-}
-
-/* Large padding */
-.p-l {
-    padding: var(--space-l);
-}
-
-/* ──────────────────────────────────────────
-   Sizing (width & height)
-   ────────────────────────────────────────── */
-
-/* Full width */
-.w-full {
-    width: 100%;
-}
-
-/* Width fits content */
-.w-fit {
-    width: fit-content;
-}
-
-/* Full height */
-.h-full {
-    height: 100%;
-}
-
-/* Square aspect ratio (1:1) */
-.aspect-square {
-    aspect-ratio: 1 / 1;
-    overflow: hidden;
-}
-
-/* Ellipse rounded */
-.rounded-ellipse {
-    border-radius: 50%;
-}
-
-/* Pill rounded */
-.rounded-pill {
-    border-radius: 100vw;
-}
-
-/* ──────────────────────────────────────────
-   Text & Typography
-   ────────────────────────────────────────── */
-
-/* Align text to left */
-.text-left {
-    text-align: left;
-}
-
-/* Center text */
-.text-center {
-    text-align: center;
-}
-
-/* Align text to right */
-.text-right {
-    text-align: right;
-}
-
-/* Secondary text color */
-.text-secondary {
-    color: var(--text-secondary);
-}
-
-/* Muted text color (lighter) */
-.text-muted {
-    color: var(--text-muted);
-}
-
-/* Semi-bold font weight */
-.font-semibold {
-    font-weight: 600;
-}
-
-/* Bold font weight */
-.font-bold {
-    font-weight: 800;
-}
-
-/* Truncate text with ellipsis */
-.truncate {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-/* ──────────────────────────────────────────
-   Interactive
-   ────────────────────────────────────────── */
-
-/* Add scrollbars when content overflows */
-.overflow-auto {
-    overflow: auto;
-}
-
-/* Pointer cursor for clickable elements */
-.cursor-pointer {
-    cursor: pointer;
-}
-
-/* Not-allowed cursor for disabled/unavailable elements */
-.cursor-not-allowed {
-    cursor: not-allowed;
-}
-
-/* 50% opacity (semi-transparent) */
-.opacity-50 {
-    opacity: 0.5;
-}
-
-/* ──────────────────────────────────────────
-   Position
-   ────────────────────────────────────────── */
-
-/* Fixed positioning */
-.fixed {
-    position: fixed;
-}
-
-/* Positioning - corners */
-.top-0 {
-    top: 0;
-}
-.top-s {
-    top: var(--space-s);
-}
-.top-m {
-    top: var(--space-m);
-}
-.top-l {
-    top: var(--space-l);
-}
-.bottom-0 {
-    bottom: 0;
-}
-.bottom-s {
-    bottom: var(--space-s);
-}
-.bottom-m {
-    bottom: var(--space-m);
-}
-.bottom-l {
-    bottom: var(--space-l);
-}
-.left-0 {
-    left: 0;
-}
-.left-s {
-    left: var(--space-s);
-}
-.left-m {
-    left: var(--space-m);
-}
-.left-l {
-    left: var(--space-l);
-}
-.right-0 {
-    right: 0;
-}
-.right-s {
-    right: var(--space-s);
-}
-.right-m {
-    right: var(--space-m);
-}
-.right-l {
-    right: var(--space-l);
-}
-
-/* Fixed positioning - centering */
-.center-x {
-    left: 50%;
-    transform: translateX(-50%);
-}
-.center-y {
-    top: 50%;
-    transform: translateY(-50%);
-}
-.center {
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
-/* Z-index layers */
-.z-low {
-    z-index: 10;
-}
-.z-mid {
-    z-index: 500;
-}
-.z-high {
-    z-index: 1000;
-}
-
-/* ──────────────────────────────────────────
-   Shadow
-   ────────────────────────────────────────── */
-
-.shadow-none {
-    box-shadow: none;
-}
-.shadow {
-    box-shadow: var(--shadow);
-}
-.shadow-l {
-    box-shadow: var(--shadow-l);
 }
 
 /* ──────────────────────────────────────────

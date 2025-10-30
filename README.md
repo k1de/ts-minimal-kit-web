@@ -27,13 +27,15 @@ ts-minimal-kit-web/
 │       └── static/    # UI framework
 ├── public/            # Static files & compiled client
 │   ├── index.html     # Main HTML
-│   └── styles.css     # Base styles
+│   ├── styles.css     # Base styles
+│   └── utils.css      # Utility classes
 ├── dist/              # Compiled server (created automatically)
 ├── .gitignore         # Ignored files
 ├── package.json       # Project settings
 ├── tsconfig.server.json  # Server TypeScript config
 ├── tsconfig.client.json  # Client TypeScript config
 ├── EXAMPLES.md        # Component examples
+├── CLAUDE_GUIDE.md    # Guide for AI
 └── README.md          # This file
 ```
 
@@ -83,11 +85,13 @@ git init         # Initialize new repository
 ## Quick Start
 
 **Setup:**
+
 ```bash
 npm install
 ```
 
 **Development:**
+
 ```bash
 npm run dev          # Watch mode (server + client)
 npm run build:start  # Build and run

@@ -250,19 +250,19 @@ class ShowcaseApp extends ClientApp {
                         onclick: () => this.toast('Default clicked'),
                     }),
                     this.button('Primary', {
-                        variant: 'primary',
+                        type: 'primary',
                         onclick: () => this.toast('Primary clicked', { type: 'primary' }),
                     }),
                     this.button('Success', {
-                        variant: 'success',
+                        type: 'success',
                         onclick: () => this.toast('Success clicked', { type: 'success' }),
                     }),
                     this.button('Warning', {
-                        variant: 'warning',
+                        type: 'warning',
                         onclick: () => this.toast('Warning clicked', { type: 'warning' }),
                     }),
                     this.button('Danger', {
-                        variant: 'danger',
+                        type: 'danger',
                         onclick: () => this.toast('Danger clicked', { type: 'danger' }),
                     }),
                 ])
@@ -279,7 +279,7 @@ class ShowcaseApp extends ClientApp {
                         { text: 'Delete', onclick: () => this.toast('Delete clicked', { type: 'danger' }) },
                     ],
                     {
-                        variant: 'primary',
+                        type: 'primary',
                     }
                 )
             )
@@ -386,10 +386,10 @@ console.log(message);`,
                 this.heading('Badge Variants') +
                 this.flex([
                     this.badge('Default'),
-                    this.badge('Primary', { variant: 'primary' }),
-                    this.badge('Success', { variant: 'success' }),
-                    this.badge('Warning', { variant: 'warning' }),
-                    this.badge('Danger', { variant: 'danger' }),
+                    this.badge('Primary', { type: 'primary' }),
+                    this.badge('Success', { type: 'success' }),
+                    this.badge('Warning', { type: 'warning' }),
+                    this.badge('Danger', { type: 'danger' }),
                 ])
             )
         );
@@ -398,10 +398,10 @@ console.log(message);`,
             this.card(
                 this.heading('Badges in Context') +
                 this.heading('Product Title', 4) +
-                this.badge('New', { variant: 'success' }) +
+                this.badge('New', { type: 'success' }) +
                 this.separator() +
                 this.heading('Product description with inline badge', 4) +
-                this.flex([this.span('Status:'), this.badge('Active', { variant: 'primary' })])
+                this.flex([this.span('Status:'), this.badge('Active', { type: 'primary' })])
             )
         );
     }
@@ -417,10 +417,10 @@ console.log(message);`,
             this.card(
                 this.heading('Card with Elements', 4) +
                 this.text('Cards can contain any HTML content.') +
-                this.flex([this.badge('New', { variant: 'success' }), this.badge('Featured', { variant: 'primary' })]) +
+                this.flex([this.badge('New', { type: 'success' }), this.badge('Featured', { type: 'primary' })]) +
                 this.separator() +
                 this.button('View Details', {
-                    variant: 'primary',
+                    type: 'primary',
                     onclick: () => this.toast('Card button clicked!'),
                 })
             )
@@ -464,10 +464,10 @@ console.log(message);`,
                 this.heading('8 Column Grid') +
                 this.grid(
                     [
-                        this.div(this.badge('Item 1', { variant: 'primary' }), { className: ['text-center', 'p-m'] }),
-                        this.div(this.badge('Item 2', { variant: 'success' }), { className: ['text-center', 'p-m'] }),
-                        this.div(this.badge('Item 3', { variant: 'warning' }), { className: ['text-center', 'p-m'] }),
-                        this.div(this.badge('Item 4', { variant: 'danger' }), { className: ['text-center', 'p-m'] }),
+                        this.div(this.badge('Item 1', { type: 'primary' }), { className: ['text-center', 'p-m'] }),
+                        this.div(this.badge('Item 2', { type: 'success' }), { className: ['text-center', 'p-m'] }),
+                        this.div(this.badge('Item 3', { type: 'warning' }), { className: ['text-center', 'p-m'] }),
+                        this.div(this.badge('Item 4', { type: 'danger' }), { className: ['text-center', 'p-m'] }),
                     ],
                     { columns: 8 }
                 )
@@ -511,8 +511,8 @@ console.log(message);`,
                 this.heading('Action Buttons (gap-m)') +
                 this.flex(
                     [
-                        this.button('Save', { variant: 'primary' }),
-                        this.button('Cancel', { variant: 'danger' }),
+                        this.button('Save', { type: 'primary' }),
+                        this.button('Cancel', { type: 'danger' }),
                         this.button('Preview'),
                     ],
                     { direction: 'row', gap: 'm' }
@@ -525,15 +525,15 @@ console.log(message);`,
                 this.heading('Notification List (column, gap-s)') +
                 this.flex(
                     [
-                        this.div(this.flex([this.badge('New', { variant: 'success' }), 'New message from Admin']), {
+                        this.div(this.flex([this.badge('New', { type: 'success' }), 'New message from Admin']), {
                             className: ['p-s', 'text-right'],
                             style: { background: 'var(--bg-secondary)', borderRadius: 'var(--radius)' },
                         }),
-                        this.div(this.flex([this.badge('Alert', { variant: 'warning' }), 'System maintenance scheduled']), {
+                        this.div(this.flex([this.badge('Alert', { type: 'warning' }), 'System maintenance scheduled']), {
                             className: ['p-s', 'text-right'],
                             style: { background: 'var(--bg-secondary)', borderRadius: 'var(--radius)' },
                         }),
-                        this.div(this.flex([this.badge('Info', { variant: 'primary' }), 'Profile updated successfully']), {
+                        this.div(this.flex([this.badge('Info', { type: 'primary' }), 'Profile updated successfully']), {
                             className: ['p-s', 'text-right'],
                             style: { background: 'var(--bg-secondary)', borderRadius: 'var(--radius)' },
                         }),
@@ -595,10 +595,10 @@ console.log(message);`,
                     {
                         title: 'Components',
                         content: this.flex([
-                            this.badge('Buttons', { variant: 'primary' }),
-                            this.badge('Cards', { variant: 'success' }),
-                            this.badge('Tables', { variant: 'warning' }),
-                            this.badge('Forms', { variant: 'danger' }),
+                            this.badge('Buttons', { type: 'primary' }),
+                            this.badge('Cards', { type: 'success' }),
+                            this.badge('Tables', { type: 'warning' }),
+                            this.badge('Forms', { type: 'danger' }),
                         ]),
                     },
                     {
@@ -622,91 +622,28 @@ await this.apiPost('/users', { name: 'John' });`,
 
         this.append(this.heading('Utility Classes') + this.text('Pre-built CSS utility classes with autocomplete'));
 
-        // All utilities first
+
+        // Utils.css content
         this.append(
             this.card(
-                this.heading('All Available Utilities') +
-                this.accordion([
-                    {
-                        title: 'Display & Visibility',
-                        content: this.code('hidden, block, inline-block'),
-                    },
-                    {
-                        title: 'Flexbox Layout',
-                        content: this.code('flex, flex-col, flex-row, flex-wrap, flex-1'),
-                    },
-                    {
-                        title: 'Flexbox Alignment',
-                        content:
-                            this.code('items-start, items-center, items-end') +
-                            this.spacer() +
-                            this.code('justify-start, justify-center, justify-end, justify-between'),
-                    },
-                    {
-                        title: 'Gap',
-                        content: this.code('gap-none, gap-s, gap-m, gap-l'),
-                    },
-                    {
-                        title: 'Margin',
-                        content:
-                            this.code('m-0, mt-0, mb-0, mb-s, mb-m, mb-l') +
-                            this.spacer() +
-                            this.code('ml-auto, mr-auto, mx-auto'),
-                    },
-                    {
-                        title: 'Padding',
-                        content: this.code('p-0, p-s, p-m, p-l'),
-                    },
-                    {
-                        title: 'Sizing',
-                        content: this.code('w-full, w-fit, h-full, aspect-square, rounded-ellipse, rounded-pill'),
-                    },
-                    {
-                        title: 'Text & Typography',
-                        content:
-                            this.code('text-left, text-center, text-right') +
-                            this.spacer() +
-                            this.code('text-secondary, text-muted') +
-                            this.spacer() +
-                            this.code('font-semibold, font-bold, truncate'),
-                    },
-                    {
-                        title: 'Interactive',
-                        content: this.code('overflow-auto, cursor-pointer, cursor-not-allowed, opacity-50'),
-                    },
-                    {
-                        title: 'Position',
-                        content:
-                            this.code('fixed') +
-                            this.spacer() +
-                            this.code('top-0, top-s, top-m, top-l') +
-                            this.spacer() +
-                            this.code('bottom-0, bottom-s, bottom-m, bottom-l') +
-                            this.spacer() +
-                            this.code('left-0, left-s, left-m, left-l') +
-                            this.spacer() +
-                            this.code('right-0, right-s, right-m, right-l') +
-                            this.spacer() +
-                            this.code('center-x, center-y, center') +
-                            this.spacer() +
-                            this.code('z-low, z-mid, z-high'),
-                    },
-                    {
-                        title: 'Shadow',
-                        content: this.code('shadow-none, shadow, shadow-l'),
-                    },
-                    {
-                        title: 'Component-Specific',
-                        content:
-                            this.code('table-fit, table-center, table-right') +
-                            this.spacer() +
-                            this.code('table-compact, table-striped') +
-                            this.spacer() +
-                            this.code('accordion-compact, nav-compact, sidebar-compact'),
-                    },
-                ])
+                this.heading('All Available Utilities: utils.css Source') +
+                this.code('', { id: 'utils-css-content', block: true, language: 'css', style: { maxHeight: '240px' } }) +
+                this.spinner({ id: 'utils-css-spinner' })
             )
         );
+
+        // Fetch utils.css
+        fetch('/utils.css')
+            .then(res => res.text())
+            .then(css => {
+                this.updateText('utils-css-content', css)
+            })
+            .catch(err => {
+                this.toast(`Failed to load utils.css: ${err.message}`, { type: 'danger' })
+            }).finally(() => {
+                const spinner = document.getElementById('utils-css-spinner');
+                if (spinner) spinner.remove();
+            });
 
         // Usage patterns
         this.append(
@@ -757,7 +694,7 @@ await this.apiPost('/users', { name: 'John' });`,
                     this.flex(
                         [
                             this.button('Increment', {
-                                variant: 'primary',
+                                type: 'primary',
                                 onclick: () => {
                                     count++;
                                     this.updateText('counter', count.toString());
@@ -765,7 +702,7 @@ await this.apiPost('/users', { name: 'John' });`,
                                 },
                             }),
                             this.button('Reset', {
-                                variant: 'danger',
+                                type: 'danger',
                                 onclick: () => {
                                     count = 0;
                                     this.updateText('counter', '0');
@@ -813,7 +750,7 @@ className: ['justify-center']          // Button group`,
                 this.text('Fixed positioning with centering') +
                 this.spacer() +
                 this.button('Show Centered Modal', {
-                    variant: 'primary',
+                    type: 'primary',
                     onclick: () => {
                         this.overlay(
                             this.card(
@@ -821,7 +758,7 @@ className: ['justify-center']          // Button group`,
                                 this.text('This card uses: fixed center') +
                                 this.spacer() +
                                 this.button('Close', {
-                                    variant: 'danger',
+                                    type: 'danger',
                                     onclick: () => this.overlay(''),
                                 }),
                                 { className: ['fixed', 'center', 'shadow-l', 'z-high'] }
@@ -850,9 +787,9 @@ className: ['justify-center']          // Button group`,
                                     this.spacer('s') +
                                     this.flex(
                                         [
-                                            this.badge('Item A', { variant: 'primary' }),
-                                            this.badge('Item B', { variant: 'success' }),
-                                            this.badge('Item C', { variant: 'warning' }),
+                                            this.badge('Item A', { type: 'primary' }),
+                                            this.badge('Item B', { type: 'success' }),
+                                            this.badge('Item C', { type: 'warning' }),
                                         ],
                                         { direction: dir, gap }
                                     ),
@@ -889,8 +826,8 @@ className: ['justify-center']          // Button group`,
                             this.text('This section contains general project information.') +
                             this.separator() +
                             this.flex([
-                                this.badge('Active', { variant: 'success' }),
-                                this.badge('3 members', { variant: 'primary' }),
+                                this.badge('Active', { type: 'success' }),
+                                this.badge('3 members', { type: 'primary' }),
                                 this.badge('Updated today'),
                             ]),
                     },
@@ -899,7 +836,7 @@ className: ['justify-center']          // Button group`,
                         content:
                             this.heading('Task List', 4) +
                             this.table(['Complete documentation', 'Review pull requests', 'Update dependencies']) +
-                            this.button('Add Task', { variant: 'primary' }),
+                            this.button('Add Task', { type: 'primary' }),
                     },
                 ])
             )
@@ -916,9 +853,9 @@ className: ['justify-center']          // Button group`,
                 this.heading('Basic Table') +
                 this.table(
                     [
-                        ['1', 'John Doe', this.badge('Active', { variant: 'success' })],
-                        ['2', 'Jane Smith', this.badge('Pending', { variant: 'warning' })],
-                        ['3', 'Bob Johnson', this.badge('Inactive', { variant: 'danger' })],
+                        ['1', 'John Doe', this.badge('Active', { type: 'success' })],
+                        ['2', 'Jane Smith', this.badge('Pending', { type: 'warning' })],
+                        ['3', 'Bob Johnson', this.badge('Inactive', { type: 'danger' })],
                     ],
                     { headers: ['ID', 'Name', 'Status'] }
                 )
@@ -980,19 +917,19 @@ className: ['justify-center']          // Button group`,
                     }),
                     this.button('Primary', {
                         onclick: () => this.toast('Primary message', { type: 'primary' }),
-                        variant: 'primary',
+                        type: 'primary',
                     }),
                     this.button('Success', {
                         onclick: () => this.toast('Success!', { type: 'success' }),
-                        variant: 'success',
+                        type: 'success',
                     }),
                     this.button('Warning', {
                         onclick: () => this.toast('Warning!', { type: 'warning' }),
-                        variant: 'warning',
+                        type: 'warning',
                     }),
                     this.button('Danger + Permanent', {
                         onclick: () => this.toast('Error! (double click to close)', { type: 'danger', duration: 0 }),
-                        variant: 'danger',
+                        type: 'danger',
                     }),
                 ])
             )
@@ -1016,7 +953,7 @@ className: ['justify-center']          // Button group`,
                                 this.spacer() +
                                 this.button('Close', {
                                     onclick: () => this.closeModal(),
-                                    variant: 'primary',
+                                    type: 'primary',
                                 })
                             ),
                     }),
@@ -1035,11 +972,11 @@ className: ['justify-center']          // Button group`,
                                             this.closeModal();
                                             this.toast('Confirmed!', { type: 'success' });
                                         },
-                                        variant: 'primary',
+                                        type: 'primary',
                                     }),
                                 ])
                             ),
-                        variant: 'primary',
+                        type: 'primary',
                     }),
                     this.button('Blocking Modal', {
                         onclick: () =>
@@ -1054,19 +991,19 @@ className: ['justify-center']          // Button group`,
                                             this.closeModal();
                                             this.toast('Update declined');
                                         },
-                                        variant: 'danger',
+                                        type: 'danger',
                                     }),
                                     this.button('Accept', {
                                         onclick: () => {
                                             this.closeModal();
                                             this.toast('Update accepted!', { type: 'success' });
                                         },
-                                        variant: 'primary',
+                                        type: 'primary',
                                     }),
                                 ]),
                                 true
                             ),
-                        variant: 'danger',
+                        type: 'danger',
                     }),
                 ])
             )
@@ -1169,7 +1106,7 @@ className: ['justify-center']          // Button group`,
                 this.checkbox({ id: 'remember', label: 'Remember me' }) +
                 this.spacer() +
                 this.button('Sign In', {
-                    variant: 'primary',
+                    type: 'primary',
                     onclick: () => this.toast('Signed in!', { type: 'success' }),
                 })
             )
@@ -1195,7 +1132,7 @@ className: ['justify-center']          // Button group`,
                 this.checkbox({ id: 'email-notif', label: 'Email notifications', checked: true }) +
                 this.checkbox({ id: 'push-notif', label: 'Push notifications' }) +
                 this.spacer() +
-                this.button('Save Changes', { variant: 'success' })
+                this.button('Save Changes', { type: 'success' })
             )
         );
     }
@@ -1243,7 +1180,7 @@ className: ['justify-center']          // Button group`,
                 this.spacer() +
                 this.button('View Utilities', {
                     onclick: () => this.go('#utilities'),
-                    variant: 'primary',
+                    type: 'primary',
                 })
             )
         );

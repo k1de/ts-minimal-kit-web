@@ -139,7 +139,7 @@ type NormalizedAttrs = { className?: string; style?: string };
 // ----------------------------------------
 
 type AlertType = NotificationType;
-type ButtonVariant = 'danger' | 'default' | 'primary' | 'success' | 'warning';
+type ButtonType = 'danger' | 'default' | 'primary' | 'success' | 'warning';
 type FlexDirection = 'col' | 'row';
 type GridColumns = 2 | 3 | 4 | 5 | 6 | 7 | 8;
 type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
@@ -243,12 +243,12 @@ interface TextareaOptions extends Omit<BaseOptions, 'onclick'> {
 
 /** Badge options */
 interface BadgeOptions extends BaseOptions {
-    variant?: ButtonVariant;
+    type?: ButtonType;
 }
 
 /** Button options */
 interface ButtonOptions extends BaseOptions {
-    variant?: ButtonVariant;
+    type?: ButtonType;
 }
 
 /** Dropdown item configuration */
@@ -309,7 +309,7 @@ interface TableOptions extends Omit<BaseOptions, 'onclick'> {
 // Feedback Interfaces
 // ----------------------------------------
 
-/** Alert message options */
+/** Alert options */
 interface AlertOptions extends BaseOptions {
     type?: AlertType;
 }
@@ -355,13 +355,13 @@ class ClientApp {
     // ========================================
 
     constructor() {
-        this.appContainer = document.getElementById('app')!;
-        this.mainContainer = document.getElementById('main')!;
-        this.modalContainer = document.getElementById('modal')!;
-        this.navContainer = document.getElementById('nav')!;
-        this.overlayContainer = document.getElementById('overlay')!;
-        this.sidebarContainer = document.getElementById('sidebar')!;
-        this.toastContainer = document.getElementById('toast')!;
+        this.appContainer = this.get('app')!;
+        this.mainContainer = this.get('main')!;
+        this.modalContainer = this.get('modal')!;
+        this.navContainer = this.get('nav')!;
+        this.overlayContainer = this.get('overlay')!;
+        this.sidebarContainer = this.get('sidebar')!;
+        this.toastContainer = this.get('toast')!;
 
         // Ensures child classes initialize before start
         setTimeout(() => {
@@ -415,7 +415,7 @@ class ClientApp {
     /** Add event listener with timeout */
     private addDelayedEventListener(id: string, handler: EventHandler, event: string = 'click'): void {
         setTimeout(() => {
-            const element = document.getElementById(id);
+            const element = this.get(id);
             this.addEventListener(element, handler, event);
         }, 0);
     }
@@ -481,12 +481,6 @@ class ClientApp {
         return `${prefix}-${++this.elementIdCounter}`;
     }
 
-    /** Generate nested element ID */
-    private getNestedId(baseId: string | undefined, suffix: string): string {
-        if (!baseId) return '';
-        return ` id="${baseId}-${suffix}"`;
-    }
-
     /** Handle hash change */
     private handleHashChange(): void {
         const hash = window.location.hash.slice(1); // Remove #
@@ -504,7 +498,7 @@ class ClientApp {
         // Close all dropdowns on outside click
         document.addEventListener('click', () => {
             document.querySelectorAll('.dropdown-menu').forEach((menu) => {
-                menu.classList.add('hidden');
+                (menu as HTMLElement).hidden = true;
             });
         });
     }
@@ -642,7 +636,7 @@ class ClientApp {
 
     /** Scroll to element by ID */
     scrollToElement(elementId: string, smooth: boolean = true): boolean {
-        const element = document.getElementById(elementId);
+        const element = this.get(elementId);
         if (!element) {
             return false;
         }
@@ -663,7 +657,7 @@ class ClientApp {
             .map((item, i) => {
                 const { text, ...itemOptions } = item;
                 const normalizedItemOptions = this.normalizeOptions(itemOptions);
-                if (!normalizedItemOptions.id) normalizedItemOptions.id = `nav-item-${i}`;
+                normalizedItemOptions.id ??= `nav-item-${i}`;
 
                 return this.createNavItem(text, normalizedItemOptions, 'nav-item');
             })
@@ -694,7 +688,7 @@ class ClientApp {
                     .map((item, j) => {
                         const { text, ...itemOptions } = item;
                         const normalizedItemOptions = this.normalizeOptions(itemOptions);
-                        if (!normalizedItemOptions.id) normalizedItemOptions.id = `sidebar-${i}-${j}`;
+                        normalizedItemOptions.id ??= `sidebar-${i}-${j}`;
 
                         return this.createNavItem(text, normalizedItemOptions, 'sidebar-item');
                     })
@@ -983,7 +977,7 @@ class ClientApp {
         if (!normalizedOptions.id) normalizedOptions.id = this.generateId('tabs');
 
         setTimeout(() => {
-            const container = document.getElementById(normalizedOptions.id!);
+            const container = this.get(normalizedOptions.id!);
             if (!container) return;
 
             // One handler for entire container
@@ -998,10 +992,10 @@ class ClientApp {
 
                 // Switch active tab
                 tabs.forEach((t) => t.classList.remove('active'));
-                panels.forEach((c) => c.classList.add('hidden'));
+                panels.forEach((c) => (c as HTMLElement).hidden = true);
 
                 tab.classList.add('active');
-                panels[index]?.classList.remove('hidden');
+                if (panels[index]) (panels[index] as HTMLElement).hidden = false;
             };
         }, 0);
 
@@ -1017,10 +1011,8 @@ class ClientApp {
 
         const panels = items
             .map((item, i) => {
-                const panelAttrs = this.buildAttrs({
-                    className: i !== 0 ? 'tab-panel hidden' : 'tab-panel',
-                });
-                return `<div${panelAttrs}>${item.content}</div>`;
+                const panelAttrs = this.buildAttrs({ className: 'tab-panel' });
+                return `<div${panelAttrs}${i !== 0 ? 'hidden' : ''}>${item.content}</div>`;
             })
             .join('');
 
@@ -1128,44 +1120,41 @@ class ClientApp {
 
     /** Create a badge */
     badge(text: string, options?: BadgeOptions): string {
-        const { variant = 'default', ...baseOptions } = options || ({} as BadgeOptions);
+        const { type = 'default', ...baseOptions } = options || ({} as BadgeOptions);
         const normalizedOptions = this.normalizeOptions(baseOptions);
         this.processOnclick(normalizedOptions, 'badge');
-        const mainClass = variant === 'default' ? 'badge' : `badge badge-${variant}`;
+        const mainClass = type === 'default' ? 'badge' : `badge badge-${type}`;
         const attrs = this.buildAttrs(normalizedOptions, mainClass);
-        const nestedId = this.getNestedId(normalizedOptions.id, 'text');
-        return `<span${attrs}><span${nestedId}>${text}</span></span>`;
+        return `<span${attrs}>${text}</span>`;
     }
 
     /** Create a button */
     button(text: string, options?: ButtonOptions): string {
-        const { variant = 'default', ...baseOptions } = options || ({} as ButtonOptions);
+        const { type = 'default', ...baseOptions } = options || ({} as ButtonOptions);
         const normalizedOptions = this.normalizeOptions(baseOptions);
         this.processOnclick(normalizedOptions, 'btn');
-        const mainClass = variant === 'default' ? 'btn' : `btn btn-${variant}`;
+        const mainClass = type === 'default' ? 'btn' : `btn btn-${type}`;
         const attrs = this.buildAttrs(normalizedOptions, mainClass);
-        const nestedId = this.getNestedId(normalizedOptions.id, 'text');
-        return `<button${attrs}><span${nestedId}>${text}</span></button>`;
+        return `<button${attrs}>${text}</button>`;
     }
 
     /** Create a dropdown menu */
     dropdown(text: string, items: DropdownItem[], options?: ButtonOptions): string {
         this.initDropdownHandler();
-        const { variant = 'default', ...baseOptions } = options || ({} as ButtonOptions);
+        const { type = 'default', ...baseOptions } = options || ({} as ButtonOptions);
         const normalizedOptions = this.normalizeOptions(baseOptions);
-
-        const id = normalizedOptions.id || this.generateId('dropdown');
-        const menuId = `${id}-menu`;
+        normalizedOptions.id ??= this.generateId('dropdown');
+        const menuId = `${normalizedOptions.id}-menu`;
 
         setTimeout(() => {
-            const button = document.getElementById(id);
-            const menu = document.getElementById(menuId);
+            const button = this.get(normalizedOptions.id!);
+            const menu = this.get(menuId);
 
             if (button && menu) {
                 // Toggle menu on button click
                 button.onclick = (e) => {
                     e.stopPropagation();
-                    menu.classList.toggle('hidden');
+                    menu.hidden = !menu.hidden;
                 };
 
                 // Handle item clicks via delegation
@@ -1175,31 +1164,28 @@ class ClientApp {
 
                     const index = Array.from(menu.children).indexOf(itemEl);
                     items[index]?.onclick?.();
-                    menu.classList.add('hidden');
+                    menu.hidden = true;
                 };
             }
         }, 0);
 
-        const className = variant === 'default' ? 'btn' : `btn btn-${variant}`;
+        const mainClass = type === 'default' ? 'dropdown btn' : `dropdown btn btn-${type}`;
         const menuItems = items
             .map((itemOptions, index) => {
                 const normalizedItemOptions = this.normalizeOptions(itemOptions);
-                if (!normalizedItemOptions.id) normalizedItemOptions.id = `${menuId}-item-${index}`;
+                normalizedItemOptions.id ??= `${menuId}-item-${index}`;
                 const itemAttrs = this.buildAttrs(normalizedItemOptions, 'dropdown-item');
                 return `<div${itemAttrs}>${normalizedItemOptions.text}</div>`;
             })
             .join('');
 
-        const attrs = this.buildAttrs(normalizedOptions, 'dropdown');
+        const attrs = this.buildAttrs(normalizedOptions, mainClass);
 
         return `
-            <div${attrs}>
-                <button id="${id}" class="${className}">
-                    ${text}
-                    <span style="margin-left: 0.5em;">▼</span>
+                <button${attrs}>
+                    ${text ? `${text} ▼` : '▼'}
+                    <div id="${menuId}" class="dropdown-menu" hidden>${menuItems}</div>
                 </button>
-                <div id="${menuId}" class="dropdown-menu hidden">${menuItems}</div>
-            </div>
         `;
     }
 
@@ -1208,14 +1194,13 @@ class ClientApp {
     // ========================================
 
     /** Create an alert message */
-    alert(message: string, options?: AlertOptions): string {
+    alert(content: string, options?: AlertOptions): string {
         const { type = 'default', ...baseOptions } = options || ({} as AlertOptions);
         const normalizedOptions = this.normalizeOptions(baseOptions);
         this.processOnclick(normalizedOptions, 'alert');
         const mainClass = `alert alert-${type}`;
         const attrs = this.buildAttrs(normalizedOptions, mainClass);
-        const nestedId = this.getNestedId(normalizedOptions.id, 'text');
-        return `<div${attrs}><span${nestedId}>${message}</span></div>`;
+        return `<div${attrs}>${content}</div>`;
     }
 
     /** Close modal dialog */
@@ -1242,12 +1227,12 @@ class ClientApp {
     }
 
     /** Show toast notification */
-    toast(message: string, options?: ToastOptions): void {
+    toast(content: string, options?: ToastOptions): void {
         const { type = 'default', duration = 5000 } = options || ({} as ToastOptions);
 
         const toast = document.createElement('div');
         toast.className = type === 'default' ? 'toast' : `toast toast-${type}`;
-        toast.innerHTML = message;
+        toast.innerHTML = content;
 
         toast.ondblclick = () => toast.remove();
 
@@ -1379,7 +1364,7 @@ export { ClientApp };
 // Export Types
 export type {
     AlertType,
-    ButtonVariant,
+    ButtonType,
     ClassNameOptions,
     ClassNameValue,
     EventHandler,

@@ -7,6 +7,7 @@ tsconfig.tsbuildinfo
 dist/
 public/*
 !public/styles.css
+!public/utils.css
 !public/index.html
 *.tsbuildinfo
 
