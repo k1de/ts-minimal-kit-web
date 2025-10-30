@@ -9,22 +9,43 @@ Quick reference for ts-minimal-kit-web components.
 ```typescript
 import { ClientApp } from './static/client.js';
 
-class MyApp extends ClientApp {
-    override start(): void {
+class App extends ClientApp {
+    override start() {
         this.nav({
             brand: 'My App',
-            items: [{ text: 'Home', onclick: () => this.showHome() }],
+            items: [
+                { text: 'Home', onclick: () => this.go('#home') },
+                { text: 'About', onclick: () => this.go('#about') },
+            ],
         });
-        this.showHome();
     }
 
-    showHome(): void {
+    // Note: onHashChange() called automatically
+    override onHashChange(hash: string) {
         this.clear();
-        this.append(this.card(this.heading('Welcome', 1) + this.text('Hello World')));
+
+        switch (hash) {
+            case 'home':
+                this.showHome();
+                break;
+            case 'about':
+                this.showAbout();
+                break;
+            default:
+                this.go('#home');
+        }
+    }
+
+    private showHome() {
+        this.append(this.card(this.heading('Home') + this.text('Welcome!')));
+    }
+
+    private showAbout() {
+        this.append(this.card(this.heading('About') + this.text('42')));
     }
 }
 
-new MyApp();
+new App();
 ```
 
 ## API Calls

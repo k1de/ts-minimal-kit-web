@@ -1012,7 +1012,7 @@ class ClientApp {
         const panels = items
             .map((item, i) => {
                 const panelAttrs = this.buildAttrs({ className: 'tab-panel' });
-                return `<div${panelAttrs}${i !== 0 ? 'hidden' : ''}>${item.content}</div>`;
+                return `<div${panelAttrs}${i !== 0 ? ' hidden' : ''}>${item.content}</div>`;
             })
             .join('');
 
@@ -1141,13 +1141,14 @@ class ClientApp {
     /** Create a dropdown menu */
     dropdown(text: string, items: DropdownItem[], options?: ButtonOptions): string {
         this.initDropdownHandler();
-        const { type = 'default', ...baseOptions } = options || ({} as ButtonOptions);
+        const { id, ...baseOptions } = options || ({} as ButtonOptions);
         const normalizedOptions = this.normalizeOptions(baseOptions);
-        normalizedOptions.id ??= this.generateId('dropdown');
-        const menuId = `${normalizedOptions.id}-menu`;
+        const containerId = id ? id : this.generateId('dropdown');
+        const buttonId = `${containerId}-btn`;
+        const menuId = `${containerId}-menu`;
 
         setTimeout(() => {
-            const button = this.get(normalizedOptions.id!);
+            const button = this.get(buttonId);
             const menu = this.get(menuId);
 
             if (button && menu) {
@@ -1169,7 +1170,6 @@ class ClientApp {
             }
         }, 0);
 
-        const mainClass = type === 'default' ? 'dropdown btn' : `dropdown btn btn-${type}`;
         const menuItems = items
             .map((itemOptions, index) => {
                 const normalizedItemOptions = this.normalizeOptions(itemOptions);
@@ -1179,14 +1179,14 @@ class ClientApp {
             })
             .join('');
 
-        const attrs = this.buildAttrs(normalizedOptions, mainClass);
+        const btnText = text ? `${text} ▼` : '▼'
+        const button = this.button(btnText, { id: buttonId, ...normalizedOptions })
 
         return `
-                <button${attrs}>
-                    ${text ? `${text} ▼` : '▼'}
-                    <div id="${menuId}" class="dropdown-menu" hidden>${menuItems}</div>
-                </button>
-        `;
+        <div id="${containerId}" class="dropdown">
+        ${button}<div id="${menuId}" class="dropdown-menu" hidden>${menuItems}</div>
+        </div>
+    `;
     }
 
     // ========================================

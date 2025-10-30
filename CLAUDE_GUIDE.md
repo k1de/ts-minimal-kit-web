@@ -1,235 +1,228 @@
 # Claude Guide for ts-minimal-kit-web
 
-## ⚡ Start Here
+## Reference First
 
-**→ [EXAMPLES.md](./EXAMPLES.md) contains ALL code examples and component reference.**
+**→ [EXAMPLES.md](./EXAMPLES.md) — Complete syntax reference. Check here first.**
 
-This guide explains *how to think* about the framework. Examples shows *what to write*.
+This guide covers framework principles and constraints.
 
 ---
 
-## 🎯 Core Philosophy
-
-**Zero dependencies. Full control. Minimal abstraction.**
-
 ```typescript
-// ✅ This IS the framework
+// ✅ Framework approach
 return `<button class="btn">${text}</button>`;
 
-// ❌ This is NOT the framework
-npm install express axios react vue
+// ❌ Never install dependencies
+npm install express react lodash
 ```
 
-### Mental Model
+**Mental model:**
 
-Think in **strings**, not components:
-- Functions return HTML strings
-- Compose with `+` operator
-- No virtual DOM, no diffing
-- Direct = Fast
+-   Functions return HTML strings
+-   Compose with `+` operator
+-   No virtual DOM, no reactivity
+-   Direct DOM manipulation via helpers
 
 ---
 
-## 🧠 How to Think
+## Critical Rules
 
-### 1. String Composition
-
-```typescript
-// Components are just string builders
-this.card(
-    this.heading('Title') + 
-    this.text('Body') + 
-    this.button('Action')
-);
-```
-
-Not React. Not Vue. Just strings.
-
-### 2. ID Management
-
-**IDs are automatic or explicit:**
-```typescript
-// Auto-generated when onclick present
-this.button('Click', { onclick: () => {} }); // id: btn-1
-
-// Explicit for removal/updates
-this.spinner({ id: 'loader' });
-this.get('loader')?.remove();
-```
-
-**Nested IDs are predictable:**
-```typescript
-this.button('Text', { id: 'my-btn' });
-// Creates: my-btn, my-btn-text
-
-this.updateText('my-btn-text', 'New Label');
-```
-
-### 3. DOM Access
-
-```typescript
-// ✅ Use framework helpers
-this.get('id')              // Safe, typed
-this.updateText('id', text) // Updates text node
-this.updateHtml('id', html) // Updates innerHTML
-
-// ❌ Don't fight the abstraction
-document.getElementById('id').innerHTML = '...'
-```
-
-### 4. Type-Safe Utilities
-
-```typescript
-// Autocomplete works!
-{ className: 'flex' }  // Ctrl+Space → all utilities
-
-// Arrays for multiple
-{ className: ['flex', 'gap-m', 'items-center'] }
-
-// Conditionals filter automatically (false/null/undefined ignored)
-{ className: [isDisabled && 'opacity-50', hasError && 'text-danger'] }
-```
-
----
-
-## 🚫 Anti-Patterns
-
-### Don't Make It Reactive
-
-```typescript
-// ❌ Fighting the framework
-class App {
-    state = reactive({ count: 0 });
-    
-    increment() {
-        this.state.count++; // Nothing updates!
-    }
-}
-
-// ✅ Embrace the model
-class App {
-    private count = 0;
-    
-    increment() {
-        this.count++;
-        this.updateText('counter', String(this.count));
-    }
-}
-```
-
-### Don't Over-Engineer State
-
-```typescript
-// ❌ Complex state management
-class StateManager {
-    private store = new Map();
-    subscribe() {}
-    dispatch() {}
-}
-
-// ✅ Plain objects
-class App {
-    private state = { user: null, cart: [] };
-    
-    updateState(updates: Partial<typeof this.state>) {
-        Object.assign(this.state, updates);
-        this.render();
-    }
-}
-```
-
-### Don't Install Dependencies
-
-```typescript
-// ❌ No
-npm install express lodash moment
-
-// ✅ Yes
-import { api } from './static/api.js';
-const result = await api.parseBody(req);
-```
-
----
-
-## 📐 Architecture Rules
-
-### Server Side
-
-**Handlers signature:** `(req, res, url)`
-```typescript
-api.get('/api/users', async (req, res, url) => {
-    const page = url.searchParams.get('page');
-    api.json(res, { users, page });
-});
-```
-
-**Hooks signature:** Same `(req, res, url)`
-```typescript
-hooks.before.push((req, res, url) => {
-    console.log(`${req.method} ${url.pathname}`);
-});
-```
-
-### Client Side
-
-**Extend ClientApp:**
-```typescript
-class App extends ClientApp {
-    override start() {
-        this.nav({ brand: 'App' });
-        this.showHome();
-    }
-    
-    override onHashChange(hash: string) {
-        // Route handling
-    }
-}
-```
-
-**Async operations:**
-1. Create placeholder with `id`
-2. Fetch data
-3. Update with `updateText(id, data)`
-
----
-
-## 🔒 Never Touch
+### 1. Never Modify Framework Files
 
 ```
-src/*/static/     ← Framework core
+src/*/static/     ← Core framework code
 public/styles.css ← Base styles
 public/utils.css  ← Utility classes
 ```
 
-These files are the framework. Don't modify them.
+### 2. Function Signatures
+
+**Server handlers & hooks:** Always `(req, res, url)`. Unused params: prefix with `_` (e.g., `_req`, `_url`).
+
+```typescript
+api.get('/api/data', (_req, res, url) => {
+    const param = url.searchParams.get('key');
+    api.json(res, { data });
+});
+
+hooks.before.push((req, _res, url) => {
+    console.log(`${req.method} ${url.pathname}`);
+});
+```
+
+**Client:** Extend `ClientApp` and override methods
+
+```typescript
+class App extends ClientApp {
+    override start() {
+        this.nav({
+            brand: 'My App',
+            items: [
+                { text: 'Home', onclick: () => this.go('#home') },
+                { text: 'About', onclick: () => this.go('#about') },
+            ],
+        });
+    }
+
+    // Note: onHashChange() called automatically
+    override onHashChange(hash: string) {
+        this.clear();
+
+        switch (hash) {
+            case 'home':
+                this.showHome();
+                break;
+            case 'about':
+                this.showAbout();
+                break;
+            default:
+                this.go('#home');
+        }
+    }
+
+    private showHome() {
+        this.append(this.card(this.heading('Home') + this.text('Welcome!')));
+    }
+
+    private showAbout() {
+        this.append(this.card(this.heading('About') + this.text('42')));
+    }
+}
+```
+
+### 3. ID Management
+
+```typescript
+// Auto-generated when onclick present
+this.button('Click', { onclick: () => {} }); // id: btn-1
+
+// Explicit for updates/removal
+this.spinner({ id: 'loader' });
+this.get('loader')?.remove();
+
+// Nested components use predictable IDs
+this.dropdown('Menu', items, { id: 'my-dropdown' });
+// Creates: my-dropdown, my-dropdown-btn, my-dropdown-menu
+```
+
+### 4. Utility Classes
+
+```typescript
+// Type-safe autocomplete
+{
+    className: 'flex';
+} // Single
+{
+    className: ['flex', 'gap-m'];
+} // Multiple
+{
+    className: [isActive && 'opacity-50'];
+} // Conditional (false/null/undefined filtered)
+```
+
+### 5. Styling
+
+**Don't add custom styles unless required.** All components have default design and spacing.
+
+```typescript
+// ✅ Use defaults
+this.button('Save');
+this.card(content);
+
+// ❌ Don't override without reason
+this.button('Save', { style: { padding: '10px' } });
+
+// ✅ Only when truly needed
+this.image('photo.jpg', { style: { width: '100%', maxWidth: '400px' } });
+```
 
 ---
 
-## 💡 Key Insights
+## Anti-Patterns
 
-1. **Strings > Objects** - HTML strings beat virtual DOM for simplicity
-2. **IDs > Refs** - Explicit IDs beat ref management
-3. **Types > Runtime** - TypeScript autocomplete beats runtime checks
-4. **Flat > Nested** - Methods beat deep component trees
-5. **Native > Dependencies** - Node.js APIs beat npm packages
+❌ **Don't implement reactivity:**
+
+```typescript
+// Wrong - state changes don't update DOM
+state.count++;
+
+// Correct - explicit updates
+this.count++;
+this.updateText('counter', String(this.count));
+```
+
+❌ **Don't use external state management:**
+
+```typescript
+// Wrong
+class StateManager { subscribe() {} dispatch() {} }
+
+// Correct
+private state = { user: null };
+this.state.user = data;
+```
+
+❌ **Don't fight string composition:**
+
+```typescript
+// Wrong - over-engineering
+const components = [btn1, btn2].map((c) => c.render());
+
+// Correct - string concatenation
+this.button('1') + this.button('2');
+```
 
 ---
 
-## 🎓 Learning Path
+## DOM Operations
 
-1. Read [EXAMPLES.md](./EXAMPLES.md) top to bottom
-2. Run `npm run build:start:showcase`
-3. Read `src/client/SHOWCASE.ts` for patterns
-4. Start building
+```typescript
+// ✅ Use framework helpers
+this.get('id'); // Safe element access
+this.updateText('id', text); // Update text node
+this.updateHtml('id', html); // Update innerHTML
+this.toggle('id', visible); // Show/hide
+
+// ❌ Avoid direct DOM when helpers exist
+document.getElementById('id').innerHTML = '...';
+```
 
 ---
 
-## ⚠️ Remember
+## Async Patterns
 
-- This is NOT React/Vue/Angular
-- Components are string builders
-- Direct DOM access is OK
-- Performance comes from simplicity
-- Check EXAMPLES.md for syntax
+```typescript
+// 1. Placeholder with ID
+// 1. Empty container
+this.append(this.div('', { id: 'content' }));
 
-**When in doubt:** Keep it simple. Return strings. Compose them.
+// 2. Show spinner
+this.updateHtml('content', this.spinner());
+
+// 3. Fetch & update
+const data = await this.apiGet('/api/data');
+this.updateHtml('content', this.card(this.text(data.result)));
+```
+
+---
+
+## Quick Reference
+
+**Component syntax:** See [EXAMPLES.md](./EXAMPLES.md)
+
+**Running:**
+
+```bash
+npm run dev          # Watch mode
+npm run build:start  # Production
+```
+
+---
+
+## Key Insights for AI
+
+1. Check EXAMPLES.md for exact syntax
+2. Components are string builders, not classes
+3. IDs are explicit for updates, auto-generated otherwise
+4. No dependencies = use Node.js/browser APIs
+5. When uncertain, keep it simple and return strings
