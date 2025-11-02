@@ -1305,6 +1305,21 @@ class ClientApp {
     }
 
     // ========================================
+    // SSE (Server-Sent Events)
+    // ========================================
+
+    /** Connect to SSE endpoint 
+    * @example
+    * const es = this.sse('/api/events');
+    * es.addEventListener('message', e => console.log(e.data));
+    * es.addEventListener('error', () => es.close());
+    */
+    sse(endpoint: string, initDict?: EventSourceInit): EventSource {
+        const eventSource = new EventSource(endpoint, initDict);
+        return eventSource;
+    }
+
+    // ========================================
     // REST API
     // ========================================
 

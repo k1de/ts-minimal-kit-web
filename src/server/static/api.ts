@@ -69,6 +69,38 @@ export class ApiRouter {
     }
 
     /**
+     * Setup SSE connection
+     */
+    sse(res: ServerResponse): {
+        send: (event: string, data: any, id?: string) => void;
+        heartbeat: () => void;
+        close: () => void;
+    } {
+        res.writeHead(200, {
+            'Content-Type': 'text/event-stream',
+            'Cache-Control': 'no-cache',
+            'Connection': 'keep-alive',
+        });
+
+        return {
+            send: (event: string, data: any, id?: string): void => {
+                if (!res.writable) return;
+
+                if (id) res.write(`id: ${id}\n`);
+                res.write(`event: ${event}\n`);
+                const processedData = typeof data === 'string' ? data : JSON.stringify(data)
+                res.write(`data: ${processedData}\n\n`);
+            },
+            heartbeat: (): void => {
+                if (res.writable) res.write(':heartbeat\n\n');
+            },
+            close: (): void => {
+                if (res.writable) res.end();
+            }
+        }
+    }
+
+    /**
      * Handle request
      */
     async handle(req: IncomingMessage, res: ServerResponse, url: URL): Promise<void> {

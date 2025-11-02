@@ -61,6 +61,12 @@ await this.apiDelete('/api/users?id=1');
 
 // Generic method for any HTTP verb
 await this.api('PATCH', '/api/users?id=1', { active: true });
+
+// SSE (Server-Sent Events)
+const es = this.sse('/api/events');
+es.addEventListener('message', (e) => console.log(e.data));
+es.addEventListener('custom', (e) => console.log(JSON.parse(e.data)));
+es.addEventListener('error', () => es.close());
 ```
 
 ### Server-side API (src/server/router.ts)
@@ -103,6 +109,24 @@ api.delete('/api/items', (req, res, url) => {
     const id = url.searchParams.get('id');
     // Process deletion...
     api.json(res, { id, deleted: true });
+});
+
+// SSE (Server-Sent Events)
+api.get('/api/events', (req, res, url) => {
+    const stream = api.sse(res);
+    
+    // Send events
+    stream.send('custom', { data: 'value' });
+    stream.send('custom', { data: 'value' }, 'event-id'); // with ID
+    
+    // Keep-alive (optional)
+    const heartbeat = setInterval(() => stream.heartbeat(), 30000);
+    
+    // Cleanup on disconnect
+    req.on('close', () => {
+        clearInterval(heartbeat);
+        stream.close();
+    });
 });
 ```
 
