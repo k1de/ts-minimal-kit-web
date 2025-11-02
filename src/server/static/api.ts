@@ -11,16 +11,56 @@ interface Route {
 }
 
 /**
+ * Rate Limiter
+ */
+class RateLimiter {
+    private attempts = new Map<string, { count: number; resetAt: number; timerId: NodeJS.Timeout }>();
+
+    check(id: string, maxAttempts: number = 5, windowMs: number = 60000): boolean {
+        const now = Date.now();
+        const record = this.attempts.get(id);
+
+        if (!record || now > record.resetAt) {
+            if (record) clearTimeout(record.timerId);
+            const timerId = setTimeout(() => this.attempts.delete(id), windowMs);
+            this.attempts.set(id, { count: 1, resetAt: now + windowMs, timerId });
+            return true;
+        }
+
+        if (record.count >= maxAttempts) return false;
+
+        record.count++;
+        return true;
+    }
+
+    reset(id: string): void {
+        const record = this.attempts.get(id);
+        if (record) {
+            clearTimeout(record.timerId);
+            this.attempts.delete(id);
+        }
+    }
+}
+
+/**
  * Minimal API Router
  */
 export class ApiRouter {
     private routes: Route[] = [];
+    public limiter = new RateLimiter();
 
     /**
      * Add route
      */
     private add(method: string, path: string, handler: Handler): void {
         this.routes.push({ method, path, handler });
+    }
+
+    /**
+     *  Process Data to string
+     */
+    private normalizeData(data?: object | string): string | undefined {
+        return typeof data === 'string' || data === undefined ? data : JSON.stringify(data)
     }
 
     /**
@@ -62,10 +102,36 @@ export class ApiRouter {
     /**
      * Send JSON response
      */
-    json(res: ServerResponse, data: object | string, status: number = 200): void {
-        res.writeHead(status, { 'Content-Type': 'application/json' });
-        const processedData = typeof data === 'string' ? data : JSON.stringify(data)
-        res.end(processedData);
+    json(res: ServerResponse, data?: object | string, status: number = 200, headers?: Record<string, string>): void {
+        res.writeHead(status, { 'Content-Type': 'application/json', ...headers });
+        const normalizedData = this.normalizeData(data)
+        res.end(normalizedData);
+    }
+
+    /**
+     * Get Basic Auth credentials
+     */
+    basicAuth(req: IncomingMessage): { user: string; password: string } | null {
+        const auth = req.headers.authorization;
+        if (!auth || !auth.startsWith('Basic ')) return null;
+
+        const credentials = Buffer.from(auth.slice(6), 'base64').toString();
+        const [user = '', password = ''] = credentials.split(':');
+
+        return { user, password };
+    }
+
+    /**
+     * Send 401 Unauthorized
+     */
+    unauthorized(res: ServerResponse, realm?: string, data?: any): void {
+        const headers: Record<string, string> = {}
+
+        if (realm) {
+            headers['WWW-Authenticate'] = `Basic realm="${realm}"`;
+        }
+
+        this.json(res, data, 401, headers)
     }
 
     /**
@@ -83,13 +149,13 @@ export class ApiRouter {
         });
 
         return {
-            send: (event: string, data: any, id?: string): void => {
+            send: (event: string, data: object | string, id?: string): void => {
                 if (!res.writable) return;
 
                 if (id) res.write(`id: ${id}\n`);
                 res.write(`event: ${event}\n`);
-                const processedData = typeof data === 'string' ? data : JSON.stringify(data)
-                res.write(`data: ${processedData}\n\n`);
+                const normalizedData = this.normalizeData(data)
+                res.write(`data: ${normalizedData}\n\n`);
             },
             heartbeat: (): void => {
                 if (res.writable) res.write(':heartbeat\n\n');
@@ -123,8 +189,7 @@ export class ApiRouter {
             }
         }
         // Route not found
-        res.writeHead(404, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ error: 'Not found' }));
+        this.json(res, "{ error: 'Not found' }", 404)
     }
 }
 

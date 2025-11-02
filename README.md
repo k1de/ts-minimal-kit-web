@@ -106,6 +106,7 @@ npm run build:start:showcase  # Build and run showcase
 
 -   HTTP server
 -   RESTful API router
+-   Rate limiting
 -   Request hooks (before/after)
 -   Static file serving
 -   SPA support

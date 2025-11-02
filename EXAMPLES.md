@@ -111,17 +111,38 @@ api.delete('/api/items', (req, res, url) => {
     api.json(res, { id, deleted: true });
 });
 
+// Basic Auth
+api.get('/api/protected', (req, res, url) => {
+    const creds = api.basicAuth(req);
+    if (!creds || creds.user !== 'admin' || creds.password !== 'secret') {
+        api.unauthorized(res, 'Protected Area'); // Shows browser dialog
+        return;
+    }
+    api.json(res, { message: 'Access granted', user: creds.user });
+});
+
+// Rate limiting
+api.post('/api/login', (req, res, url) => {
+    const ip = req.socket.remoteAddress || 'unknown';
+    if (!api.limiter.check(ip, 5, 60000)) {
+        // 5 attempts per minute
+        api.json(res, { error: 'Too many attempts' }, 429);
+        return;
+    }
+    // Your logic...
+});
+
 // SSE (Server-Sent Events)
 api.get('/api/events', (req, res, url) => {
     const stream = api.sse(res);
-    
+
     // Send events
     stream.send('custom', { data: 'value' });
     stream.send('custom', { data: 'value' }, 'event-id'); // with ID
-    
+
     // Keep-alive (optional)
     const heartbeat = setInterval(() => stream.heartbeat(), 30000);
-    
+
     // Cleanup on disconnect
     req.on('close', () => {
         clearInterval(heartbeat);
