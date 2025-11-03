@@ -358,7 +358,7 @@ this.card(
     this.heading('Card Title') + // defaults to h2
         this.separator() +
         this.text('Card content') +
-        this.button('Action', { variant: 'primary' })
+        this.button('Action', { type: 'primary' })
 );
 
 // Tabs
@@ -439,8 +439,8 @@ this.div(
 ```typescript
 // Buttons
 this.button('Click me', { onclick: () => alert('Hi!') });
-this.button('Save', { variant: 'primary' });
-this.button('Delete', { variant: 'danger' });
+this.button('Save', { type: 'primary' });
+this.button('Delete', { type: 'danger' });
 
 // Dropdown
 this.dropdown(
@@ -451,13 +451,13 @@ this.dropdown(
         { text: 'Delete', onclick: () => this.delete() },
     ],
     {
-        variant: 'primary',
+        type: 'primary',
     }
 );
 
 // Badges
 this.badge('New');
-this.badge('Active', { variant: 'success' });
+this.badge('Active', { type: 'success' });
 
 // Alerts
 this.alert('Info message');
@@ -483,7 +483,7 @@ this.modal(
                         this.handleConfirm();
                         this.closeModal();
                     },
-                    variant: 'primary',
+                    type: 'primary',
                 }),
             ],
             { gap: 's' }
@@ -498,7 +498,7 @@ this.modal(
         this.spacer('m') +
         this.button('I understand', {
             onclick: () => this.closeModal(),
-            variant: 'danger',
+            type: 'danger',
         }),
     true // block parameter - prevents closing by clicking outside
 );
@@ -513,8 +513,8 @@ this.table(['Item 1', 'Item 2', 'Item 3']);
 // Table with headers
 this.table(
     [
-        ['John', 'john@example.com', this.badge('Active', { variant: 'success' })],
-        ['Jane', 'jane@example.com', this.badge('Pending', { variant: 'warning' })],
+        ['John', 'john@example.com', this.badge('Active', { type: 'success' })],
+        ['Jane', 'jane@example.com', this.badge('Pending', { type: 'warning' })],
     ],
     {
         headers: ['Name', 'Email', 'Status'],
