@@ -122,6 +122,16 @@ export class ApiRouter {
     }
 
     /**
+     * Get Bearer token
+     */
+    bearerAuth(req: IncomingMessage): string | null {
+        const auth = req.headers.authorization;
+        if (!auth || !auth.startsWith('Bearer ')) return null;
+
+        return auth.slice(7);
+    }
+
+    /**
      * Send 401 Unauthorized
      */
     unauthorized(res: ServerResponse, realm?: string, data?: any): void {

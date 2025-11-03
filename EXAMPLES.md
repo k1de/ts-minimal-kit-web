@@ -121,6 +121,16 @@ api.get('/api/protected', (req, res, url) => {
     api.json(res, { message: 'Access granted', user: creds.user });
 });
 
+// Bearer Auth
+api.get('/api/protected', (req, res, _url) => {
+    const token = api.bearerAuth(req);
+    if (!token || token !== 'secret-token') {
+        api.unauthorized(res);
+        return;
+    }
+    api.json(res, { message: 'Access granted' });
+});
+
 // Rate limiting
 api.post('/api/login', (req, res, url) => {
     const ip = req.socket.remoteAddress || 'unknown';
