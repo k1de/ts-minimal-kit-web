@@ -1,29 +1,39 @@
-# Dependencies
-node_modules/
-package-lock.json
-tsconfig.tsbuildinfo
-
 # Build output
 dist/
 public/*
 !public/styles.css
 !public/utils.css
 !public/index.html
+
+# Dependencies
+node_modules/
+
+# TypeScript cache
 *.tsbuildinfo
 
 # IDE
 .vscode/
 .idea/
+*.swp
+*~
 
 # OS
 .DS_Store
 Thumbs.db
 
+# Testing
+coverage/
+
+# Cache
+.cache/
+.temp/
+.tmp/
+
 # Logs
 *.log
-npm-debug.log*
 
 # Environment variables
 .env
 .env.local
 .env.*.local
+!.env.example
