@@ -16,7 +16,7 @@
         "noEmitOnError": true,
 
         // Module Resolution
-        "moduleResolution": "node",
+        "moduleResolution": "bundler",
         "allowSyntheticDefaultImports": true,
         "esModuleInterop": true,
 
