@@ -2,17 +2,12 @@
 
 import { createServer, IncomingMessage, ServerResponse } from 'node:http';
 import { promises as fs } from 'node:fs';
-import { fileURLToPath } from 'node:url';
-import { dirname, join, extname } from 'node:path';
+import { join, extname } from 'node:path';
 import { api } from './api.js';
-
-// Get current directory
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 
 // Configuration
 const PORT = process.env.PORT || 3000;
-const PUBLIC_DIR = join(dirname(dirname(__dirname)), 'public');
+const PUBLIC_DIR = process.env.PUBLIC_DIR || join(process.cwd(), 'public');
 
 // Types
 type HookFn = (req: IncomingMessage, res: ServerResponse, url: URL) => void | Promise<void>;
