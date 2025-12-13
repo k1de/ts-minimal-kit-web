@@ -98,6 +98,9 @@ npm run build:start  # Build and run
 npm run start        # Run server only
 npm run clean        # Clean artifacts
 npm run build:start:showcase  # Build and run showcase
+
+# CLI options: --port (-p), --public (-d)
+# node dist/app.js --port 4000 --public ./my-public
 ```
 
 ## Features

@@ -2,12 +2,22 @@
 
 import { createServer, IncomingMessage, ServerResponse } from 'node:http';
 import { promises as fs } from 'node:fs';
-import { join, extname } from 'node:path';
+import { join, extname, resolve } from 'node:path';
+import { parseArgs } from 'node:util';
 import { api } from './api.js';
 
-// Configuration
-const PORT = process.env.PORT || 3000;
-const PUBLIC_DIR = process.env.PUBLIC_DIR || join(process.cwd(), 'public');
+// CLI arguments (highest priority)
+const { values: args } = parseArgs({
+    options: {
+        port: { type: 'string', short: 'p' },
+        public: { type: 'string', short: 'd' },
+    },
+    strict: false,
+});
+
+// Configuration: CLI > ENV > defaults
+const PORT = Number(args.port) || Number(process.env.PORT) || 3000;
+const PUBLIC_DIR = resolve((typeof args.public === 'string' && args.public) || process.env.PUBLIC_DIR || 'public');
 
 // Types
 type HookFn = (req: IncomingMessage, res: ServerResponse, url: URL) => void | Promise<void>;
