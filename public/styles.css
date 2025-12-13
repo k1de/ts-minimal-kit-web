@@ -878,8 +878,9 @@ pre code {
     border: 1px solid var(--border);
     border-radius: var(--radius-l);
     box-shadow: var(--shadow-l);
-    max-width: 500px;
-    width: 100%;
+    width: fit-content;
+    min-width: 10vw;
+    max-width: 90vw;
     margin: var(--space-l);
     padding: var(--space-l);
 }
