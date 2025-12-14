@@ -148,6 +148,7 @@ type NotificationType = 'danger' | 'default' | 'primary' | 'success' | 'warning'
 type Spacing = 'l' | 'm' | 'none' | 's';
 type ThemeVariant = 'dark' | 'light';
 type ToastType = NotificationType;
+type QueryParams = Record<string, string | number | boolean | null | undefined>;
 
 // ========================================
 // INTERFACES
@@ -1324,7 +1325,17 @@ class ClientApp {
     // ========================================
 
     /** Make API request */
-    async api(method: string, endpoint: string, data?: any): Promise<any> {
+    async api(method: string, endpoint: string, data?: any, params?: QueryParams): Promise<any> {
+        let url = endpoint;
+        if (params) {
+            const query = new URLSearchParams(
+                Object.entries(params)
+                    .filter(([_, v]) => v !== undefined && v !== null && v !== false && v === v)
+                    .map(([k, v]) => [k, String(v)])
+            ).toString();
+            if (query) url += '?' + query;
+        }
+
         const options: RequestInit = {
             method,
             headers: { 'Content-Type': 'application/json' },
@@ -1335,7 +1346,7 @@ class ClientApp {
         }
 
         try {
-            const response = await fetch(endpoint, options);
+            const response = await fetch(url, options);
             const contentType = response.headers.get('content-type');
 
             if (contentType && contentType.includes('application/json')) {
@@ -1350,23 +1361,23 @@ class ClientApp {
     }
 
     /** DELETE request */
-    async apiDelete(endpoint: string): Promise<any> {
-        return this.api('DELETE', endpoint);
+    async apiDelete(endpoint: string, params?: QueryParams): Promise<any> {
+        return this.api('DELETE', endpoint, undefined, params);
     }
 
     /** GET request */
-    async apiGet(endpoint: string): Promise<any> {
-        return this.api('GET', endpoint);
+    async apiGet(endpoint: string, params?: QueryParams): Promise<any> {
+        return this.api('GET', endpoint, undefined, params);
     }
 
     /** POST request */
-    async apiPost(endpoint: string, data: any): Promise<any> {
-        return this.api('POST', endpoint, data);
+    async apiPost(endpoint: string, data?: any, params?: QueryParams): Promise<any> {
+        return this.api('POST', endpoint, data, params);
     }
 
     /** PUT request */
-    async apiPut(endpoint: string, data: any): Promise<any> {
-        return this.api('PUT', endpoint, data);
+    async apiPut(endpoint: string, data?: any, params?: QueryParams): Promise<any> {
+        return this.api('PUT', endpoint, data, params);
     }
 }
 
@@ -1389,6 +1400,7 @@ export type {
     Layout,
     NormalizedAttrs,
     NotificationType,
+    QueryParams,
     Spacing,
     StyleOptions,
     ThemeVariant,
