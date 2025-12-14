@@ -59,6 +59,10 @@ await this.apiPost('/api/users', { name: 'John' });
 await this.apiPut('/api/users?id=1', { name: 'Jane' });
 await this.apiDelete('/api/users?id=1');
 
+// With query params (optional)
+await this.apiGet('/api/users', { page: 1, active: true });
+// → GET /api/users?page=1&active=true
+
 // Generic method for any HTTP verb
 await this.api('PATCH', '/api/users?id=1', { active: true });
 
@@ -79,6 +83,12 @@ import { api } from './static/api.js';
 // Simple GET endpoint
 api.get('/api/health', (req, res, url) => {
     api.json(res, { status: 'ok' });
+});
+
+// Compressed JSON response (br, gzip, deflate)
+api.get('/api/large-data', async (req, res, url) => {
+    const data = await fetchLargeData();
+    await api.jsonZip(req, res, data);
 });
 
 // GET with query parameters

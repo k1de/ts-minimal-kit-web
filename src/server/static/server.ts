@@ -5,6 +5,7 @@ import { promises as fs } from 'node:fs';
 import { join, extname, resolve } from 'node:path';
 import { parseArgs } from 'node:util';
 import { api } from './api.js';
+import { compressors, compressibleTypes, getEncoding } from './compress.js';
 
 // CLI arguments (highest priority)
 const { values: args } = parseArgs({
@@ -40,7 +41,7 @@ const mimeTypes: Record<string, string> = {
 };
 
 // Serve static files
-async function serveStatic(res: ServerResponse, url: URL): Promise<void> {
+async function serveStatic(req: IncomingMessage, res: ServerResponse, url: URL): Promise<void> {
     try {
         // Serve index.html for directory roots
         let pathname = url.pathname;
@@ -59,9 +60,16 @@ async function serveStatic(res: ServerResponse, url: URL): Promise<void> {
 
         const ext = extname(filePath);
         const contentType = mimeTypes[ext] || 'application/octet-stream';
+        let content: Buffer = await fs.readFile(filePath);
 
-        const content = await fs.readFile(filePath);
-        res.writeHead(200, { 'Content-Type': contentType });
+        // Compress if supported
+        const encoding = compressibleTypes.has(ext) ? getEncoding(req) : null;
+        if (encoding) {
+            content = await compressors[encoding](content);
+            res.writeHead(200, { 'Content-Type': contentType, 'Content-Encoding': encoding });
+        } else {
+            res.writeHead(200, { 'Content-Type': contentType });
+        }
         res.end(content);
     } catch (err) {
         // Return proper 404 for missing files
@@ -96,7 +104,7 @@ const server = createServer(async (req: IncomingMessage, res: ServerResponse) =>
             if (url.pathname.startsWith('/api')) {
                 await api.handle(req, res, url);
             } else {
-                await serveStatic(res, url);
+                await serveStatic(req, res, url);
             }
         }
 

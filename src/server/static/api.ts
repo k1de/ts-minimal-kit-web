@@ -1,6 +1,7 @@
 // api.ts - Minimal API Router (static file)
 
 import { IncomingMessage, ServerResponse } from 'node:http';
+import { compressors, getEncoding } from './compress.js';
 
 type Handler = (req: IncomingMessage, res: ServerResponse, url: URL) => void | Promise<void>;
 
@@ -106,6 +107,23 @@ export class ApiRouter {
         res.writeHead(status, { 'Content-Type': 'application/json', ...headers });
         const normalizedData = this.normalizeData(data)
         res.end(normalizedData);
+    }
+
+    /**
+     * Send compressed JSON response
+     */
+    async jsonZip(req: IncomingMessage, res: ServerResponse, data?: object | string, status: number = 200, headers?: Record<string, string>): Promise<void> {
+        const normalizedData = this.normalizeData(data);
+        const encoding = getEncoding(req);
+
+        if (encoding && normalizedData) {
+            const compressed = await compressors[encoding](Buffer.from(normalizedData));
+            res.writeHead(status, { 'Content-Type': 'application/json', 'Content-Encoding': encoding, ...headers });
+            res.end(compressed);
+        } else {
+            res.writeHead(status, { 'Content-Type': 'application/json', ...headers });
+            res.end(normalizedData);
+        }
     }
 
     /**
