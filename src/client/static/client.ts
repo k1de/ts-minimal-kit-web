@@ -981,19 +981,23 @@ class ClientApp {
             const container = this.get(normalizedOptions.id!);
             if (!container) return;
 
-            // One handler for entire container
+            // One handler for entire container - only direct children
+            const tabsRow = container.querySelector(':scope > .tabs');
+            const contentRow = container.querySelector(':scope > .tab-content');
+            if (!tabsRow || !contentRow) return;
+
             container.onclick = (e) => {
                 const tab = (e.target as HTMLElement).closest('.tab');
-                if (!tab) return;
+                if (!tab || tab.parentElement !== tabsRow) return;
 
                 e.preventDefault();
-                const tabs = container.querySelectorAll('.tab');
-                const panels = container.querySelectorAll('.tab-panel');
+                const tabs = tabsRow.querySelectorAll(':scope > .tab');
+                const panels = contentRow.querySelectorAll(':scope > .tab-panel');
                 const index = Array.from(tabs).indexOf(tab);
 
                 // Switch active tab
                 tabs.forEach((t) => t.classList.remove('active'));
-                panels.forEach((c) => (c as HTMLElement).hidden = true);
+                panels.forEach((p) => (p as HTMLElement).hidden = true);
 
                 tab.classList.add('active');
                 if (panels[index]) (panels[index] as HTMLElement).hidden = false;
