@@ -669,7 +669,7 @@ class ClientApp {
 
         // Set inner content
         this.navContainer.innerHTML = `
-            <div class="nav-brand">${brand || ''}</div>
+            <div id="nav-brand" class="nav-brand">${brand || ''}</div>
             <ul class="nav-menu">${navItems}</ul>
         `;
 
@@ -708,7 +708,7 @@ class ClientApp {
         this.applyStyleToElement(this.sidebarContainer, normalizedOptions, 'sidebar');
 
         // Set inner content
-        this.sidebarContainer.innerHTML = `${brand ? `<div class="sidebar-brand">${brand}</div>` : ''}${content}`;
+        this.sidebarContainer.innerHTML = `${brand ? `<div id="sidebar-brand" class="sidebar-brand">${brand}</div>` : ''}${content}`;
 
         this.sidebarContainer.hidden = false;
         this.hasSidebar = true;

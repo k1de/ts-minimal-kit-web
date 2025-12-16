@@ -231,6 +231,9 @@ this.sidebar({
     ],
 });
 
+// Dynamic brand update (IDs: nav-brand, sidebar-brand)
+this.updateText('nav-brand', 'New App Name');
+
 // Toggle visibility
 this.toggleNav(); // Toggle nav visibility
 this.toggleNav(true); // Show nav
