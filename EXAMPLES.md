@@ -452,6 +452,20 @@ this.div(
         this.text('We never share your email', { className: 'sublabel' }) +
         this.input({ id: 'email', type: 'email' })
 );
+
+// Form elements with onchange (el is typed automatically)
+this.select({
+    options: [{ value: 'us', text: 'US' }, { value: 'uk', text: 'UK' }],
+    onchange: (el) => console.log(el.value), // el: HTMLSelectElement
+});
+this.input({ onchange: (el) => console.log(el.value) }); // el: HTMLInputElement
+this.textarea({ onchange: (el) => console.log(el.value) }); // el: HTMLTextAreaElement
+this.checkbox({ label: 'Agree', onchange: (el) => console.log(el.checked) }); // el: HTMLInputElement
+this.radioGroup({
+    name: 'size',
+    options: [{ value: 's', text: 'S' }, { value: 'l', text: 'L' }],
+    onchange: (el) => console.log(el.value), // el: HTMLInputElement
+});
 ```
 
 ## UI Components

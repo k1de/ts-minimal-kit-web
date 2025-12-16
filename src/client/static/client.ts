@@ -204,6 +204,7 @@ interface SidebarOptions extends Omit<BaseOptions, 'id'> {
 interface CheckboxOptions extends Omit<BaseOptions, 'onclick'> {
     label: string;
     checked?: boolean;
+    onchange?: (el: HTMLInputElement) => void;
 }
 
 /** Form input options */
@@ -211,6 +212,7 @@ interface InputOptions extends Omit<BaseOptions, 'onclick'> {
     type?: string;
     placeholder?: string;
     value?: string;
+    onchange?: (el: HTMLInputElement) => void;
 }
 
 /** Radio group options */
@@ -218,6 +220,7 @@ interface RadioGroupOptions extends Omit<BaseOptions, 'onclick'> {
     name: string;
     options: SelectOption[];
     selected?: string;
+    onchange?: (el: HTMLInputElement) => void;
 }
 
 /** Select option configuration */
@@ -230,6 +233,7 @@ interface SelectOption {
 interface SelectOptions extends Omit<BaseOptions, 'onclick'> {
     options: SelectOption[];
     selected?: string;
+    onchange?: (el: HTMLSelectElement) => void;
 }
 
 /** Textarea options */
@@ -237,6 +241,7 @@ interface TextareaOptions extends Omit<BaseOptions, 'onclick'> {
     placeholder?: string;
     value?: string;
     rows?: number;
+    onchange?: (el: HTMLTextAreaElement) => void;
 }
 
 // Button & Action Interfaces
@@ -394,12 +399,12 @@ class ClientApp {
     // ========================================
 
     /** Add event listener to element with common setup */
-    private addEventListener(element: HTMLElement | null, handler: EventHandler, event: string = 'click'): void {
+    private addEventListener<T extends HTMLElement = HTMLElement>(element: HTMLElement | null, handler: (el: T) => void, event: string = 'click'): void {
         if (!element) return;
 
         element.addEventListener(event, (e) => {
             // Only prevent default for links and form elements
-            const el = e.target as HTMLElement;
+            const el = e.target as T;
             const tagName = el.tagName.toLowerCase();
             if (tagName === 'a' || tagName === 'button' || tagName === 'form') {
                 e.preventDefault();
@@ -414,10 +419,10 @@ class ClientApp {
     }
 
     /** Add event listener with timeout */
-    private addDelayedEventListener(id: string, handler: EventHandler, event: string = 'click'): void {
+    private addDelayedEventListener<T extends HTMLElement = HTMLElement>(id: string, handler: (el: T) => void, event: string = 'click'): void {
         setTimeout(() => {
             const element = this.get(id);
-            this.addEventListener(element, handler, event);
+            this.addEventListener<T>(element, handler, event);
         }, 0);
     }
 
@@ -471,7 +476,7 @@ class ClientApp {
     /** Create navigation item HTML */
     private createNavItem(text: string, options?: NavItemOptions, mainClass?: string): string {
         const normalizedOptions = this.normalizeOptions(options);
-        this.processOnclick(normalizedOptions, 'nav-item');
+        this.processEvent(normalizedOptions, 'nav-item');
         if (!normalizedOptions.href) normalizedOptions.href = '#';
         const attrs = this.buildAttrs(normalizedOptions, mainClass);
         return `<li><a${attrs}>${text}</a></li>`;
@@ -552,17 +557,17 @@ class ClientApp {
         return cssString || undefined;
     }
 
-    /** Process onclick handler and mutate, generate ID if needed */
-    private processOnclick<T extends BaseOptions>(options: T, defaultPrefix?: string, event: string = 'click'): void {
-        if (!options.onclick) return;
+    /** Process event handler and mutate, generate ID if needed */
+    private processEvent<T extends BaseOptions>(options: T, defaultPrefix?: string, handlerKey: string = 'onclick', eventType: string = 'click'): void {
+        if (!options[handlerKey]) return;
 
         if (!options.id) {
             options.id = this.generateId(defaultPrefix);
         }
 
-        this.addDelayedEventListener(options.id, options.onclick, event);
+        this.addDelayedEventListener(options.id, options[handlerKey], eventType);
 
-        delete options.onclick;
+        delete options[handlerKey];
     }
 
     /** Update element content (text or HTML) */
@@ -765,7 +770,7 @@ class ClientApp {
     /** Create a div element */
     div(content: string, options?: BaseOptions): string {
         const normalizedOptions = this.normalizeOptions(options);
-        this.processOnclick(normalizedOptions, 'div');
+        this.processEvent(normalizedOptions, 'div');
         const attrs = this.buildAttrs(normalizedOptions);
         return `<div${attrs}>${content}</div>`;
     }
@@ -773,7 +778,7 @@ class ClientApp {
     /** Create a link element */
     link(text: string, options: LinkOptions): string {
         const normalizedOptions = this.normalizeOptions(options);
-        this.processOnclick(normalizedOptions, 'link');
+        this.processEvent(normalizedOptions, 'link');
         const attrs = this.buildAttrs(normalizedOptions);
         return `<a${attrs}>${text}</a>`;
     }
@@ -781,7 +786,7 @@ class ClientApp {
     /** Create an ordered list */
     ol(items: string[], options?: BaseOptions): string {
         const normalizedOptions = this.normalizeOptions(options);
-        this.processOnclick(normalizedOptions, 'ol');
+        this.processEvent(normalizedOptions, 'ol');
         const listItems = items.map((item) => `<li>${item}</li>`).join('');
         const attrs = this.buildAttrs(normalizedOptions);
         return `<ol${attrs}>${listItems}</ol>`;
@@ -790,7 +795,7 @@ class ClientApp {
     /** Create a span element */
     span(content: string, options?: BaseOptions): string {
         const normalizedOptions = this.normalizeOptions(options);
-        this.processOnclick(normalizedOptions, 'span');
+        this.processEvent(normalizedOptions, 'span');
         const attrs = this.buildAttrs(normalizedOptions);
         return `<span${attrs}>${content}</span>`;
     }
@@ -798,7 +803,7 @@ class ClientApp {
     /** Create an unordered list */
     ul(items: string[], options?: BaseOptions): string {
         const normalizedOptions = this.normalizeOptions(options);
-        this.processOnclick(normalizedOptions, 'ul');
+        this.processEvent(normalizedOptions, 'ul');
         const listItems = items.map((item) => `<li>${item}</li>`).join('');
         const attrs = this.buildAttrs(normalizedOptions);
         return `<ul${attrs}>${listItems}</ul>`;
@@ -829,7 +834,7 @@ class ClientApp {
     /** Create a heading */
     heading(text: string, level: HeadingLevel = 2, options?: BaseOptions): string {
         const normalizedOptions = this.normalizeOptions(options);
-        this.processOnclick(normalizedOptions, 'heading');
+        this.processEvent(normalizedOptions, 'heading');
         const attrs = this.buildAttrs(normalizedOptions);
         return `<h${level}${attrs}>${text}</h${level}>`;
     }
@@ -860,7 +865,7 @@ class ClientApp {
     /** Create a text block with optional styling */
     text(content: string, options?: BaseOptions): string {
         const normalizedOptions = this.normalizeOptions(options);
-        this.processOnclick(normalizedOptions, 'text');
+        this.processEvent(normalizedOptions, 'text');
         const attrs = this.buildAttrs(normalizedOptions);
         return `<p${attrs}>${content}</p>`;
     }
@@ -899,7 +904,7 @@ class ClientApp {
     /** Create a card container */
     card(content: string, options?: BaseOptions): string {
         const normalizedOptions = this.normalizeOptions(options);
-        this.processOnclick(normalizedOptions, 'card');
+        this.processEvent(normalizedOptions, 'card');
         const attrs = this.buildAttrs(normalizedOptions, 'card');
         return `<div${attrs}>${content}</div>`;
     }
@@ -908,7 +913,7 @@ class ClientApp {
     flex(items: string[], options?: FlexOptions): string {
         const { gap = 'm', direction = 'row', ...baseOptions } = options || ({} as FlexOptions);
         const normalizedOptions = this.normalizeOptions(baseOptions);
-        this.processOnclick(normalizedOptions, 'flex');
+        this.processEvent(normalizedOptions, 'flex');
         const mainClass = `flex flex-${direction} gap-${gap}`;
         const attrs = this.buildAttrs(normalizedOptions, mainClass);
         return `<div${attrs}>${items.join('')}</div>`;
@@ -918,7 +923,7 @@ class ClientApp {
     grid(items: string[], options?: GridOptions): string {
         const { columns = 3, ...baseOptions } = options || ({} as GridOptions);
         const normalizedOptions = this.normalizeOptions(baseOptions);
-        this.processOnclick(normalizedOptions, 'grid');
+        this.processEvent(normalizedOptions, 'grid');
         const attrs = this.buildAttrs(normalizedOptions, `grid grid-${columns}`);
         return `<div${attrs}>${items.join('')}</div>`;
     }
@@ -928,7 +933,7 @@ class ClientApp {
         const normalizedOptions = this.normalizeOptions({ ...options, src });
         if (normalizedOptions.alt === undefined) normalizedOptions.alt = '';
         if (normalizedOptions.loading === undefined) normalizedOptions.loading = 'lazy';
-        this.processOnclick(normalizedOptions, 'img');
+        this.processEvent(normalizedOptions, 'img');
         const attrs = this.buildAttrs(normalizedOptions);
         return `<img${attrs}>`;
     }
@@ -936,7 +941,7 @@ class ClientApp {
     /** Create a spinner */
     spinner(options?: BaseOptions): string {
         const normalizedOptions = this.normalizeOptions(options);
-        this.processOnclick(normalizedOptions, 'spinner');
+        this.processEvent(normalizedOptions, 'spinner');
         const attrs = this.buildAttrs(normalizedOptions, 'spinner');
         return `<div${attrs}></div>`;
     }
@@ -1032,11 +1037,13 @@ class ClientApp {
 
     /** Create a checkbox */
     checkbox(options: CheckboxOptions): string {
-        const { label, checked, ...baseOptions } = options;
+        const { label, checked, onchange, ...baseOptions } = options;
         const normalizedOptions = this.normalizeOptions(baseOptions);
         if (!normalizedOptions.id) normalizedOptions.id = this.generateId('checkbox');
-        const containerAttrs = this.buildAttrs(normalizedOptions);
         const inputId = `${normalizedOptions.id}-input`;
+        const inputOptions = { id: inputId, onchange };
+        this.processEvent(inputOptions, 'checkbox', 'onchange', 'change');
+        const containerAttrs = this.buildAttrs(normalizedOptions);
         const inputAttrs = this.buildAttrs({
             type: 'checkbox',
             id: inputId,
@@ -1055,6 +1062,7 @@ class ClientApp {
     input(options?: InputOptions): string {
         const normalizedOptions = this.normalizeOptions(options);
         if (!normalizedOptions.type) normalizedOptions.type = 'text';
+        this.processEvent(normalizedOptions, 'input', 'onchange', 'change');
         const attrs = this.buildAttrs(normalizedOptions, 'input');
         return `<input${attrs}>`;
     }
@@ -1063,6 +1071,7 @@ class ClientApp {
     radioGroup(options: RadioGroupOptions): string {
         const { name, options: radioOptions, selected, ...baseOptions } = options;
         const normalizedOptions = this.normalizeOptions(baseOptions);
+        this.processEvent(normalizedOptions, 'radio', 'onchange', 'change');
         const containerAttrs = this.buildAttrs(normalizedOptions);
 
         const radios = radioOptions
@@ -1091,6 +1100,7 @@ class ClientApp {
     select(options: SelectOptions): string {
         const { options: selectOptions, selected, ...baseOptions } = options;
         const normalizedOptions = this.normalizeOptions(baseOptions);
+        this.processEvent(normalizedOptions, 'select', 'onchange', 'change');
         const attrs = this.buildAttrs(normalizedOptions, 'select');
 
         const optionElements = selectOptions
@@ -1110,6 +1120,7 @@ class ClientApp {
     textarea(options?: TextareaOptions): string {
         const { value, ...baseOptions } = options || ({} as TextareaOptions);
         const normalizedOptions = this.normalizeOptions(baseOptions);
+        this.processEvent(normalizedOptions, 'textarea', 'onchange', 'change');
         const attrs = this.buildAttrs(normalizedOptions, 'textarea');
         return `<textarea${attrs}>${value || ''}</textarea>`;
     }
@@ -1122,7 +1133,7 @@ class ClientApp {
     badge(text: string, options?: BadgeOptions): string {
         const { type = 'default', ...baseOptions } = options || ({} as BadgeOptions);
         const normalizedOptions = this.normalizeOptions(baseOptions);
-        this.processOnclick(normalizedOptions, 'badge');
+        this.processEvent(normalizedOptions, 'badge');
         const mainClass = type === 'default' ? 'badge' : `badge badge-${type}`;
         const attrs = this.buildAttrs(normalizedOptions, mainClass);
         return `<span${attrs}>${text}</span>`;
@@ -1132,7 +1143,7 @@ class ClientApp {
     button(text: string, options?: ButtonOptions): string {
         const { type = 'default', ...baseOptions } = options || ({} as ButtonOptions);
         const normalizedOptions = this.normalizeOptions(baseOptions);
-        this.processOnclick(normalizedOptions, 'btn');
+        this.processEvent(normalizedOptions, 'btn');
         const mainClass = type === 'default' ? 'btn' : `btn btn-${type}`;
         const attrs = this.buildAttrs(normalizedOptions, mainClass);
         return `<button${attrs}>${text}</button>`;
@@ -1197,7 +1208,7 @@ class ClientApp {
     alert(content: string, options?: AlertOptions): string {
         const { type = 'default', ...baseOptions } = options || ({} as AlertOptions);
         const normalizedOptions = this.normalizeOptions(baseOptions);
-        this.processOnclick(normalizedOptions, 'alert');
+        this.processEvent(normalizedOptions, 'alert');
         const mainClass = `alert alert-${type}`;
         const attrs = this.buildAttrs(normalizedOptions, mainClass);
         return `<div${attrs}>${content}</div>`;
