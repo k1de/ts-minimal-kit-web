@@ -581,6 +581,8 @@ this.getParams();                   // Get URLSearchParams
 // getParam('page') -> '2'
 // getParams().get('sort') -> 'name'
 
+// To clear query params, use path: this.go('/') or this.go('/#about')
+
 // Override to handle hash changes
 protected onHashChange(hash: string): void {
     switch(hash) {
