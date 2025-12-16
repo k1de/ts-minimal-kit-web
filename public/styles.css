@@ -107,48 +107,22 @@ body {
 }
 
 /* === Typography & Block Elements === */
-/* Base margin-bottom for common elements */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p,
-ul,
-ol,
-hr,
-img,
-code,
-pre,
-div,
-.card,
-.grid,
-.flex,
-.tabs,
-.input,
-.textarea,
-.select,
-.checkbox,
-.radio,
-.alert,
-.table,
-.btn,
-.dropdown,
-.code,
-.code-block,
-.accordion {
+/* Base margin-bottom for common elements (scoped to body, :where for low specificity) */
+body :where(h1, h2, h3, h4, h5, h6, p, ul, ol, hr, img, code, pre, div),
+body :where(.card, .grid, .flex, .tabs, .input, .textarea, .select),
+body :where(.checkbox, .radio, .alert, .table, .btn, .dropdown),
+body :where(.code, .code-block, .accordion) {
     margin-top: 0;
     margin-bottom: var(--space-m);
 }
 
 /* Remove bottom margin from last child in containers */
-div > :last-child,
-.main > :last-child,
-.card > :last-child,
-.modal > :last-child,
-.tab-panel > :last-child,
-.sidebar-section > :last-child {
+body div > :last-child,
+body .main > :last-child,
+body .card > :last-child,
+body .modal > :last-child,
+body .tab-panel > :last-child,
+body .sidebar-section > :last-child {
     margin-bottom: 0;
 }
 
