@@ -384,12 +384,15 @@ this.card(
         this.button('Action', { type: 'primary' })
 );
 
-// Tabs
-this.tabs([
-    { label: 'Tab 1', content: 'Content 1' },
-    { label: 'Tab 2', content: 'Content 2' },
-    { label: 'Tab 3', content: 'Content 3' },
-]);
+// Tabs (activeIndex: 0 by default, here "Tab 2" is active)
+this.tabs(
+    [
+        { label: 'Tab 1', content: 'Content 1' },
+        { label: 'Tab 2', content: 'Content 2' },
+        { label: 'Tab 3', content: 'Content 3' },
+    ],
+    { activeIndex: 1 }
+);
 
 // Grid (2-8 columns)
 this.grid([this.card('Content 1'), this.card('Content 2'), this.card('Content 3')], { columns: 3 });

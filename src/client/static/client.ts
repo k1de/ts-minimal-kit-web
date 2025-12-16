@@ -307,6 +307,11 @@ interface TabItem {
     content: string;
 }
 
+/** Tabs options */
+interface TabsOptions extends BaseOptions {
+    activeIndex?: number;
+}
+
 /** Table options */
 interface TableOptions extends Omit<BaseOptions, 'onclick'> {
     headers?: string[];
@@ -973,9 +978,10 @@ class ClientApp {
     }
 
     /** Create tabs */
-    tabs(items: TabItem[], options?: BaseOptions): string {
-        const normalizedOptions = this.normalizeOptions(options || ({} as BaseOptions));
+    tabs(items: TabItem[], options?: TabsOptions): string {
+        const normalizedOptions = this.normalizeOptions(options || ({} as TabsOptions));
         if (!normalizedOptions.id) normalizedOptions.id = this.generateId('tabs');
+        const activeIndex = Math.max(0, Math.min(options?.activeIndex ?? 0, items.length - 1));
 
         setTimeout(() => {
             const container = this.get(normalizedOptions.id!);
@@ -1008,7 +1014,7 @@ class ClientApp {
             .map((item, i) => {
                 const tabAttrs = this.buildAttrs({
                     href: '#',
-                    className: i === 0 ? 'tab active' : 'tab',
+                    className: i === activeIndex ? 'tab active' : 'tab',
                 });
                 return `<a${tabAttrs}>${item.label}</a>`;
             })
@@ -1017,7 +1023,7 @@ class ClientApp {
         const panels = items
             .map((item, i) => {
                 const panelAttrs = this.buildAttrs({ className: 'tab-panel' });
-                return `<div${panelAttrs}${i !== 0 ? ' hidden' : ''}>${item.content}</div>`;
+                return `<div${panelAttrs}${i !== activeIndex ? ' hidden' : ''}>${item.content}</div>`;
             })
             .join('');
 
