@@ -477,11 +477,6 @@ class ClientApp {
         return `<li><a${attrs}>${text}</a></li>`;
     }
 
-    /** Generate unique element ID */
-    private generateId(prefix: string = 'id'): string {
-        return `${prefix}-${++this.elementIdCounter}`;
-    }
-
     /** Handle hash change */
     private handleHashChange(): void {
         const hash = window.location.hash.slice(1); // Remove #
@@ -1252,6 +1247,11 @@ class ClientApp {
     // ========================================
     // DOM UTILITIES
     // ========================================
+
+    /** Generate unique element ID */
+    generateId(prefix: string = 'id'): string {
+        return `${prefix}-${++this.elementIdCounter}`;
+    }
 
     /** Get element by ID */
     get(id: string): HTMLElement | null {

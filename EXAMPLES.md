@@ -585,6 +585,9 @@ this.overlay(this.button('X', {     // Set overlay content (fixed layer)
     onclick: () => this.overlay('')
 }));
 
+// Generate unique IDs
+const id = this.generateId('card'); // → 'card-1', 'card-2', ...
+
 // Element access
 this.get('element-id');           // Get element
 this.updateText('span-id', 'New'); // Update text
