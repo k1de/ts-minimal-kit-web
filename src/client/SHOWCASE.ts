@@ -1046,7 +1046,7 @@ className: ['justify-center']          // Button group`,
                 ) +
                 this.div(
                     this.text('Textarea', { className: 'label' }) +
-                    this.textarea({ id: 'textarea', placeholder: 'Enter long text...', rows: 4 })
+                    this.textarea({ id: 'textarea', placeholder: 'Enter long text...', rows: 12, className: 'w-full' })
                 )
             )
         );

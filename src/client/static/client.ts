@@ -17,102 +17,110 @@
 // Utility Types
 // ----------------------------------------
 
-/** Utility classes from styles.css */
+/** Utility classes from utils.css */
 type UtilityClass =
     // Display & Visibility
-    | 'block'
     | 'hidden'
+    | 'block'
     | 'inline-block'
     // Flexbox Layout
     | 'flex'
-    | 'flex-1'
     | 'flex-col'
     | 'flex-row'
     | 'flex-wrap'
+    | 'flex-nowrap'
+    | 'flex-1'
     // Flexbox Alignment
+    | 'items-start'
     | 'items-center'
     | 'items-end'
-    | 'items-start'
-    | 'justify-between'
+    | 'justify-start'
     | 'justify-center'
     | 'justify-end'
-    | 'justify-start'
+    | 'justify-between'
     // Gap
-    | 'gap-l'
-    | 'gap-m'
     | 'gap-none'
     | 'gap-s'
+    | 'gap-m'
+    | 'gap-l'
     // Margin
     | 'm-0'
+    | 'mt-0'
+    | 'mt-s'
+    | 'mt-m'
+    | 'mt-l'
     | 'mb-0'
-    | 'mb-l'
-    | 'mb-m'
     | 'mb-s'
+    | 'mb-m'
+    | 'mb-l'
     | 'ml-auto'
     | 'mr-auto'
-    | 'mt-0'
     | 'mx-auto'
     // Padding
     | 'p-0'
-    | 'p-l'
-    | 'p-m'
     | 'p-s'
+    | 'p-m'
+    | 'p-l'
     // Sizing
-    | 'aspect-square'
+    | 'w-full'
+    | 'w-fit'
     | 'h-full'
+    | 'aspect-square'
     | 'rounded-ellipse'
     | 'rounded-pill'
-    | 'w-fit'
-    | 'w-full'
-    // Position
-    | 'bottom-0'
-    | 'bottom-l'
-    | 'bottom-m'
-    | 'bottom-s'
-    | 'center'
-    | 'center-x'
-    | 'center-y'
-    | 'fixed'
-    | 'left-0'
-    | 'left-l'
-    | 'left-m'
-    | 'left-s'
-    | 'right-0'
-    | 'right-l'
-    | 'right-m'
-    | 'right-s'
-    | 'top-0'
-    | 'top-l'
-    | 'top-m'
-    | 'top-s'
-    | 'z-high'
-    | 'z-low'
-    | 'z-mid'
     // Text & Typography
-    | 'font-bold'
-    | 'font-semibold'
-    | 'text-center'
     | 'text-left'
-    | 'text-muted'
+    | 'text-center'
     | 'text-right'
     | 'text-secondary'
+    | 'text-muted'
+    | 'font-semibold'
+    | 'font-bold'
     | 'truncate'
-    // Shadow
-    | 'shadow'
-    | 'shadow-lg'
-    | 'shadow-none'
     // Interactive
-    | 'cursor-not-allowed'
-    | 'cursor-pointer'
-    | 'opacity-50'
     | 'overflow-auto'
+    | 'overflow-hidden'
+    | 'cursor-pointer'
+    | 'cursor-not-allowed'
+    | 'opacity-50'
+    // Position
+    | 'relative'
+    | 'absolute'
+    | 'fixed'
+    | 'top-0'
+    | 'top-s'
+    | 'top-m'
+    | 'top-l'
+    | 'bottom-0'
+    | 'bottom-s'
+    | 'bottom-m'
+    | 'bottom-l'
+    | 'left-0'
+    | 'left-s'
+    | 'left-m'
+    | 'left-l'
+    | 'right-0'
+    | 'right-s'
+    | 'right-m'
+    | 'right-l'
+    | 'center-x'
+    | 'center-y'
+    | 'center'
+    // Z-index
+    | 'z-low'
+    | 'z-mid'
+    | 'z-high'
+    // Shadow
+    | 'shadow-none'
+    | 'shadow'
+    | 'shadow-l'
     // Component-Specific
     | 'accordion-compact'
     | 'sidebar-compact'
-    | 'table-center'
-    | 'table-compact'
     | 'table-fit'
+    | 'table-center'
     | 'table-right'
+    | 'table-compact'
     | 'table-striped';
 
 /** ClassName value with autocomplete (string & {}) trick prevents union collapse */
@@ -563,7 +571,12 @@ class ClientApp {
     }
 
     /** Process event handler and mutate, generate ID if needed */
-    private processEvent<T extends BaseOptions>(options: T, defaultPrefix?: string, handlerKey: string = 'onclick', eventType: string = 'click'): void {
+    private processEvent<T extends BaseOptions>(
+        options: T,
+        defaultPrefix?: string,
+        handlerKey: string = 'onclick',
+        eventType: string = 'click'
+    ): void {
         if (!options[handlerKey]) return;
 
         if (!options.id) {
@@ -1003,7 +1016,7 @@ class ClientApp {
 
                 // Switch active tab
                 tabs.forEach((t) => t.classList.remove('active'));
-                panels.forEach((p) => (p as HTMLElement).hidden = true);
+                panels.forEach((p) => ((p as HTMLElement).hidden = true));
 
                 tab.classList.add('active');
                 if (panels[index]) (panels[index] as HTMLElement).hidden = false;
@@ -1196,8 +1209,8 @@ class ClientApp {
             })
             .join('');
 
-        const btnText = text ? `${text} ▼` : '▼'
-        const button = this.button(btnText, { id: buttonId, ...normalizedOptions })
+        const btnText = text ? `${text} ▼` : '▼';
+        const button = this.button(btnText, { id: buttonId, ...normalizedOptions });
 
         return `
         <div id="${containerId}" class="dropdown">
@@ -1330,12 +1343,12 @@ class ClientApp {
     // SSE (Server-Sent Events)
     // ========================================
 
-    /** Connect to SSE endpoint 
-    * @example
-    * const es = this.sse('/api/events');
-    * es.addEventListener('message', e => console.log(e.data));
-    * es.addEventListener('error', () => es.close());
-    */
+    /** Connect to SSE endpoint
+     * @example
+     * const es = this.sse('/api/events');
+     * es.addEventListener('message', e => console.log(e.data));
+     * es.addEventListener('error', () => es.close());
+     */
     sse(endpoint: string, initDict?: EventSourceInit): EventSource {
         const eventSource = new EventSource(endpoint, initDict);
         return eventSource;

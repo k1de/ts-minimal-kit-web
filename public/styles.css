@@ -3,7 +3,7 @@
     /* Core color palette - minimal set */
     --primary: #5577ff; /* #3993e1 */
     --success: #2f9e44;
-    --danger: #e03131; 
+    --danger: #e03131;
     --warning: #e67700;
     --shadow-color: black;
 
@@ -47,7 +47,7 @@
     --shadow-l: 2px 4px 8px color-mix(in srgb, var(--shadow-color) 8%, transparent);
 
     /* Utils */
-    --hover-image: linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.1));
+    --hover-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1));
 }
 
 /* Dark theme */
@@ -392,7 +392,7 @@ ol {
 .input,
 .select,
 .textarea {
-    width: 100%;
+    max-width: 100%;
     padding: var(--space-s) var(--space-m);
     border: 1px solid var(--border);
     border-radius: var(--radius);
@@ -413,14 +413,14 @@ ol {
     -webkit-appearance: none;
     -moz-appearance: none;
     padding-right: 30px;
-    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23999' d='M6 9L1 4h10z'/%3E%3C/svg%3E") no-repeat right 10px center;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23999' d='M6 9L1 4h10z'/%3E%3C/svg%3E")
+        no-repeat right 10px center;
     background-size: 12px;
     cursor: pointer;
 }
 
 .textarea {
     resize: vertical;
-    min-height: 100px;
 }
 
 /* Checkbox & Radio */
@@ -461,7 +461,7 @@ ol {
 }
 
 .btn:hover {
-    background-image: var(--hover-image)
+    background-image: var(--hover-image);
 }
 
 .btn:disabled {
@@ -651,7 +651,6 @@ pre code {
     border-radius: var(--radius);
     border: 1px solid;
     transition: var(--transition);
-    
     background: var(--surface);
     border-color: var(--text-secondary);
     color: var(--text-secondary);
@@ -665,13 +664,13 @@ pre code {
     width: max-content;
     max-width: min(480px, calc(100vw - var(--space-l) * 2));
     animation: slideIn 200ms ease;
-    box-shadow: var(--shadow-l);    
+    box-shadow: var(--shadow-l);
     /* min-width: 120px; */
     /* cursor: pointer; */
 }
 
 .toast:hover {
-    background-image: var(--hover-image)
+    background-image: var(--hover-image);
 }
 
 /* Notification variants using CSS variables */
@@ -744,7 +743,7 @@ pre code {
 
 /* === Table === */
 .table {
-    width: 100%;
+    max-width: 100%;
     border-collapse: collapse;
 }
 
@@ -1059,13 +1058,6 @@ pre code {
     .toast {
         width: 100%;
         max-width: 100%;
-    }
-
-    /* Table responsive - horizontal scroll */
-    .table {
-        display: block;
-        overflow-x: auto;
-        white-space: nowrap;
     }
 
     /* Card responsive - reduce padding */
