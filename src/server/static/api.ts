@@ -86,8 +86,8 @@ export class ApiRouter {
     /**
      * Parse JSON body
      */
-    async parseBody(req: IncomingMessage): Promise<any> {
-        return new Promise((resolve, reject) => {
+    async parseBody<T = unknown>(req: IncomingMessage): Promise<T> {
+        return new Promise<T>((resolve, reject) => {
             let body = '';
             req.on('data', (chunk) => (body += chunk.toString()));
             req.on('end', () => {
