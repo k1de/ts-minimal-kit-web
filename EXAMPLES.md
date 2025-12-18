@@ -561,6 +561,22 @@ this.table(
         id: 'users-table',
     }
 );
+
+// Table with column styles (width, background)
+this.table(
+    [
+        ['John Doe', '25', '$75,000'],
+        ['Jane Smith', '30', '$82,000'],
+    ],
+    {
+        headers: ['Name', 'Age', 'Salary'],
+        styles: [
+            { width: '200px' },
+            { width: '60px' },
+            { width: '100px', background: 'var(--surface)' },
+        ],
+    }
+);
 ```
 
 ## Navigation & DOM

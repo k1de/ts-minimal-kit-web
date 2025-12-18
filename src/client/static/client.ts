@@ -323,6 +323,7 @@ interface TabsOptions extends BaseOptions {
 /** Table options */
 interface TableOptions extends Omit<BaseOptions, 'onclick'> {
     headers?: string[];
+    styles?: (StyleOptions | undefined)[];
 }
 
 // Feedback Interfaces
@@ -966,7 +967,7 @@ class ClientApp {
 
     /** Create a table */
     table(rows: string[] | string[][], options?: TableOptions): string {
-        const { headers, ...baseOptions } = options || ({} as TableOptions);
+        const { headers, styles, ...baseOptions } = options || ({} as TableOptions);
         const normalizedOptions = this.normalizeOptions(baseOptions);
         if (!normalizedOptions.id) normalizedOptions.id = this.generateId('table');
 
@@ -974,6 +975,15 @@ class ClientApp {
         const normalizedRows: string[][] = Array.isArray(rows[0])
             ? (rows as string[][])
             : (rows as string[]).map((item) => [item]);
+
+        // Build colgroup if styles specified
+        const colgroup = styles
+            ? `<colgroup>${styles.map((s) => {
+                  if (!s) return '<col>';
+                  const style = this.normalizeStyle(s);
+                  return style ? `<col style="${style}">` : '<col>';
+              }).join('')}</colgroup>`
+            : '';
 
         const headerRow = headers ? headers.map((h) => `<th>${h}</th>`).join('') : '';
         const bodyRows = normalizedRows
@@ -984,6 +994,7 @@ class ClientApp {
 
         return `
             <table${attrs}>
+                ${colgroup}
                 ${headers ? `<thead><tr>${headerRow}</tr></thead>` : ''}
                 <tbody id="${normalizedOptions.id}-body">${bodyRows}</tbody>
             </table>
