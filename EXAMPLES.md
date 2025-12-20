@@ -459,18 +459,42 @@ this.div(
         this.input({ id: 'email', type: 'email' })
 );
 
-// Form elements with onchange (el is typed automatically)
-this.select({
-    options: [{ value: 'us', text: 'US' }, { value: 'uk', text: 'UK' }],
-    onchange: (el) => console.log(el.value), // el: HTMLSelectElement
+// Text inputs (input, textarea): oninput, onchange, onfocus, onblur, onkeydown
+this.input({
+    placeholder: 'Type here...',
+    oninput: (el) => console.log(el.value),      // on every keystroke
+    onchange: (el) => console.log(el.value),     // on blur after change
+    onfocus: () => console.log('focused'),
+    onblur: () => console.log('blurred'),
+    onkeydown: (el, e) => {
+        if (e.key === 'Enter') console.log('Enter pressed');
+    },
 });
-this.input({ onchange: (el) => console.log(el.value) }); // el: HTMLInputElement
-this.textarea({ onchange: (el) => console.log(el.value) }); // el: HTMLTextAreaElement
-this.checkbox({ label: 'Agree', onchange: (el) => console.log(el.checked) }); // el: HTMLInputElement
+
+this.textarea({
+    placeholder: 'Message...',
+    oninput: (el) => console.log(el.value),
+    onkeydown: (el, e) => {
+        if (e.key === 'Escape') el.blur();
+    },
+});
+
+// Check inputs (checkbox, radioGroup) - onchange only
+this.checkbox({
+    label: 'I agree',
+    onchange: (el) => console.log(el.checked), // el: HTMLInputElement
+});
+
 this.radioGroup({
     name: 'size',
     options: [{ value: 's', text: 'S' }, { value: 'l', text: 'L' }],
-    onchange: (el) => console.log(el.value), // el: HTMLInputElement
+    onchange: (el) => console.log(el.value),   // el: HTMLInputElement
+});
+
+// Select - onchange only
+this.select({
+    options: [{ value: 'us', text: 'US' }, { value: 'uk', text: 'UK' }],
+    onchange: (el) => console.log(el.value),   // el: HTMLSelectElement
 });
 ```
 
