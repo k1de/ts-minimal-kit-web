@@ -1522,6 +1522,7 @@ export type {
     SidebarOptions,
     SidebarSection,
     TabItem,
+    TabsOptions,
     TableOptions,
     TextareaOptions,
     ToastOptions,
