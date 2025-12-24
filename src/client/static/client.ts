@@ -340,6 +340,7 @@ interface TabItem {
 /** Tabs options */
 interface TabsOptions extends BaseOptions {
     activeIndex?: number;
+    onchange?: EventHandler<HTMLDivElement>;
 }
 
 /** Table options */
@@ -1030,6 +1031,7 @@ class ClientApp {
         const normalizedOptions = this.normalizeOptions(options || ({} as TabsOptions));
         if (!normalizedOptions.id) normalizedOptions.id = this.generateId('tabs');
         this.processEvent(normalizedOptions, 'tabs', 'onclick', 'click');
+        this.processEvent(normalizedOptions, 'tabs', 'onchange', 'change');
         const activeIndex = Math.max(0, Math.min(options?.activeIndex ?? 0, items.length - 1));
 
         setTimeout(() => {
@@ -1056,6 +1058,10 @@ class ClientApp {
 
                 tab.classList.add('active');
                 if (panels[index]) (panels[index] as HTMLElement).hidden = false;
+
+                // Dispatch change event with index in dataset
+                container.dataset.activeIndex = String(index);
+                container.dispatchEvent(new Event('change'));
             };
         }, 0);
 
@@ -1079,7 +1085,7 @@ class ClientApp {
         const attrs = this.buildAttrs(normalizedOptions);
 
         return `
-            <div${attrs}>
+            <div${attrs} data-active-index="${activeIndex}">
                 <div class="tabs">${tabElements}</div>
                 <div class="tab-content">${panels}</div>
             </div>

@@ -394,6 +394,20 @@ this.tabs(
     { activeIndex: 1 }
 );
 
+// Tabs with onchange
+this.tabs(
+    [
+        { label: 'Tab 1', content: 'Content 1' },
+        { label: 'Tab 2', content: 'Content 2' },
+    ],
+    {
+        onchange: (el) => {
+            const index = parseInt(el.dataset.activeIndex!);
+            console.log('Tab changed:', index);
+        },
+    }
+);
+
 // Grid (2-8 columns)
 this.grid([this.card('Content 1'), this.card('Content 2'), this.card('Content 3')], { columns: 3 });
 
