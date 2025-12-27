@@ -162,6 +162,16 @@ type ThemeVariant = 'dark' | 'light';
 type ToastType = NotificationType;
 type QueryParams = Record<string, string | number | boolean | null | undefined>;
 
+/** API request configuration */
+interface ApiConfig {
+    url: string;
+    method?: string;
+    data?: any;
+    params?: QueryParams;
+    signal?: AbortSignal;
+    headers?: Record<string, string>;
+}
+
 // ========================================
 // INTERFACES
 // ========================================
@@ -1409,11 +1419,17 @@ class ClientApp {
     // ========================================
 
     /** Make API request */
-    async api(method: string, endpoint: string, data?: any, params?: QueryParams): Promise<any> {
-        let url = endpoint;
-        if (params) {
+    async api(config: ApiConfig): Promise<any>;
+    async api(url: string, config?: Omit<ApiConfig, 'url'>): Promise<any>;
+    async api(urlOrConfig: string | ApiConfig, config?: Omit<ApiConfig, 'url'>): Promise<any> {
+        const cfg: ApiConfig = typeof urlOrConfig === 'string'
+            ? { url: urlOrConfig, ...config }
+            : urlOrConfig;
+
+        let url = cfg.url;
+        if (cfg.params) {
             const query = new URLSearchParams(
-                Object.entries(params)
+                Object.entries(cfg.params)
                     .filter(([_, v]) => v !== undefined && v !== null && v !== false && v === v)
                     .map(([k, v]) => [k, String(v)])
             ).toString();
@@ -1421,12 +1437,13 @@ class ClientApp {
         }
 
         const options: RequestInit = {
-            method,
-            headers: { 'Content-Type': 'application/json' },
+            method: cfg.method || 'GET',
+            headers: { 'Content-Type': 'application/json', ...cfg.headers },
+            signal: cfg.signal,
         };
 
-        if (data && ['POST', 'PUT', 'PATCH'].includes(method)) {
-            options.body = JSON.stringify(data);
+        if (cfg.data && ['POST', 'PUT', 'PATCH'].includes(options.method!)) {
+            options.body = JSON.stringify(cfg.data);
         }
 
         try {
@@ -1439,29 +1456,32 @@ class ClientApp {
 
             return await response.text();
         } catch (error) {
+            if (error instanceof DOMException && error.name === 'AbortError') {
+                throw error;
+            }
             console.error('API request failed:', error);
             throw error;
         }
     }
 
     /** DELETE request */
-    async apiDelete(endpoint: string, params?: QueryParams): Promise<any> {
-        return this.api('DELETE', endpoint, undefined, params);
+    async apiDelete(url: string, config?: Omit<ApiConfig, 'url' | 'method'>): Promise<any> {
+        return this.api({ ...config, url, method: 'DELETE' });
     }
 
     /** GET request */
-    async apiGet(endpoint: string, params?: QueryParams): Promise<any> {
-        return this.api('GET', endpoint, undefined, params);
+    async apiGet(url: string, config?: Omit<ApiConfig, 'url' | 'method'>): Promise<any> {
+        return this.api({ ...config, url, method: 'GET' });
     }
 
     /** POST request */
-    async apiPost(endpoint: string, data?: any, params?: QueryParams): Promise<any> {
-        return this.api('POST', endpoint, data, params);
+    async apiPost(url: string, config?: Omit<ApiConfig, 'url' | 'method'>): Promise<any> {
+        return this.api({ ...config, url, method: 'POST' });
     }
 
     /** PUT request */
-    async apiPut(endpoint: string, data?: any, params?: QueryParams): Promise<any> {
-        return this.api('PUT', endpoint, data, params);
+    async apiPut(url: string, config?: Omit<ApiConfig, 'url' | 'method'>): Promise<any> {
+        return this.api({ ...config, url, method: 'PUT' });
     }
 }
 
@@ -1526,4 +1546,5 @@ export type {
     TableOptions,
     TextareaOptions,
     ToastOptions,
+    ApiConfig,
 };
