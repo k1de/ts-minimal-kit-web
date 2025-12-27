@@ -1,6 +1,6 @@
 {
     "name": "ts-minimal-kit-web",
-    "version": "2.9.0",
+    "version": "3.0.0",
     "description": "",
     "type": "module",
     "main": "./dist/app.js",
