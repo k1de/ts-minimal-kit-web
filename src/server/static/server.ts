@@ -11,6 +11,7 @@ import { compressors, compressibleTypes, getEncoding } from './compress.js';
 const { values: args } = parseArgs({
     options: {
         port: { type: 'string', short: 'p' },
+        host: { type: 'string', short: 'h' },
         public: { type: 'string', short: 'd' },
     },
     strict: false,
@@ -18,6 +19,7 @@ const { values: args } = parseArgs({
 
 // Configuration: CLI > ENV > defaults
 const PORT = Number(args.port) || Number(process.env.PORT) || 3000;
+const HOST = (typeof args.host === 'string' && args.host) || process.env.HOST || undefined;
 const PUBLIC_DIR = resolve((typeof args.public === 'string' && args.public) || process.env.PUBLIC_DIR || 'public');
 
 // Types
@@ -116,17 +118,15 @@ const server = createServer(async (req: IncomingMessage, res: ServerResponse) =>
 });
 
 // Start server
-server.listen(PORT, () => {
+server.listen(PORT, HOST, () => {
+    const host = HOST || 'localhost';
+    const dim = '\x1b[90m';
+    const cyan = '\x1b[36m';
+    const reset = '\x1b[0m';
     console.log(`
-╔════════════════════════════════════╗
-║         ts-minimal-kit-web         ║
-╠════════════════════════════════════╣
-║                                    ║
-║  Server:  http://localhost:${PORT}${' '.repeat(8 - String(PORT).length)}║
-║                                    ║
-╚════════════════════════════════════╝
+  ${dim}ts-minimal-kit-web${reset}
 
-Press Ctrl+C to stop the server
+  ${cyan}➜${reset}  http://${host}:${PORT}
     `);
 });
 
