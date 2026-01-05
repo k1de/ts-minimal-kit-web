@@ -110,7 +110,7 @@ body {
 
 /* === Typography & Block Elements === */
 /* Base margin-bottom for common elements (scoped to body, :where for low specificity) */
-body :where(h1, h2, h3, h4, h5, h6, p, ul, ol, hr, img, code, pre, div),
+body :where(h1, h2, h3, h4, h5, h6, p, ul, ol, hr, code, pre, div),
 body :where(.card, .grid, .flex, .tabs, .input, .textarea, .select),
 body :where(.checkbox, .radio, .alert, .table, .btn, .dropdown),
 body :where(.code, .code-block, .accordion) {
