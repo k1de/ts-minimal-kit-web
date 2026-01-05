@@ -108,10 +108,6 @@ body {
     min-height: 100vh;
 }
 
-img {
-    vertical-align: middle;
-}
-
 /* === Typography & Block Elements === */
 /* Base margin-bottom for common elements (scoped to body, :where for low specificity) */
 body :where(h1, h2, h3, h4, h5, h6, p, ul, ol, hr, code, pre, div),
@@ -500,6 +496,8 @@ ol {
     color: white;
 }
 
+.btn img { vertical-align: middle; }
+
 /* === Dropdown === */
 .dropdown {
     position: relative;
@@ -779,6 +777,8 @@ pre code {
 .table tr:hover {
     background: var(--bg-secondary);
 }
+
+.table img { vertical-align: middle; }
 
 /* === Tabs === */
 .tabs {
