@@ -329,6 +329,12 @@ interface GridOptions extends BaseOptions {
     columns?: GridColumns;
 }
 
+/** Canvas options */
+interface CanvasOptions extends BaseOptions {
+    width?: number;
+    height?: number;
+}
+
 /** Image options */
 interface ImageOptions extends BaseOptions {
     alt?: string;
@@ -981,6 +987,15 @@ class ClientApp {
         return `<div${attrs}>${items.join('')}</div>`;
     }
 
+    /** Create a canvas element */
+    canvas(options?: CanvasOptions): string {
+        const normalizedOptions = this.normalizeOptions(options);
+        if (!normalizedOptions.id) normalizedOptions.id = this.generateId('canvas');
+        this.processEvent(normalizedOptions, 'canvas', 'onclick', 'click');
+        const attrs = this.buildAttrs(normalizedOptions);
+        return `<canvas${attrs}></canvas>`;
+    }
+
     /** Create an image element */
     image(src: string, options?: ImageOptions): string {
         const normalizedOptions = this.normalizeOptions({ ...options, src });
@@ -1522,6 +1537,7 @@ export type {
     BaseOptions,
     StylingOptions,
     ButtonOptions,
+    CanvasOptions,
     CheckboxOptions,
     CodeOptions,
     DropdownItem,

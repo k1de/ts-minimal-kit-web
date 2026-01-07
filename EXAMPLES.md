@@ -268,6 +268,7 @@ this.text('Styled text', {
 // Basic containers
 this.div('Content in div', { id: 'my-div', className: 'custom-class' });
 this.span('Inline text', { className: 'highlight' });
+this.canvas({ id: 'chart', width: 400, height: 200 }); // for Chart.js, etc.
 
 // Links
 this.link('Click here', {
