@@ -411,7 +411,11 @@ ol {
 }
 
 .select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
     cursor: pointer;
+    border-bottom-color: var(--primary);
 }
 
 .textarea {
