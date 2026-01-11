@@ -439,11 +439,14 @@ class ClientApp {
 
     /** Initialize the app */
     private init(): void {
-        this.initHashNavigation();
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => this.start());
+            document.addEventListener('DOMContentLoaded', () => {
+                this.start();
+                this.initHashNavigation();
+            });
         } else {
             this.start();
+            this.initHashNavigation();
         }
     }
 
