@@ -679,7 +679,7 @@ this.toggle('element-id', false); // Hide element
 this.val('input-id');             // Get input value
 this.setVal('input-id', 'new');   // Set input value
 
-// Theme
+// Theme (persists to localStorage)
 this.toggleTheme();           // Toggle dark/light
 this.toggleTheme('dark');     // Set to dark
 this.toggleTheme('light');    // Set to light

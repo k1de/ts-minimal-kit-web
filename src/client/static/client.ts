@@ -1411,6 +1411,7 @@ class ClientApp {
     toggleTheme(theme?: ThemeVariant): ThemeVariant {
         const newTheme = theme ?? (this.getTheme() === 'dark' ? 'light' : 'dark');
         document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
         return newTheme;
     }
 

@@ -1,11 +1,10 @@
 // showcase.ts - Showcase application demonstrating framework capabilities
 
 import { ClientApp } from './static/client.js';
-import type { ThemeVariant, FlexDirection, Spacing } from './static/client.js';
+import type { FlexDirection, Spacing } from './static/client.js';
 
 class ShowcaseApp extends ClientApp {
     override start(): void {
-        this.loadTheme();
 
         //Title
         this.setTitle('SHOWCASE');
@@ -72,7 +71,7 @@ class ShowcaseApp extends ClientApp {
             this.flex(
                 [
                     this.button('🌓', {
-                        onclick: () => this.swapThemeAndSave(),
+                        onclick: () => this.toggleTheme(),
                         className: ['aspect-square', 'w-full']
                     }),
                     this.button('☰', {
@@ -147,16 +146,6 @@ class ShowcaseApp extends ClientApp {
             default:
                 this.showHome();
         }
-    }
-
-    private loadTheme(): void {
-        const theme = localStorage.getItem('theme') as ThemeVariant;
-        if (theme) this.toggleTheme(theme);
-    }
-
-    private swapThemeAndSave(): void {
-        const theme = this.toggleTheme();
-        localStorage.setItem('theme', theme);
     }
 
     private showHome(): void {
