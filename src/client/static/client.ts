@@ -1484,22 +1484,22 @@ class ClientApp {
     }
 
     /** DELETE request */
-    async apiDelete(url: string, config?: Omit<ApiConfig, 'url' | 'method'>): Promise<any> {
+    async apiDelete<T = any>(url: string, config?: Omit<ApiConfig, 'url' | 'method'>): Promise<T> {
         return this.api({ ...config, url, method: 'DELETE' });
     }
 
     /** GET request */
-    async apiGet(url: string, config?: Omit<ApiConfig, 'url' | 'method'>): Promise<any> {
+    async apiGet<T = any>(url: string, config?: Omit<ApiConfig, 'url' | 'method'>): Promise<T> {
         return this.api({ ...config, url, method: 'GET' });
     }
 
     /** POST request */
-    async apiPost(url: string, config?: Omit<ApiConfig, 'url' | 'method'>): Promise<any> {
+    async apiPost<T = any>(url: string, config?: Omit<ApiConfig, 'url' | 'method'>): Promise<T> {
         return this.api({ ...config, url, method: 'POST' });
     }
 
     /** PUT request */
-    async apiPut(url: string, config?: Omit<ApiConfig, 'url' | 'method'>): Promise<any> {
+    async apiPut<T = any>(url: string, config?: Omit<ApiConfig, 'url' | 'method'>): Promise<T> {
         return this.api({ ...config, url, method: 'PUT' });
     }
 }

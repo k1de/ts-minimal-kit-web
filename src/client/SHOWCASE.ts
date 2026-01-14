@@ -594,10 +594,10 @@ console.log(message);`,
                         title: 'API Example',
                         content: this.code(
                             `// Fetch users
-const users = await this.apiGet('/users');
+const users = await this.apiGet('/api/users');
 
 // Create user
-await this.apiPost('/users', { name: 'John' });`,
+await this.apiPost('/api/users', { data: { name: 'John' } });`,
                             { block: true, language: 'javascript' }
                         ),
                     },

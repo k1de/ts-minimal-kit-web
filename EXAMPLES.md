@@ -55,16 +55,19 @@ new App();
 ```typescript
 // REST methods
 await this.apiGet('/api/users');
-await this.apiPost('/api/users', { name: 'John' });
-await this.apiPut('/api/users?id=1', { name: 'Jane' });
-await this.apiDelete('/api/users?id=1');
+await this.apiPost('/api/users', { data: { name: 'John' } });
+await this.apiPut('/api/users/1', { data: { name: 'Jane' } });
+await this.apiDelete('/api/users/1');
 
-// With query params (optional)
-await this.apiGet('/api/users', { page: 1, active: true });
+// With query params
+await this.apiGet('/api/users', { params: { page: 1, active: true } });
 // → GET /api/users?page=1&active=true
 
-// Generic method for any HTTP verb
-await this.api('PATCH', '/api/users?id=1', { active: true });
+// With type inference
+const user = await this.apiGet<User>('/api/users/1');
+
+// Generic api() for any HTTP verb
+await this.api('/api/users/1', { method: 'PATCH', data: { active: true } });
 
 // SSE (Server-Sent Events)
 const es = this.sse('/api/events');
