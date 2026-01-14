@@ -188,8 +188,8 @@ interface StylingOptions {
 }
 
 /** Base options for all UI components */
-interface BaseOptions extends StylingOptions {
-    onclick?: EventHandler;
+interface BaseOptions<T extends HTMLElement = HTMLElement> extends StylingOptions {
+    onclick?: EventHandler<T>;
 }
 
 /** Base options for text input elements (input, textarea) */
@@ -212,7 +212,7 @@ interface SelectInputBaseOptions extends StylingOptions {
 }
 
 /** Navigation item options */
-interface NavItemOptions extends BaseOptions {
+interface NavItemOptions extends BaseOptions<HTMLAnchorElement> {
     href?: string;
 }
 
@@ -293,7 +293,7 @@ interface BadgeOptions extends BaseOptions {
 }
 
 /** Button options */
-interface ButtonOptions extends BaseOptions {
+interface ButtonOptions extends BaseOptions<HTMLButtonElement> {
     type?: ButtonType;
 }
 
@@ -330,19 +330,19 @@ interface GridOptions extends BaseOptions {
 }
 
 /** Canvas options */
-interface CanvasOptions extends BaseOptions {
+interface CanvasOptions extends BaseOptions<HTMLCanvasElement> {
     width?: number;
     height?: number;
 }
 
 /** Image options */
-interface ImageOptions extends BaseOptions {
+interface ImageOptions extends BaseOptions<HTMLImageElement> {
     alt?: string;
     loading?: 'lazy' | 'eager';
 }
 
 /** Link options */
-interface LinkOptions extends BaseOptions {
+interface LinkOptions extends BaseOptions<HTMLAnchorElement> {
     href: string;
     target?: string;
 }
@@ -360,7 +360,7 @@ interface TabsOptions extends BaseOptions {
 }
 
 /** Table options */
-interface TableOptions extends BaseOptions {
+interface TableOptions extends BaseOptions<HTMLTableElement> {
     headers?: string[];
     styles?: (StyleOptions | undefined)[];
 }
