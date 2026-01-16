@@ -205,6 +205,7 @@ div {
     align-items: center;
     box-shadow: var(--shadow);
     z-index: 0;
+    overflow: hidden;
 }
 
 .nav ul {
@@ -224,6 +225,8 @@ div {
     color: var(--primary);
     padding: var(--space-s) var(--space-m);
     margin-bottom: 0;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .nav-menu {
@@ -231,6 +234,9 @@ div {
     list-style: none;
     margin-left: auto;
     margin-bottom: 0;
+    min-width: 0;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .nav-item {
@@ -239,6 +245,7 @@ div {
     padding: var(--space-s) var(--space-m);
     border-radius: var(--radius);
     transition: var(--transition);
+    white-space: nowrap;
 }
 
 .nav-item:hover {
@@ -584,6 +591,7 @@ pre {
     padding: var(--space-s);
     border-radius: var(--radius);
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
     border: 1px solid var(--border);
 }
 
@@ -787,6 +795,7 @@ pre code {
     border-bottom: 1px solid var(--border);
     display: flex;
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
     margin-bottom: 0;
 }
 
