@@ -743,6 +743,11 @@ pre code {
 }
 
 /* === Table === */
+.table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
 .table {
     max-width: 100%;
     border-collapse: collapse;
@@ -781,12 +786,11 @@ pre code {
 .tabs {
     border-bottom: 1px solid var(--border);
     display: flex;
-    gap: var(--space-m);
-    margin-bottom: 0; /* Remove margin - tab-content has padding */
+    overflow-x: auto;
+    margin-bottom: 0;
 }
 
 .tab {
-    padding: var(--space-s) var(--space-m);
     color: var(--text-secondary);
     text-decoration: none;
     border-bottom: 2px solid transparent;
@@ -802,12 +806,8 @@ pre code {
     border-bottom-color: var(--primary);
 }
 
-.tab-content {
-    padding: var(--space-l);
-}
-
 .tab-panel {
-    color: var(--text);
+    margin-bottom: 0;
 }
 
 /* === Overlay Container === */
@@ -817,9 +817,9 @@ pre code {
     left: 0;
     right: 0;
     bottom: 0;
-    margin-bottom: 0;
     pointer-events: none;
     z-index: 1400;
+    margin-bottom: 0;
 }
 
 .overlay-container > * {

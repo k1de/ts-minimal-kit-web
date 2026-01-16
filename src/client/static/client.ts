@@ -353,9 +353,22 @@ interface TabItem {
     content: string;
 }
 
+/** Tab button options */
+interface TabButtonOptions extends BaseOptions<HTMLAnchorElement> {
+    padding?: Spacing;
+}
+
+/** Tab panel options */
+interface TabPanelOptions extends BaseOptions {
+    padding?: Spacing;
+}
+
 /** Tabs options */
 interface TabsOptions extends BaseOptions {
     activeIndex?: number;
+    gap?: Spacing;
+    tab?: TabButtonOptions;
+    panel?: TabPanelOptions;
     onchange?: EventHandler<HTMLDivElement>;
 }
 
@@ -976,7 +989,7 @@ class ClientApp {
         const { gap = 'm', direction = 'row', ...baseOptions } = options || ({} as FlexOptions);
         const normalizedOptions = this.normalizeOptions(baseOptions);
         this.processEvent(normalizedOptions, 'flex', 'onclick', 'click');
-        const mainClass = `flex flex-${direction} gap-${gap}`;
+        const mainClass = gap === 'none' ? `flex flex-${direction}` : `flex flex-${direction} gap-${gap}`;
         const attrs = this.buildAttrs(normalizedOptions, mainClass);
         return `<div${attrs}>${items.join('')}</div>`;
     }
@@ -1019,9 +1032,12 @@ class ClientApp {
 
     /** Create a table */
     table(rows: string[] | string[][], options?: TableOptions): string {
-        const { headers, styles, ...baseOptions } = options || ({} as TableOptions);
-        const normalizedOptions = this.normalizeOptions(baseOptions);
-        if (!normalizedOptions.id) normalizedOptions.id = this.generateId('table');
+        const { headers, styles, id, ...tableOptions } = options || ({} as TableOptions);
+        const normalizedOptions = this.normalizeOptions(tableOptions);
+        const wrapperId = id || this.generateId('table');
+        const tableId = `${wrapperId}-table`;
+
+        // onclick goes to table
         this.processEvent(normalizedOptions, 'table', 'onclick', 'click');
 
         // Normalize rows to string[][]
@@ -1043,33 +1059,42 @@ class ClientApp {
             .map((row) => `<tr>${row.map((cell) => `<td>${cell}</td>`).join('')}</tr>`)
             .join('');
 
-        const attrs = this.buildAttrs(normalizedOptions, 'table');
+        // Wrapper: id + table-wrapper class
+        // Table: className, style + table class
+        const tableAttrs = this.buildAttrs(normalizedOptions, 'table');
 
         return `
-            <table${attrs}>
-                ${colgroup}
-                ${headers ? `<thead><tr>${headerRow}</tr></thead>` : ''}
-                <tbody id="${normalizedOptions.id}-body">${bodyRows}</tbody>
-            </table>
+            <div id="${wrapperId}" class="table-wrapper">
+                <table${tableAttrs} id="${tableId}">
+                    ${colgroup}
+                    ${headers ? `<thead><tr>${headerRow}</tr></thead>` : ''}
+                    <tbody id="${tableId}-body">${bodyRows}</tbody>
+                </table>
+            </div>
         `;
     }
 
     /** Create tabs */
     tabs(items: TabItem[], options?: TabsOptions): string {
-        const normalizedOptions = this.normalizeOptions(options || ({} as TabsOptions));
+        const { gap = 'none', tab, panel, ...baseOptions } = options || ({} as TabsOptions);
+        const normalizedOptions = this.normalizeOptions(baseOptions);
         if (!normalizedOptions.id) normalizedOptions.id = this.generateId('tabs');
         this.processEvent(normalizedOptions, 'tabs', 'onclick', 'click');
         this.processEvent(normalizedOptions, 'tabs', 'onchange', 'change');
         const activeIndex = Math.max(0, Math.min(options?.activeIndex ?? 0, items.length - 1));
 
+        // Tab and panel options with defaults
+        const tabPadding = tab?.padding ?? 's';
+        const panelPadding = panel?.padding ?? 'm';
+        const tabOptions = this.normalizeOptions(tab);
+        const panelOptions = this.normalizeOptions(panel);
+
         setTimeout(() => {
             const container = this.get(normalizedOptions.id!);
             if (!container) return;
 
-            // One handler for entire container - only direct children
             const tabsRow = container.querySelector(':scope > .tabs');
-            const contentRow = container.querySelector(':scope > .tab-content');
-            if (!tabsRow || !contentRow) return;
+            if (!tabsRow) return;
 
             container.onclick = (e) => {
                 const tab = (e.target as HTMLElement).closest('.tab');
@@ -1077,7 +1102,7 @@ class ClientApp {
 
                 e.preventDefault();
                 const tabs = tabsRow.querySelectorAll(':scope > .tab');
-                const panels = contentRow.querySelectorAll(':scope > .tab-panel');
+                const panels = container.querySelectorAll(':scope > .tab-panel');
                 const index = Array.from(tabs).indexOf(tab);
 
                 // Switch active tab
@@ -1093,19 +1118,35 @@ class ClientApp {
             };
         }, 0);
 
+        // Tabs row class
+        const tabsClass = gap === 'none' ? 'tabs' : `tabs gap-${gap}`;
+
+        // Build tab elements
         const tabElements = items
             .map((item, i) => {
+                const isActive = i === activeIndex;
+                const baseClass = isActive ? 'tab active' : 'tab';
+                const paddingClass = tabPadding === 'none' ? '' : `p-${tabPadding}`;
+                const combinedClass = [baseClass, paddingClass, tabOptions.className].filter(Boolean).join(' ');
                 const tabAttrs = this.buildAttrs({
                     href: '#',
-                    className: i === activeIndex ? 'tab active' : 'tab',
+                    className: combinedClass,
+                    style: tabOptions.style,
                 });
                 return `<a${tabAttrs}>${item.label}</a>`;
             })
             .join('');
 
+        // Build panel elements
         const panels = items
             .map((item, i) => {
-                const panelAttrs = this.buildAttrs({ className: 'tab-panel' });
+                const baseClass = 'tab-panel';
+                const paddingClass = panelPadding === 'none' ? '' : `p-${panelPadding}`;
+                const combinedClass = [baseClass, paddingClass, panelOptions.className].filter(Boolean).join(' ');
+                const panelAttrs = this.buildAttrs({
+                    className: combinedClass,
+                    style: panelOptions.style,
+                });
                 return `<div${panelAttrs}${i !== activeIndex ? ' hidden' : ''}>${item.content}</div>`;
             })
             .join('');
@@ -1114,8 +1155,8 @@ class ClientApp {
 
         return `
             <div${attrs} data-active-index="${activeIndex}">
-                <div class="tabs">${tabElements}</div>
-                <div class="tab-content">${panels}</div>
+                <div class="${tabsClass}">${tabElements}</div>
+                ${panels}
             </div>
         `;
     }
