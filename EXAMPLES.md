@@ -58,6 +58,7 @@ await this.apiGet('/api/users');
 await this.apiPost('/api/users', { data: { name: 'John' } });
 await this.apiPut('/api/users/1', { data: { name: 'Jane' } });
 await this.apiDelete('/api/users/1');
+await this.apiOptions('/api/users');
 
 // With query params
 await this.apiGet('/api/users', { params: { page: 1, active: true } });
@@ -122,6 +123,13 @@ api.delete('/api/items', (req, res, url) => {
     const id = url.searchParams.get('id');
     // Process deletion...
     api.json(res, { id, deleted: true });
+});
+
+// OPTIONS endpoint (CORS preflight)
+api.options('/api/items', (req, res, url) => {
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    api.json(res, null, 204);
 });
 
 // Basic Auth

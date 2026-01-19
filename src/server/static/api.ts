@@ -83,6 +83,10 @@ export class ApiRouter {
         this.add('DELETE', path, handler);
     }
 
+    options(path: string, handler: Handler): void {
+        this.add('OPTIONS', path, handler);
+    }
+
     /**
      * Parse JSON body
      */

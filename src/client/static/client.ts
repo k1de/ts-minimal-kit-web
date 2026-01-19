@@ -1543,6 +1543,11 @@ class ClientApp {
     async apiPut<T = any>(url: string, config?: Omit<ApiConfig, 'url' | 'method'>): Promise<T> {
         return this.api({ ...config, url, method: 'PUT' });
     }
+
+    /** OPTIONS request */
+    async apiOptions<T = any>(url: string, config?: Omit<ApiConfig, 'url' | 'method'>): Promise<T> {
+        return this.api({ ...config, url, method: 'OPTIONS' });
+    }
 }
 
 // ========================================
