@@ -335,6 +335,7 @@ div {
     border-radius: var(--radius-l);
     padding: var(--space-l);
     box-shadow: var(--shadow-l);
+    overflow: hidden;
 }
 
 /* Remove shadows from card children */
@@ -1075,6 +1076,11 @@ pre code {
     /* Card responsive - reduce padding */
     .card {
         padding: var(--space-m);
+    }
+
+    /* Force flex-1 items to stack vertically */
+    .flex-1 {
+        min-width: 100%;
     }
 }
 
