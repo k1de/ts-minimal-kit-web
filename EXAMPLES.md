@@ -681,6 +681,10 @@ this.get('element-id');           // Get element
 this.updateText('span-id', 'New'); // Update text
 this.updateHtml('div-id', '<b>HTML</b>'); // Update HTML
 
+// Escape untrusted text before inserting into HTML (prevents XSS)
+this.escapeHtml('<img onerror=alert(1)>'); // → '&lt;img onerror=alert(1)&gt;'
+this.div(this.escapeHtml(name));           // escape leaf text; builders compose structure
+
 // Visibility
 this.toggle('element-id');        // Toggle visibility
 this.toggle('element-id', true);  // Show element
@@ -705,3 +709,4 @@ this.on('button-id', 'click', (e) => console.log('Clicked'));
 -   **Handler Signature (v1.1.0+)**: All API handlers and hooks receive `(req, res, url)`
 -   **Static Files**: Don't modify files in `static/` directories
 -   **TypeScript**: Separate configs for server (Node.js) and client (Browser)
+-   **XSS**: Element builders interpolate `content` as raw HTML so they can compose. Wrap any untrusted/external text (API data, user input) in `this.escapeHtml(...)` before passing it in.

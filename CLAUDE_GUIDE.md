@@ -185,6 +185,9 @@ this.toggle('id', visible); // Show/hide
 
 // ❌ Avoid direct DOM when helpers exist
 document.getElementById('id').innerHTML = '...';
+
+// ⚠️ Escape untrusted text before it reaches innerHTML (builders pass content as raw HTML)
+this.updateHtml('id', this.div(this.escapeHtml(externalName)));
 ```
 
 ---

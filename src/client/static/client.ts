@@ -1402,6 +1402,16 @@ class ClientApp {
         return `${prefix}-${++this.elementIdCounter}`;
     }
 
+    /** Escape text for safe insertion into HTML (content and attribute values). */
+    escapeHtml(value: string): string {
+        return value
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
     /** Get element by ID */
     get(id: string): HTMLElement | null {
         return document.getElementById(id);
