@@ -1,0 +1,8 @@
+{
+    // Editor-only root: maps each file to its project (server/client).
+    "files": [],
+    "references": [
+        { "path": "./tsconfig.server.json" },
+        { "path": "./tsconfig.client.json" }
+    ]
+}
