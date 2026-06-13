@@ -2,7 +2,7 @@
 
 import { createServer, IncomingMessage, ServerResponse } from 'node:http';
 import { promises as fs } from 'node:fs';
-import { join, extname, resolve } from 'node:path';
+import { join, extname, resolve, sep } from 'node:path';
 import { parseArgs } from 'node:util';
 import { api } from './api.js';
 import { compressors, compressibleTypes, getEncoding } from './compress.js';
@@ -53,8 +53,8 @@ async function serveStatic(req: IncomingMessage, res: ServerResponse, url: URL):
 
         const filePath = join(PUBLIC_DIR, pathname);
 
-        // Security: prevent directory traversal
-        if (!filePath.startsWith(PUBLIC_DIR)) {
+        // Security: prevent directory traversal (require separator so siblings like `public-secret` don't match)
+        if (filePath !== PUBLIC_DIR && !filePath.startsWith(PUBLIC_DIR + sep)) {
             res.writeHead(403, { 'Content-Type': 'text/plain' });
             res.end('403 Forbidden');
             return;
