@@ -39,6 +39,7 @@
     --space-s: 0.5rem;
     --space-m: 1rem;
     --space-l: 1.5rem;
+    --space-flow: var(--space-m); /* auto-margin between blocks; 0 disables, inherits per subtree */
 
     /* Sizing */
     --radius: 0.5rem;
@@ -116,11 +117,12 @@ body :where(.card, .grid, .flex, .tabs, .input, .textarea, .select),
 body :where(.checkbox, .radio, .alert, .table, .btn, .dropdown),
 body :where(.code, .code-block, .accordion) {
     margin-top: 0;
-    margin-bottom: var(--space-m);
+    margin-bottom: var(--space-flow);
 }
 
 /* Remove bottom margin from last child in containers */
 body div > :last-child,
+body summary > :last-child,
 body .main > :last-child,
 body .card > :last-child,
 body .modal > :last-child,

@@ -378,6 +378,25 @@ this.card(
 );
 ```
 
+### Auto-spacing
+
+Block elements and components get an automatic `margin-bottom: var(--space-flow)` (default `--space-m`). Control it via the CSS variable — it inherits, so it works globally or per subtree:
+
+```typescript
+// Disable for a subtree (inherited by all descendants)
+this.div(content, { style: '--space-flow: 0' });
+
+// Tighter rhythm for one container
+this.card(content, { style: '--space-flow: var(--space-s)' });
+```
+
+```css
+/* Disable or resize globally (your own CSS, or style="" on <body>) */
+:root {
+    --space-flow: 0;
+}
+```
+
 ### Available Utilities
 
 See complete list with definitions in **[public/utils.css](./public/utils.css)**

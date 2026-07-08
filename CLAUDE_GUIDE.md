@@ -124,6 +124,8 @@ this.dropdown('Menu', items, { id: 'my-dropdown' });
 
 **Don't add custom styles unless required.** All components have default design and spacing.
 
+Auto-spacing between blocks is driven by `--space-flow` (default `--space-m`). Set it to `0` on `:root`, `<body>`, or any container to disable — it inherits down the subtree.
+
 ```typescript
 // ✅ Use defaults
 this.button('Save');
