@@ -105,6 +105,19 @@ export class ApiRouter {
     }
 
     /**
+     * Required query parameters. If any missing — respond 400 {error:'<names> required'} and return null.
+     * Handler side: const q = api.requireQuery(res, url, 'a', 'b'); if (!q) return; // q.a, q.b
+     */
+    requireQuery<K extends string>(res: ServerResponse, url: URL, ...names: K[]): Record<K, string> | null {
+        const missing = names.filter((n) => !url.searchParams.get(n));
+        if (missing.length) {
+            this.json(res, { error: `${missing.join(', ')} required` }, 400);
+            return null;
+        }
+        return Object.fromEntries(names.map((n) => [n, url.searchParams.get(n)!])) as Record<K, string>;
+    }
+
+    /**
      * Send JSON response
      */
     json(res: ServerResponse, data?: object | string, status: number = 200, headers?: Record<string, string>): void {

@@ -103,6 +103,14 @@ api.get('/api/search', (req, res, url) => {
     api.json(res, { query, limit, results });
 });
 
+// Required query parameters (responds 400 {error:'from, to required'} when missing)
+api.get('/api/range', (req, res, url) => {
+    const q = api.requireQuery(res, url, 'from', 'to');
+    if (!q) return;
+    // Process...
+    api.json(res, { from: q.from, to: q.to });
+});
+
 // POST with body parsing
 api.post('/api/data', async (req, res, url) => {
     const body = await api.parseBody(req);
