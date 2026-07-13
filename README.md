@@ -111,6 +111,7 @@ npm run build:start:showcase  # Build and run showcase
 -   RESTful API router
 -   Rate limiting
 -   Request hooks (before/after)
+-   Response compression (br/gzip/deflate, tunable levels)
 -   Bearer and Basic Auth
 -   SSE streaming
 -   SPA support

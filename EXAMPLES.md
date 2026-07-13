@@ -214,6 +214,18 @@ hooks.after.push((req, res, url) => {
 });
 ```
 
+## Compression
+
+Static files and `api.jsonZip` are compressed on the fly (`br` > `gzip` > `deflate` by `Accept-Encoding`):
+
+```typescript
+import { compression } from './static/compress.js';
+
+compression.brotli = 9; // 0-11 (default 5; 11 too slow per-request)
+compression.gzip = 6; // 1-9 (default 4)
+compression.deflate = 6; // 1-9 (default 4)
+```
+
 ## Layout
 
 ```typescript
