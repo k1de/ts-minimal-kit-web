@@ -163,7 +163,7 @@ export class ApiRouter {
             headers['WWW-Authenticate'] = `Basic realm="${realm}"`;
         }
 
-        this.json(res, data, 401, headers)
+        this.json(res, data ?? { error: 'Unauthorized' }, 401, headers)
     }
 
     /**
@@ -221,7 +221,7 @@ export class ApiRouter {
             }
         }
         // Route not found
-        this.json(res, "{ error: 'Not found' }", 404)
+        this.json(res, { error: 'Not found' }, 404)
     }
 }
 

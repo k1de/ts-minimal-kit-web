@@ -129,7 +129,7 @@ api.delete('/api/items', (req, res, url) => {
 api.options('/api/items', (req, res, url) => {
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    api.json(res, null, 204);
+    api.json(res, undefined, 204);
 });
 
 // Basic Auth
