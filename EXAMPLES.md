@@ -229,7 +229,7 @@ Static files and `api.jsonZip` are compressed on the fly (`br` > `gzip` > `defla
 ```typescript
 import { compression } from './static/compress.js';
 
-compression.brotli = 9; // 0-11 (default 5; 11 too slow per-request)
+compression.brotli = 9; // 0-11 (default 4; 11 too slow per-request)
 compression.gzip = 6; // 1-9 (default 4)
 compression.deflate = 6; // 1-9 (default 4)
 ```

@@ -10,8 +10,8 @@ const brotliAsync = promisify(brotliCompress);
 
 /** On-the-fly compression levels; tune from app code, e.g. compression.brotli = 9 */
 export const compression = {
-    /** Brotli quality 0-11 (11 suits pre-compressed static, too slow per-request) */
-    brotli: 5,
+    /** Brotli quality 0-11 (q5+ ~2x slower for little gain on real data; 11 only suits pre-compressed static) */
+    brotli: 4,
     /** Gzip level 1-9 */
     gzip: 4,
     /** Deflate level 1-9 */
