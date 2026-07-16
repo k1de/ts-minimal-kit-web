@@ -312,6 +312,8 @@ interface AccordionItem {
     title: string;
     content: string;
     open?: boolean;
+    titleOptions?: StylingOptions;
+    contentOptions?: StylingOptions;
 }
 
 /** Code block/inline options */
@@ -964,10 +966,12 @@ class ClientApp {
                     className: 'accordion-item',
                     open: item.open,
                 });
+                const titleAttrs = this.buildAttrs(this.normalizeOptions(item.titleOptions), 'accordion-title');
+                const contentAttrs = this.buildAttrs(this.normalizeOptions(item.contentOptions), 'accordion-content');
                 return `
                     <details${detailsAttrs}>
-                        <summary class="accordion-title">${item.title}</summary>
-                        <div class="accordion-content">${item.content}</div>
+                        <summary${titleAttrs}>${item.title}</summary>
+                        <div${contentAttrs}>${item.content}</div>
                     </details>
                 `;
             })
