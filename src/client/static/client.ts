@@ -80,6 +80,8 @@ type UtilityClass =
     // Interactive
     | 'overflow-auto'
     | 'overflow-hidden'
+    | 'scroll-x'
+    | 'scroll-y'
     | 'cursor-pointer'
     | 'cursor-not-allowed'
     | 'opacity-50'

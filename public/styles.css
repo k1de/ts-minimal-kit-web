@@ -240,7 +240,6 @@ div {
     margin-bottom: 0;
     min-width: 0;
     overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
 }
 
 .nav-item {
@@ -526,6 +525,8 @@ ol {
     border-radius: var(--radius);
     box-shadow: var(--shadow-l);
     z-index: 100;
+    max-height: 60vh;
+    overflow-y: auto;
 }
 
 .dropdown-item {
@@ -596,7 +597,6 @@ pre {
     padding: var(--space-s);
     border-radius: var(--radius);
     overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
     border: 1px solid var(--border);
 }
 
@@ -758,7 +758,6 @@ pre code {
 /* === Table === */
 .table-wrapper {
     overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
 }
 
 .table {
@@ -800,7 +799,6 @@ pre code {
     border-bottom: 1px solid var(--border);
     display: flex;
     overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
     margin-bottom: 0;
 }
 

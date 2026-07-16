@@ -73,6 +73,8 @@
 /* Interactive */
 .overflow-auto { overflow: auto; }
 .overflow-hidden { overflow: hidden; }
+.scroll-x { overflow-x: auto; }
+.scroll-y { overflow-y: auto; }
 .cursor-pointer { cursor: pointer; }
 .cursor-not-allowed { cursor: not-allowed; }
 .opacity-50 { opacity: 0.5; }
